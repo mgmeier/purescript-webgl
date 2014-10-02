@@ -1,0 +1,22 @@
+{
+  "name": "starter-kit",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "tests",
+    "externs",
+    "js",
+    "tmp"
+  ],
+  "dependencies": {
+    "purescript-arrays"               : "*",
+    "purescript-maybe"                : "*",
+    "purescript-foldable-traversable" : "*"
+  },
+  "devDependencies": {
+    "purescript-math"                 : "*",
+    "purescript-quickcheck"           : "*"
+  }
+}
