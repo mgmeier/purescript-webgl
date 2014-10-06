@@ -1,22 +1,8 @@
 {
-  "name": "starter-kit",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "tests",
-    "externs",
-    "js",
-    "tmp"
-  ],
+  "name": "purescript-webgl",
+  "version": "0.0.1",
   "dependencies": {
-    "purescript-arrays"               : "*",
-    "purescript-maybe"                : "*",
-    "purescript-foldable-traversable" : "*"
+    "purescript-signal": "fgc/purescript-signal"
   },
-  "devDependencies": {
-    "purescript-math"                 : "*",
-    "purescript-quickcheck"           : "*"
-  }
+  "license": "Apache-2.0"
 }
