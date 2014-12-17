@@ -12,10 +12,23 @@ foreign import initGL """
         function initGL(canvasId) {
           return function() {
             var canvas = document.getElementById(canvasId);
-            window.gl = canvas.getContext('experimental-webgl');
+            try {
+            window.gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+            }
+            catch(e) {}
+            if (!window.gl)
+            {
+              alert("Unable to initialize WebGL. Your browser may not support it.");
+              gl = null;
+              return false;
+            }
             window.gl.viewPortWidth = canvas.width;
             window.gl.viewPortHeight = canvas.height;
-        };}""" :: forall eff.String -> (Eff (eff) Unit)
+            console.log("Init WebGL Ok");
+            return true;
+            }
+
+        }""" :: forall eff.String -> (Eff (eff) Boolean)
 
 foreign import glClearColor """
         function glClearColor(r) {
