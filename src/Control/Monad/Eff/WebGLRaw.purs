@@ -1,4 +1,4 @@
-module WebGLRaw where
+module Control.Monad.Eff.WebGLRaw where
 
 import Control.Monad.Eff
 
@@ -944,23 +944,35 @@ _BROWSER_DEFAULT_WEBGL = 37444
 -- *Methods
 foreign import getContextAttributes
   """function getContextAttributes()
-   {window.gl.getContextAttributes();};"""
+   {var res = window.gl.getContextAttributes();
+    if (res === undefined){
+      throw "Undefined in  getContextAttributes"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLContextAttributes)
 
 foreign import isContextLost
   """function isContextLost()
-   {window.gl.isContextLost();};"""
+   {var res = window.gl.isContextLost();
+    if (res === undefined){
+      throw "Undefined in  isContextLost"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) Boolean)
 
 foreign import getSupportedExtensions
   """function getSupportedExtensions()
-   {window.gl.getSupportedExtensions();};"""
+   {var res = window.gl.getSupportedExtensions();
+    if (res === undefined){
+      throw "Undefined in  getSupportedExtensions"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) String)
 
 foreign import getExtension
   """function getExtension(name)
    {return function()
-    {window.gl.getExtension(name);};};"""
+    {var res = window.gl.getExtension(name);
+     if (res === undefined){
+       throw "Undefined in  getExtension"};
+     return res;};};"""
     :: forall eff. String -> (Eff (webgl :: WebGl | eff) StrangeObject)
 
 foreign import activeTexture
@@ -1096,7 +1108,10 @@ foreign import bufferSubData
 foreign import checkFramebufferStatus
   """function checkFramebufferStatus(target)
    {return function()
-    {window.gl.checkFramebufferStatus(target);};};"""
+    {var res = window.gl.checkFramebufferStatus(target);
+     if (res === undefined){
+       throw "Undefined in  checkFramebufferStatus"};
+     return res;};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLenum)
 
 foreign import clear
@@ -1193,33 +1208,51 @@ foreign import copyTexSubImage2D
 
 foreign import createBuffer
   """function createBuffer()
-   {window.gl.createBuffer();};"""
+   {var res = window.gl.createBuffer();
+    if (res === undefined){
+      throw "Undefined in  createBuffer"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLBuffer)
 
 foreign import createFramebuffer
   """function createFramebuffer()
-   {window.gl.createFramebuffer();};"""
+   {var res = window.gl.createFramebuffer();
+    if (res === undefined){
+      throw "Undefined in  createFramebuffer"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLFramebuffer)
 
 foreign import createProgram
   """function createProgram()
-   {window.gl.createProgram();};"""
+   {var res = window.gl.createProgram();
+    if (res === undefined){
+      throw "Undefined in  createProgram"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLProgram)
 
 foreign import createRenderbuffer
   """function createRenderbuffer()
-   {window.gl.createRenderbuffer();};"""
+   {var res = window.gl.createRenderbuffer();
+    if (res === undefined){
+      throw "Undefined in  createRenderbuffer"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLRenderbuffer)
 
 foreign import createShader
   """function createShader(type)
    {return function()
-    {window.gl.createShader(type);};};"""
+    {var res = window.gl.createShader(type);
+     if (res === undefined){
+       throw "Undefined in  createShader"};
+     return res;};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) WebGLShader)
 
 foreign import createTexture
   """function createTexture()
-   {window.gl.createTexture();};"""
+   {var res = window.gl.createTexture();
+    if (res === undefined){
+      throw "Undefined in  createTexture"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLTexture)
 
 foreign import cullFace
@@ -1398,7 +1431,10 @@ foreign import getActiveAttrib
   """function getActiveAttrib(program)
    {return function(index)
     {return function()
-     {window.gl.getActiveAttrib(program,index);};};};"""
+     {var res = window.gl.getActiveAttrib(program,index);
+      if (res === undefined){
+        throw "Undefined in  getActiveAttrib"};
+      return res;};};};"""
     :: forall eff. WebGLProgram->
                    GLuint
                    -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
@@ -1407,7 +1443,10 @@ foreign import getActiveUniform
   """function getActiveUniform(program)
    {return function(index)
     {return function()
-     {window.gl.getActiveUniform(program,index);};};};"""
+     {var res = window.gl.getActiveUniform(program,index);
+      if (res === undefined){
+        throw "Undefined in  getActiveUniform"};
+      return res;};};};"""
     :: forall eff. WebGLProgram->
                    GLuint
                    -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
@@ -1415,7 +1454,10 @@ foreign import getActiveUniform
 foreign import getAttachedShaders
   """function getAttachedShaders(program)
    {return function()
-    {window.gl.getAttachedShaders(program);};};"""
+    {var res = window.gl.getAttachedShaders(program);
+     if (res === undefined){
+       throw "Undefined in  getAttachedShaders"};
+     return res;};};"""
     :: forall eff. WebGLProgram
                    -> (Eff (webgl :: WebGl | eff) WebGLShader)
 
@@ -1423,7 +1465,10 @@ foreign import getAttribLocation
   """function getAttribLocation(program)
    {return function(name)
     {return function()
-     {window.gl.getAttribLocation(program,name);};};};"""
+     {var res = window.gl.getAttribLocation(program,name);
+      if (res === undefined){
+        throw "Undefined in  getAttribLocation"};
+      return res;};};};"""
     :: forall eff. WebGLProgram->
                    String
                    -> (Eff (webgl :: WebGl | eff) GLint)
@@ -1431,21 +1476,30 @@ foreign import getAttribLocation
 foreign import getParameter
   """function getParameter(pname)
    {return function()
-    {window.gl.getParameter(pname);};};"""
+    {var res = window.gl.getParameter(pname);
+     if (res === undefined){
+       throw "Undefined in  getParameter"};
+     return res;};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) StrangeAny)
 
 foreign import getBufferParameter
   """function getBufferParameter(target)
    {return function(pname)
     {return function()
-     {window.gl.getBufferParameter(target,pname);};};};"""
+     {var res = window.gl.getBufferParameter(target,pname);
+      if (res === undefined){
+        throw "Undefined in  getBufferParameter"};
+      return res;};};};"""
     :: forall eff. GLenum->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) StrangeAny)
 
 foreign import getError
   """function getError()
-   {window.gl.getError();};"""
+   {var res = window.gl.getError();
+    if (res === undefined){
+      throw "Undefined in  getError"};
+    return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) GLenum)
 
 foreign import getFramebufferAttachmentParameter
@@ -1453,7 +1507,10 @@ foreign import getFramebufferAttachmentParameter
    {return function(attachment)
     {return function(pname)
      {return function()
-      {window.gl.getFramebufferAttachmentParameter(target,attachment,pname);};};};};"""
+      {var res = window.gl.getFramebufferAttachmentParameter(target,attachment,pname);
+       if (res === undefined){
+         throw "Undefined in  getFramebufferAttachmentParameter"};
+       return res;};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLenum
@@ -1463,7 +1520,10 @@ foreign import getProgramParameter
   """function getProgramParameter(program)
    {return function(pname)
     {return function()
-     {window.gl.getProgramParameter(program,pname);};};};"""
+     {var res = window.gl.getProgramParameter(program,pname);
+      if (res === undefined){
+        throw "Undefined in  getProgramParameter"};
+      return res;};};};"""
     :: forall eff. WebGLProgram->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) StrangeAny)
@@ -1471,14 +1531,20 @@ foreign import getProgramParameter
 foreign import getProgramInfoLog
   """function getProgramInfoLog(program)
    {return function()
-    {window.gl.getProgramInfoLog(program);};};"""
+    {var res = window.gl.getProgramInfoLog(program);
+     if (res === undefined){
+       throw "Undefined in  getProgramInfoLog"};
+     return res;};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) String)
 
 foreign import getRenderbufferParameter
   """function getRenderbufferParameter(target)
    {return function(pname)
     {return function()
-     {window.gl.getRenderbufferParameter(target,pname);};};};"""
+     {var res = window.gl.getRenderbufferParameter(target,pname);
+      if (res === undefined){
+        throw "Undefined in  getRenderbufferParameter"};
+      return res;};};};"""
     :: forall eff. GLenum->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) StrangeAny)
@@ -1487,7 +1553,10 @@ foreign import getShaderParameter
   """function getShaderParameter(shader)
    {return function(pname)
     {return function()
-     {window.gl.getShaderParameter(shader,pname);};};};"""
+     {var res = window.gl.getShaderParameter(shader,pname);
+      if (res === undefined){
+        throw "Undefined in  getShaderParameter"};
+      return res;};};};"""
     :: forall eff. WebGLShader->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) StrangeAny)
@@ -1495,20 +1564,29 @@ foreign import getShaderParameter
 foreign import getShaderInfoLog
   """function getShaderInfoLog(shader)
    {return function()
-    {window.gl.getShaderInfoLog(shader);};};"""
+    {var res = window.gl.getShaderInfoLog(shader);
+     if (res === undefined){
+       throw "Undefined in  getShaderInfoLog"};
+     return res;};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
 
 foreign import getShaderSource
   """function getShaderSource(shader)
    {return function()
-    {window.gl.getShaderSource(shader);};};"""
+    {var res = window.gl.getShaderSource(shader);
+     if (res === undefined){
+       throw "Undefined in  getShaderSource"};
+     return res;};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
 
 foreign import getTexParameter
   """function getTexParameter(target)
    {return function(pname)
     {return function()
-     {window.gl.getTexParameter(target,pname);};};};"""
+     {var res = window.gl.getTexParameter(target,pname);
+      if (res === undefined){
+        throw "Undefined in  getTexParameter"};
+      return res;};};};"""
     :: forall eff. GLenum->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) StrangeAny)
@@ -1517,7 +1595,10 @@ foreign import getUniform
   """function getUniform(program)
    {return function(location)
     {return function()
-     {window.gl.getUniform(program,location);};};};"""
+     {var res = window.gl.getUniform(program,location);
+      if (res === undefined){
+        throw "Undefined in  getUniform"};
+      return res;};};};"""
     :: forall eff. WebGLProgram->
                    WebGLUniformLocation
                    -> (Eff (webgl :: WebGl | eff) StrangeAny)
@@ -1526,7 +1607,10 @@ foreign import getUniformLocation
   """function getUniformLocation(program)
    {return function(name)
     {return function()
-     {window.gl.getUniformLocation(program,name);};};};"""
+     {var res = window.gl.getUniformLocation(program,name);
+      if (res === undefined){
+        throw "Undefined in  getUniformLocation"};
+      return res;};};};"""
     :: forall eff. WebGLProgram->
                    String
                    -> (Eff (webgl :: WebGl | eff) WebGLUniformLocation)
@@ -1535,7 +1619,10 @@ foreign import getVertexAttrib
   """function getVertexAttrib(index)
    {return function(pname)
     {return function()
-     {window.gl.getVertexAttrib(index,pname);};};};"""
+     {var res = window.gl.getVertexAttrib(index,pname);
+      if (res === undefined){
+        throw "Undefined in  getVertexAttrib"};
+      return res;};};};"""
     :: forall eff. GLuint->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) StrangeAny)
@@ -1544,7 +1631,10 @@ foreign import getVertexAttribOffset
   """function getVertexAttribOffset(index)
    {return function(pname)
     {return function()
-     {window.gl.getVertexAttribOffset(index,pname);};};};"""
+     {var res = window.gl.getVertexAttribOffset(index,pname);
+      if (res === undefined){
+        throw "Undefined in  getVertexAttribOffset"};
+      return res;};};};"""
     :: forall eff. GLuint->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) GLsizeiptr)
@@ -1559,48 +1649,69 @@ foreign import hint
 foreign import isBuffer
   """function isBuffer(buffer)
    {return function()
-    {window.gl.isBuffer(buffer);};};"""
+    {var res = window.gl.isBuffer(buffer);
+     if (res === undefined){
+       throw "Undefined in  isBuffer"};
+     return res;};};"""
     :: forall eff. WebGLBuffer
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
 foreign import isEnabled
   """function isEnabled(cap)
    {return function()
-    {window.gl.isEnabled(cap);};};"""
+    {var res = window.gl.isEnabled(cap);
+     if (res === undefined){
+       throw "Undefined in  isEnabled"};
+     return res;};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLboolean)
 
 foreign import isFramebuffer
   """function isFramebuffer(framebuffer)
    {return function()
-    {window.gl.isFramebuffer(framebuffer);};};"""
+    {var res = window.gl.isFramebuffer(framebuffer);
+     if (res === undefined){
+       throw "Undefined in  isFramebuffer"};
+     return res;};};"""
     :: forall eff. WebGLFramebuffer
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
 foreign import isProgram
   """function isProgram(program)
    {return function()
-    {window.gl.isProgram(program);};};"""
+    {var res = window.gl.isProgram(program);
+     if (res === undefined){
+       throw "Undefined in  isProgram"};
+     return res;};};"""
     :: forall eff. WebGLProgram
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
 foreign import isRenderbuffer
   """function isRenderbuffer(renderbuffer)
    {return function()
-    {window.gl.isRenderbuffer(renderbuffer);};};"""
+    {var res = window.gl.isRenderbuffer(renderbuffer);
+     if (res === undefined){
+       throw "Undefined in  isRenderbuffer"};
+     return res;};};"""
     :: forall eff. WebGLRenderbuffer
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
 foreign import isShader
   """function isShader(shader)
    {return function()
-    {window.gl.isShader(shader);};};"""
+    {var res = window.gl.isShader(shader);
+     if (res === undefined){
+       throw "Undefined in  isShader"};
+     return res;};};"""
     :: forall eff. WebGLShader
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
 foreign import isTexture
   """function isTexture(texture)
    {return function()
-    {window.gl.isTexture(texture);};};"""
+    {var res = window.gl.isTexture(texture);
+     if (res === undefined){
+       throw "Undefined in  isTexture"};
+     return res;};};"""
     :: forall eff. WebGLTexture
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 

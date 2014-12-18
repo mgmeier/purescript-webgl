@@ -1,12 +1,81 @@
-module WebGL where
+module Control.Monad.Eff.WebGL
+  (
+    runWebGL
+  , withShaders
+
+  , ShaderType(..)
+  , makeShader
+  , initShaders
+  
+  ) where
 
 import Control.Monad.Eff
+import Data.Maybe
+import Data.Either
 
-foreign import data GLContext :: *
+import Control.Monad.Eff.WebGLRaw
+import Control.Monad.Eff.Alert
 
-foreign import data GLShader :: *
+data ShaderType = FragmentShader
+                  | VertexShader
 
-foreign import data GLProgram :: *
+-- | Returns either a (Left) continuation which takes a String in the error case,
+--   which happens when WebGL is not present, or a (Right) continuation with the WebGL
+--   effect.
+runWebGL :: forall a eff. String -> (String -> Eff eff a) -> Eff (webgl :: WebGl | eff) a -> Eff eff a
+runWebGL canvasId failure success = do
+  res <- initGL canvasId
+  if res
+    then runWebGl_ success
+    else failure "Unable to initialize WebGL. Your browser may not support it."
+
+withShaders :: forall eff.String -> String -> Eff (webgl :: WebGl | eff) (Either WebGLProgram String)
+withShaders fragmetShaderSource vertexShaderSource = do
+  condFShader <- makeShader FragmentShader fragmetShaderSource -- (unlines fshaderSource)
+  case condFShader of
+    Nothing -> return $ Right "Can't compile fragment shader"
+    Just fshader -> do
+      condVShader <- makeShader VertexShader vertexShaderSource
+      case condVShader of
+        Nothing -> return $ Right "Can't compile vertex shader"
+        Just vshader -> do
+            condProg <- initShaders fshader vshader
+            case condProg of
+                Nothing -> return $ Right "Can't init shaders"
+                Just p -> return $ Left p
+
+makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Maybe WebGLShader)
+makeShader shaderType shaderSrc = do
+  let shaderTypeConst = case shaderType of
+                          FragmentShader -> _FRAGMENT_SHADER
+                          VertexShader -> _VERTEX_SHADER
+  shader <- createShader shaderTypeConst
+  shaderSource shader shaderSrc
+  compileShader shader
+  res <- getShaderParameterBool shader _COMPILE_STATUS
+  if res
+      then return (Just shader)
+      else return Nothing
+
+initShaders :: forall eff. WebGLShader -> WebGLShader -> Eff (webgl :: WebGl | eff) (Maybe WebGLProgram)
+initShaders fragmentShader vertexShader = do
+  shaderProgram <- createProgram
+  attachShader shaderProgram vertexShader
+  attachShader shaderProgram fragmentShader
+  linkProgram shaderProgram
+  res <- getProgramParameterBool shaderProgram _LINK_STATUS
+  if res
+    then do
+        useProgram shaderProgram
+        return (Just shaderProgram)
+    else return Nothing
+
+-- * Foreign functions
+
+foreign import runWebGl_ """
+  function runWebGl_(f) {
+      return f;
+  }""" :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
 
 foreign import initGL """
         function initGL(canvasId) {
@@ -15,20 +84,37 @@ foreign import initGL """
             try {
             window.gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
             }
-            catch(e) {}
+            catch(e) {return false}
             if (!window.gl)
             {
-              alert("Unable to initialize WebGL. Your browser may not support it.");
               gl = null;
               return false;
             }
-            window.gl.viewPortWidth = canvas.width;
-            window.gl.viewPortHeight = canvas.height;
-            console.log("Init WebGL Ok");
             return true;
             }
-
         }""" :: forall eff.String -> (Eff (eff) Boolean)
+
+foreign import getShaderParameterBool
+  """function getShaderParameterBool(shader)
+   {return function(pname)
+    {return function()
+     {return window.gl.getShaderParameter(shader,pname);};};};"""
+    :: forall eff. WebGLShader->
+                   GLenum
+                   -> (Eff (webgl :: WebGl | eff) Boolean)
+
+foreign import getProgramParameterBool
+  """function getProgramParameterBool(program)
+   {return function(pname)
+    {return function()
+     {return window.gl.getProgramParameter(program,pname);};};};"""
+    :: forall eff. WebGLProgram->
+                   GLenum
+                   -> (Eff (webgl :: WebGl | eff) Boolean)
+
+
+
+{--
 
 foreign import glClearColor """
         function glClearColor(r) {
@@ -111,3 +197,4 @@ foreign import glUseProgram """
             window.gl.useProgram(program);
             return {};
         };}""" :: forall eff.GLProgram -> Eff (eff) Unit
+--}

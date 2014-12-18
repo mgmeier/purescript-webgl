@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 
     psc: {
         options: {
-            modules: ["WebGL","WebGLRaw","Main"]
+            modules: ["Main"]
         },
       all: {
       src: ["<%=srcFiles%>"],
