@@ -1,6 +1,8 @@
+-- Auto generated: don't change manually, use purescript-webgl-generator to modify!!
 module Control.Monad.Eff.WebGLRaw where
 
 import Control.Monad.Eff
+import Data.TypedArray
 
 foreign import data WebGl :: !
 
@@ -18,8 +20,7 @@ type GLushort = Number
 type GLuint = Number
 type GLfloat = Number
 type GLclampf = Number
-type StrangeObject = Unit
-type StrangeAny = Unit
+type FloatArray = Float32Array
 
 -- *TypeDecls
 foreign import data WebGLContextAttributes :: *
@@ -29,15 +30,12 @@ foreign import data WebGLBuffer :: *
 foreign import data WebGLFramebuffer :: *
 foreign import data WebGLRenderbuffer :: *
 foreign import data WebGLTexture :: *
-foreign import data ArrayBufferView :: *
-foreign import data ArrayBuffer :: *
 foreign import data WebGLActiveInfo :: *
 foreign import data WebGLUniformLocation :: *
+foreign import data ArrayBufferView :: *
 foreign import data ImageData :: *
 foreign import data HTMLImageElement :: *
 foreign import data HTMLVideoElement :: *
-foreign import data FloatArray :: *
-foreign import data Int32Array :: *
 
 -- *Constants
 _DEPTH_BUFFER_BIT :: Number
@@ -973,7 +971,7 @@ foreign import getExtension
      if (res === undefined){
        throw "Undefined in  getExtension"};
      return res;};};"""
-    :: forall eff. String -> (Eff (webgl :: WebGl | eff) StrangeObject)
+    :: forall eff ret. String -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import activeTexture
   """function activeTexture(texture)
@@ -1085,12 +1083,12 @@ foreign import blendFuncSeparate
 
 foreign import bufferData
   """function bufferData(target)
-   {return function(size)
+   {return function(data)
     {return function(usage)
      {return function()
-      {window.gl.bufferData(target,size,usage);};};};};"""
+      {window.gl.bufferData(target,data,usage);};};};};"""
     :: forall eff. GLenum->
-                   GLsizeiptr->
+                   ArrayBuffer Float32->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1102,7 +1100,7 @@ foreign import bufferSubData
       {window.gl.bufferSubData(target,offset,data);};};};};"""
     :: forall eff. GLenum->
                    GLintptr->
-                   ArrayBufferView
+                   ArrayBuffer Float32
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import checkFramebufferStatus
@@ -1480,7 +1478,7 @@ foreign import getParameter
      if (res === undefined){
        throw "Undefined in  getParameter"};
      return res;};};"""
-    :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. GLenum -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getBufferParameter
   """function getBufferParameter(target)
@@ -1490,9 +1488,9 @@ foreign import getBufferParameter
       if (res === undefined){
         throw "Undefined in  getBufferParameter"};
       return res;};};};"""
-    :: forall eff. GLenum->
-                   GLenum
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. GLenum->
+                       GLenum
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getError
   """function getError()
@@ -1511,10 +1509,10 @@ foreign import getFramebufferAttachmentParameter
        if (res === undefined){
          throw "Undefined in  getFramebufferAttachmentParameter"};
        return res;};};};};"""
-    :: forall eff. GLenum->
-                   GLenum->
-                   GLenum
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. GLenum->
+                       GLenum->
+                       GLenum
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getProgramParameter
   """function getProgramParameter(program)
@@ -1524,9 +1522,9 @@ foreign import getProgramParameter
       if (res === undefined){
         throw "Undefined in  getProgramParameter"};
       return res;};};};"""
-    :: forall eff. WebGLProgram->
-                   GLenum
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. WebGLProgram->
+                       GLenum
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getProgramInfoLog
   """function getProgramInfoLog(program)
@@ -1545,9 +1543,9 @@ foreign import getRenderbufferParameter
       if (res === undefined){
         throw "Undefined in  getRenderbufferParameter"};
       return res;};};};"""
-    :: forall eff. GLenum->
-                   GLenum
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. GLenum->
+                       GLenum
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getShaderParameter
   """function getShaderParameter(shader)
@@ -1557,9 +1555,9 @@ foreign import getShaderParameter
       if (res === undefined){
         throw "Undefined in  getShaderParameter"};
       return res;};};};"""
-    :: forall eff. WebGLShader->
-                   GLenum
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. WebGLShader->
+                       GLenum
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getShaderInfoLog
   """function getShaderInfoLog(shader)
@@ -1587,9 +1585,9 @@ foreign import getTexParameter
       if (res === undefined){
         throw "Undefined in  getTexParameter"};
       return res;};};};"""
-    :: forall eff. GLenum->
-                   GLenum
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. GLenum->
+                       GLenum
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getUniform
   """function getUniform(program)
@@ -1599,9 +1597,9 @@ foreign import getUniform
       if (res === undefined){
         throw "Undefined in  getUniform"};
       return res;};};};"""
-    :: forall eff. WebGLProgram->
-                   WebGLUniformLocation
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. WebGLProgram->
+                       WebGLUniformLocation
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getUniformLocation
   """function getUniformLocation(program)
@@ -1623,9 +1621,9 @@ foreign import getVertexAttrib
       if (res === undefined){
         throw "Undefined in  getVertexAttrib"};
       return res;};};};"""
-    :: forall eff. GLuint->
-                   GLenum
-                   -> (Eff (webgl :: WebGl | eff) StrangeAny)
+    :: forall eff ret. GLuint->
+                       GLenum
+                       -> (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getVertexAttribOffset
   """function getVertexAttribOffset(index)

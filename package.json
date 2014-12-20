@@ -1,11 +1,11 @@
 {
-  "name": "ConeCanvas",
+  "name": "purescript-webgl",
   "version": "0.1.0",
-  "description": "Core of Hierarchy Widget",
+  "description": "Webgl binding for purescript",
   "main": "",
   "private": true,
   "author": "Jürgen Nicklisch-Franken",
-  "license": "GPLv2",
+  "license": "Apache-2.0",
   "dependencies": {
     "grunt": "~0.4.4",
     "grunt-contrib-copy": "~0.5.0",

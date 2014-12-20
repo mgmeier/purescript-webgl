@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 
     psc: {
         options: {
-            modules: ["Main"]
+            modules: ["Main","Data.Matrix4"]
         },
       all: {
       src: ["<%=srcFiles%>"],
@@ -16,9 +16,17 @@ module.exports = function(grunt) {
       }
     },
 
-    dotPsci: ["<%=srcFiles%>"]
+    dotPsci: ["<%=srcFiles%>"],
+    pscDocs: {
+    readme: {
+        src: "src/**/*.purs",
+        dest: "docs/Module.md"
+    }
+    },
   });
 
+  grunt.loadNpmTasks("grunt-contrib-clean");
+  grunt.loadNpmTasks("grunt-execute");
   grunt.loadNpmTasks("grunt-purescript");
-  grunt.registerTask("default", ["psc:all", "dotPsci"]);
+  grunt.registerTask("default", ["psc:all", "dotPsci", "pscDocs"]);
 };

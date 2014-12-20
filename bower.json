@@ -2,9 +2,12 @@
   "name": "purescript-webgl",
   "version": "0.0.1",
   "dependencies": {
+    "mjs": "*",
     "purescript-signal": "fgc/purescript-signal",
     "purescript-maybe" : "*",
-    "purescript-either": "*"
+    "purescript-either": "*",
+    "purescript-arrays": "*",
+    "purescript-math": "*"
   },
   "license": "Apache-2.0"
 }
