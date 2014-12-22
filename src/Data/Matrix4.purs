@@ -15,10 +15,13 @@
 module Data.Matrix4 where
 
 import qualified Data.Vector3 as V3
+import qualified Data.Vector as V
+
 import Data.Array
 import Prelude.Unsafe
 import Math
 
+type Vec3N = V3.Vec3 Number
 newtype Mat4 = Mat4 [Number]
 
 mat4 :: [Number] -> Mat4
@@ -31,15 +34,15 @@ identity = mat4 [1.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, 1.0, 0.0,
                 0.0, 0.0, 0.0, 1.0]
 
--- | Multiply a vector by a 4x4 matrix: m * v
-transform :: Mat4 -> V3.Vec3 -> V3.Vec3
+-- | Multiply a V.Vector by a 4x4 matrix: m * v
+transform :: Mat4 -> Vec3N -> Vec3N
 transform (Mat4 [x11, x12, x13, x14, x21, x22, x23, x24, x31, x32, x33, x34, x41, x42, x43, x44]) v =
-  let t1 = V3.Vec3[x11,x21,x31]
-      t2 = V3.Vec3[x12,x22,x32]
-      t3 = V3.Vec3[x13,x23,x33]
-      t4 = V3.Vec3[x14,x24,x34]
-      w  = V3.dot v t4 + x44
-  in V3.Vec3 [(V3.dot v t1 + x41) / w,(V3.dot v t2 + x42) / w,(V3.dot v t3 + x43) / w]
+  let t1 = V.Vec[x11,x21,x31]
+      t2 = V.Vec[x12,x22,x32]
+      t3 = V.Vec[x13,x23,x33]
+      t4 = V.Vec[x14,x24,x34]
+      w  = V.dot v t4 + x44
+  in V.Vec [(V.dot v t1 + x41) / w,(V.dot v t2 + x42) / w,(V.dot v t3 + x43) / w]
 
 -- | Computes the inverse of the given matrix m, assuming that the matrix is
 --   orthonormal.
@@ -48,10 +51,10 @@ inverseOrthonormal v@(Mat4 [x11, x12, x13, x14, x21, x22, x23, x24, x31, x32, x3
   case transpose v of
     Mat4 [y11, y12, y13, y14, y21, y22, y23, y24, y31, y32, y33, y34, y41, y42, y43, y44] ->
       let
-        t = V3.Vec3 [x41, x42, x43]
-        r12 = negate (V3.dot (V3.Vec3 [y11,y21,y31]) t)
-        r13 = negate (V3.dot (V3.Vec3 [y12,y22,y32]) t)
-        r14 = negate (V3.dot (V3.Vec3 [y13,y23,y33]) t)
+        t = V.Vec [x41, x42, x43]
+        r12 = negate (V.dot (V.Vec [y11,y21,y31]) t)
+        r13 = negate (V.dot (V.Vec [y12,y22,y32]) t)
+        r14 = negate (V.dot (V.Vec [y13,y23,y33]) t)
       in Mat4 [y11, y12, y13, 0, y21, y22, y23, 0, y31, y32, y33, 0, r12, r13, r14, y44]
 
 -- | "Flip" the matrix across the diagonal by swapping row index and column index.
@@ -170,11 +173,11 @@ mulAffine (Mat4 [x11, x12, x13, x14, x21, x22, x23, x24, x31, x32, x33, x34, x41
                 x31 * y14 + x32 * y24 + x33 * y34 + x34,
                   1]
 
--- | Creates a transformation matrix for rotation in radians about the 3-element vector axis.
-makeRotate :: Number -> V3.Vec3 -> Mat4
+-- | Creates a transformation matrix for rotation in radians about the 3-element V.Vector axis.
+makeRotate :: Number -> Vec3N -> Mat4
 makeRotate angle axis =
-  case V3.normalize axis of
-    V3.Vec3 [x,y,z] ->
+  case V.normalize axis of
+    V.Vec [x,y,z] ->
       let c = cos angle
           c1 = 1-c
           s = sin angle
@@ -184,8 +187,8 @@ makeRotate angle axis =
               0,0,0,1]
 
 -- | Concatenates a rotation in radians about an axis to the given matrix.
-rotate :: Number -> V3.Vec3 -> Mat4 -> Mat4
-rotate angle (V3.Vec3 [a0,a1,a2])
+rotate :: Number -> Vec3N -> Mat4 -> Mat4
+rotate angle (V.Vec [a0,a1,a2])
     (Mat4 [m11, m21, m31, m41, m12, m22, m32, m42, m13, m23, m33, m43, m14, m24, m34, m44]) =
   let l = sqrt (a0*a0 + a1*a1 + a2*a2)
       im = 1.0 / l
@@ -233,9 +236,9 @@ makeScale3 x y z = Mat4 [x,0,0,0,
                           0,0,0,1]
 
 -- | Creates a transformation matrix for scaling each of the x, y, and z axes by
--- the amount given in the corresponding element of the 3-element vector.
-makeScale :: V3.Vec3 -> Mat4
-makeScale (V3.Vec3 [x,y,z]) = makeScale3 x y z
+-- the amount given in the corresponding element of the 3-element V.Vector.
+makeScale :: Vec3N -> Mat4
+makeScale (V.Vec [x,y,z]) = makeScale3 x y z
 
 -- | Concatenates a scaling to the given matrix.
 scale3 :: Number -> Number -> Number -> Mat4 -> Mat4
@@ -246,8 +249,8 @@ scale3 x y z (Mat4 [x11, x12, x13, x14, x21, x22, x23, x24, x31, x32, x33, x34, 
         x41, x42, x43, x44]
 
 -- | Concatenates a scaling to the given matrix.
-scale :: V3.Vec3 -> Mat4 -> Mat4
-scale (V3.Vec3 [x,y,z]) = scale3 x y z
+scale :: Vec3N -> Mat4 -> Mat4
+scale (V.Vec [x,y,z]) = scale3 x y z
 
 -- | Creates a transformation matrix for translating by 3 scalar values, one for
 -- each of the x, y, and z directions.
@@ -258,9 +261,9 @@ makeTranslate3 x y z = Mat4 [1,0,0,0,
                               x,y,z,1]
 
 -- | Creates a transformation matrix for translating each of the x, y, and z
--- axes by the amount given in the corresponding element of the 3-element vector.
-makeTranslate :: V3.Vec3 -> Mat4
-makeTranslate (V3.Vec3 [x,y,z]) = makeTranslate3 x y z
+-- axes by the amount given in the corresponding element of the 3-element V.Vector.
+makeTranslate :: Vec3N -> Mat4
+makeTranslate (V.Vec [x,y,z]) = makeTranslate3 x y z
 
 -- | Concatenates a translation to the given matrix.
 translate3 :: Number -> Number -> Number -> Mat4 -> Mat4
@@ -274,22 +277,22 @@ translate3 x y z (Mat4 [m11, m21, m31, m41, m12, m22, m32, m42, m13, m23, m33, m
               m41 * x + m42 * y + m43 * z + m44]
 
 -- | Concatenates a translation to the given matrix.
-translate :: V3.Vec3 -> Mat4 -> Mat4
-translate (V3.Vec3 [x,y,z]) m = translate3 x y z m
+translate :: Vec3N -> Mat4 -> Mat4
+translate (V.Vec [x,y,z]) m = translate3 x y z m
 
 -- | Creates a transformation matrix for a camera.
 -- Parameters:
 --  * eye - The location of the camera
 --  * center - The location of the focused object
 --  * up - The "up" direction according to the camera
-makeLookAt :: V3.Vec3 -> V3.Vec3 -> V3.Vec3 -> Mat4
-makeLookAt eye@(V3.Vec3 [e0,e1,e2]) center up =
-  case V3.direction eye center of
-    z@V3.Vec3 [z0,z1,z2] ->
-      case V3.normalize (V3.cross up z) of
-        x@V3.Vec3 [x0,x1,x2] ->
-          case V3.normalize (V3.cross z x) of
-            y@V3.Vec3 [y0,y1,y2] ->
+makeLookAt :: Vec3N -> Vec3N -> Vec3N -> Mat4
+makeLookAt eye@(V.Vec [e0,e1,e2]) center up =
+  case V.direction eye center of
+    z@V.Vec [z0,z1,z2] ->
+      case V.normalize (V3.cross up z) of
+        x@V.Vec [x0,x1,x2] ->
+          case V.normalize (V3.cross z x) of
+            y@V.Vec [y0,y1,y2] ->
               let m1 = Mat4 [x0,y0,z0,0,
                              x1,y1,z1,0,
                              x2,y2,z2,0,
@@ -300,9 +303,9 @@ makeLookAt eye@(V3.Vec3 [e0,e1,e2]) center up =
                              (-e0),(-e1),(-e2),1]
                 in mul m1 m2
 
--- | Creates a transform from a basis consisting of 3 linearly independent vectors.
-makeBasis :: V3.Vec3 -> V3.Vec3 -> V3.Vec3 -> Mat4
-makeBasis (V3.Vec3 [x0,x1,x2]) (V3.Vec3 [y0,y1,y2]) (V3.Vec3 [z0,z1,z2])=
+-- | Creates a transform from a basis consisting of 3 linearly independent V.Vectors.
+makeBasis :: Vec3N -> Vec3N -> Vec3N -> Mat4
+makeBasis (V.Vec [x0,x1,x2]) (V.Vec [y0,y1,y2]) (V.Vec [z0,z1,z2])=
   Mat4 [x0,x1,x2,0,
         y0,y1,y2,0,
         z0,z1,z2,0,

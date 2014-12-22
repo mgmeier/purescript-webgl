@@ -7,7 +7,9 @@
     "purescript-maybe" : "*",
     "purescript-either": "*",
     "purescript-arrays": "*",
-    "purescript-math": "*"
+    "purescript-math": "*",
+    "purescript-monoid": "*",
+    "purescript-foldable-traversable": "*"
   },
   "license": "Apache-2.0"
 }
