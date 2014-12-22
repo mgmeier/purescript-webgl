@@ -18,6 +18,8 @@
 
     type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
 
+    type ShaderProgram = { matrices :: SMap.StrMap WebGLUniformLocation, attributes :: SMap.StrMap GLint, glProgram :: WebGLProgram }
+
     data ShaderType where
       FragmentShader :: ShaderType
       VertexShader :: ShaderType
@@ -25,17 +27,25 @@
 
 ### Values
 
-    canvasHeight :: String -> Number
+    drawBuffer :: forall eff. ShaderProgram -> WebGLBuffer -> String -> Number -> Number -> EffWebGL eff Unit
 
-    canvasWidth :: String -> Number
+    getCanvasHeight :: String -> Number
+
+    getCanvasWidth :: String -> Number
 
     initShaders :: forall eff. WebGLShader -> WebGLShader -> Eff (webgl :: WebGl | eff) (Maybe WebGLProgram)
+
+    makeBuffer :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) WebGLBuffer
 
     makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Maybe WebGLShader)
 
     runWebGL :: forall a eff. String -> (String -> Eff eff a) -> EffWebGL eff a -> Eff eff a
 
-    withShaders :: forall a eff. String -> String -> (String -> EffWebGL eff a) -> (WebGLProgram -> EffWebGL eff a) -> EffWebGL eff a
+    setMatrix :: forall eff. ShaderProgram -> String -> M4.Mat4 -> EffWebGL eff Unit
+
+    vertexPointer :: forall eff. ShaderProgram -> String -> EffWebGL eff Unit
+
+    withShaders :: forall a eff. String -> String -> [String] -> [String] -> (String -> EffWebGL eff a) -> (ShaderProgram -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Control.Monad.Eff.WebGLRaw
@@ -1261,4 +1271,10 @@
 
 ### Values
 
+    asArg :: M4.Mat4 -> ArrayBuffer Float32
+
+    fshaderSource :: String
+
     main :: Eff (alert :: Alert, trace :: Trace) Unit
+
+    vshaderSource :: String

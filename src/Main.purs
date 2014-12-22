@@ -11,98 +11,11 @@ import Control.Monad.Eff.WebGL
 import Control.Monad.Eff.WebGLRaw
 import Control.Monad.Eff.Alert
 import Data.TypedArray
+import qualified Data.Matrix4 as M4
+import qualified Data.Vector3 as V3
+import qualified Data.Vector as V
 
-main :: Eff (trace :: Trace, alert :: Alert) Unit
-main = runWebGL "glcanvas" (\s -> alert s) $ do
-  trace "WebGL started"
-  withShaders fshaderSource vshaderSource (\s -> alert s)
-    \ shaderProgram -> do
-
-      clearColor 0.0 0.0 0.0 1.0
-      enable _DEPTH_TEST
-
-      triangleVertexPositionBuffer <- createBuffer
-      bindBuffer _ARRAY_BUFFER triangleVertexPositionBuffer
-      let vertices = [0.0,  1.0,  0.0,
-                    (-1.0), (-1.0),  0.0,
-                      1.0, (-1.0),  0.0]
-      let arrayBuffer = asFloat32Array vertices
-      bufferData _ARRAY_BUFFER arrayBuffer _STATIC_DRAW
-
-{-
-      squareVertexPositionBuffer <- createBuffer
-      bindBuffer _ARRAY_BUFFER squareVertexPositionBuffer
-      let vertices = [
-             1.0,  1.0,  0.0,
-            (-1.0),  1.0,  0.0,
-             1.0, (-1.0),  0.0,
-            (-1.0), (-1.0),  0.0]
-      let arrayBuffer  = asArrayBuffer vertices
-      bufferData _ARRAY_BUFFER arrayBuffer _STATIC_DRAW
--}
-
-      clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
-      let width = canvasWidth "glcanvas"
-          height = canvasHeight "glcanvas"
-      viewport 0 0 width height
-
---        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
---        mat4.identity(mvMatrix);
---        mat4.translate(mvMatrix, [-1.5, 0.0, -7.0]);
-      bindBuffer _ARRAY_BUFFER triangleVertexPositionBuffer
-      vpa <- getAttribLocation shaderProgram "aVertexPosition"
-      vertexAttribPointer vpa 3 _FLOAT false 0 0
---      pMatrixUniform <- getUniformLocation shaderProgram "uPMatrix"
-      drawArrays _TRIANGLES 0 3
-      trace "WebGL completed"
-      return unit
-
-{-
-      uniformMatrix4fv (shaderProgram.pMatrixUniform, false, pMatrix);
-
-        setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
-
-
-        mat4.translate(mvMatrix, [3.0, 0.0, 0.0]);
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
-
-      clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
-      perspect
-      return unit
--}
-{-
-
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        triangleVertexPositionBuffer.itemSize = 3;
-        triangleVertexPositionBuffer.numItems = 3;
-
-        squareVertexPositionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-        vertices = [
-             1.0,  1.0,  0.0,
-            -1.0,  1.0,  0.0,
-             1.0, -1.0,  0.0,
-            -1.0, -1.0,  0.0
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        squareVertexPositionBuffer.itemSize = 3;
-        squareVertexPositionBuffer.numItems = 4;
-    }
--}
-{-
-  shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-  gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-
-  shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-  shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
--}
-
-
-
+fshaderSource :: String
 fshaderSource =
 """precision mediump float;
 
@@ -111,8 +24,10 @@ void main(void) {
     }
 """
 
+vshaderSource :: String
 vshaderSource =
-"""attribute vec3 aVertexPosition;
+"""
+    attribute vec3 aVertexPosition;
 
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
@@ -122,4 +37,49 @@ vshaderSource =
     }
 """
 
---
+asArg :: M4.Mat4 -> ArrayBuffer Float32
+asArg (M4.Mat4 v) = asFloat32Array v
+
+main :: Eff (trace :: Trace, alert :: Alert) Unit
+main =
+  runWebGL
+    "glcanvas"
+    (\s -> alert s) $ do
+      trace "WebGL started"
+      withShaders fshaderSource
+                  vshaderSource
+                  ["aVertexPosition"]
+                  ["uPMatrix","uMVMatrix"]
+                  (\s -> alert s)
+                  \ shaderProgram -> do
+        clearColor 0.0 0.0 0.0 1.0
+        enable _DEPTH_TEST
+
+
+    --      viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        let canvasWidth = getCanvasWidth "glcanvas"
+        let canvasHeight = getCanvasHeight "glcanvas"
+        viewport 0 0 canvasWidth canvasHeight
+        clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
+
+        let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
+        setMatrix shaderProgram "uPMatrix" pMatrix
+
+        let mvMatrix = M4.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M4.identity
+        setMatrix shaderProgram "uMVMatrix" mvMatrix
+
+        buf1 <- makeBuffer [0.0,  1.0,  0.0,
+                           (-1.0), (-1.0),  0.0,
+                            1.0, (-1.0),  0.0]
+        drawBuffer shaderProgram buf1 "aVertexPosition" _TRIANGLES 3
+
+        let mvMatrix' = M4.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
+        setMatrix shaderProgram "uMVMatrix" mvMatrix'
+
+        buf2 <- makeBuffer [1.0,  1.0,  0.0,
+                           (-1.0), 1.0,  0.0,
+                            1.0, (-1.0),  0.0,
+                           (-1.0), (-1.0),  0.0]
+        drawBuffer shaderProgram buf2 "aVertexPosition" _TRIANGLE_STRIP 4
+
+        trace "WebGL completed"
