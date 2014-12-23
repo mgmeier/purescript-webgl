@@ -2,8 +2,7 @@
   "name": "purescript-webgl",
   "version": "0.0.1",
   "dependencies": {
-    "mjs": "*",
-    "purescript-signal": "fgc/purescript-signal",
+    "purescript-datetime" : "*",
     "purescript-maybe" : "*",
     "purescript-either": "*",
     "purescript-arrays": "*",

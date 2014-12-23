@@ -109,7 +109,7 @@ main =
 
 tick :: forall eff. State (trace :: Trace, now :: Now |eff)  ->  EffWebGL (trace :: Trace, now :: Now |eff) Unit
 tick state = do
-  trace ("tick: " ++ show state.lastTime)
+--  trace ("tick: " ++ show state.lastTime)
   drawScene state
   state' <- animate state
   return unit

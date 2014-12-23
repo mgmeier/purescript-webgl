@@ -26,6 +26,8 @@ module Control.Monad.Eff.WebGL
   , makeBuffer
   , drawBuffer
 
+  , requestAnimationFrame
+
   , vertexPointer
 
   ) where
@@ -50,8 +52,8 @@ type MatrixBinding = WebGLUniformLocation
 
 type WebGLContext eff = {
     canvasName :: String,
-    getCanvasWidth :: EffWebGL eff Number,
-    getCanvasHeight :: EffWebGL eff Number
+    getCanvasWidth :: Eff (webgl :: WebGl | eff) Number,
+    getCanvasHeight :: Eff (webgl :: WebGl | eff) Number
   }
 
 drawBuffer :: forall eff. WebGLProgram -> WebGLBuffer -> AttributeBinding -> Number -> Number -> EffWebGL eff Unit
@@ -198,3 +200,20 @@ foreign import getCanvasHeight """
             var canvas = document.getElementById(canvasId);
             return canvas.height;
             };}""" :: forall eff. String -> Eff (webgl :: WebGl | eff) Number
+
+foreign import requestAnimationFrame """
+  var rAF = (function(){
+    return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            function( callback ){
+              window.setTimeout(callback, 1000 / 60);
+            };
+  })();
+
+  function requestAnimationFrame(x){
+    return function(){
+      return rAF(x);
+    };
+  };
+""" :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit

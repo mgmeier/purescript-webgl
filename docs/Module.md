@@ -26,7 +26,7 @@
       FragmentShader :: ShaderType
       VertexShader :: ShaderType
 
-    type WebGLContext eff = { getCanvasHeight :: EffWebGL eff Number, getCanvasWidth :: EffWebGL eff Number, canvasName :: String }
+    type WebGLContext eff = { getCanvasHeight :: Eff (webgl :: WebGl | eff) Number, getCanvasWidth :: Eff (webgl :: WebGl | eff) Number, canvasName :: String }
 
 
 ### Values
@@ -34,6 +34,8 @@
     drawBuffer :: forall eff. WebGLProgram -> WebGLBuffer -> AttributeBinding -> Number -> Number -> EffWebGL eff Unit
 
     makeBuffer :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) WebGLBuffer
+
+    requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
     runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext eff -> EffWebGL eff a) -> Eff eff a
 
@@ -1265,10 +1267,25 @@
 
 ## Module Main
 
+### Types
+
+    type State eff = { rSquare :: Number, rTri :: Number, lastTime :: Maybe Number, buf2Colors :: WebGLBuffer, buf2 :: WebGLBuffer, buf1Colors :: WebGLBuffer, buf1 :: WebGLBuffer, uMVMatrix :: MatrixBinding, uPMatrix :: MatrixBinding, aVertexColor :: AttributeBinding, aVertexPosition :: AttributeBinding, shaderProgram :: WebGLProgram, context :: WebGLContext eff }
+
+
 ### Values
+
+    animate :: forall eff. State (now :: Now | eff) -> EffWebGL (now :: Now | eff) (State (now :: Now | eff))
+
+    degToRad :: Number -> Number
+
+    drawScene :: forall eff. State (now :: Now | eff) -> EffWebGL (now :: Now | eff) Unit
 
     fshaderSource :: String
 
-    main :: Eff (alert :: Alert, trace :: Trace) Unit
+    main :: Eff (now :: Now, alert :: Alert, trace :: Trace) Unit
+
+    radToDeg :: Number -> Number
+
+    tick :: forall eff. State (now :: Now, trace :: Trace | eff) -> EffWebGL (now :: Now, trace :: Trace | eff) Unit
 
     vshaderSource :: String
