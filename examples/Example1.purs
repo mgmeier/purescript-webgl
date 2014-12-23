@@ -40,8 +40,8 @@ main = runWebGL "glcanvas" (\s -> alert s)
     trace "WebGL started"
     withShaders fshaderSource
                 vshaderSource
-                [Tuple "aVertexPosition" 3]
-                ["uPMatrix","uMVMatrix"]
+                [Vec3 "aVertexPosition"]
+                [Mat4 "uPMatrix",Mat4 "uMVMatrix"]
                 (\s -> alert s)
       \ shaderProgram [aVertexPosition] [uPMatrix,uMVMatrix] -> do
         clearColor 0.0 0.0 0.0 1.0
@@ -53,23 +53,23 @@ main = runWebGL "glcanvas" (\s -> alert s)
         clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
 
         let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-        setMatrix shaderProgram uPMatrix pMatrix
+        setMatrix uPMatrix pMatrix
 
         let mvMatrix = M4.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M4.identity
-        setMatrix shaderProgram uMVMatrix mvMatrix
+        setMatrix uMVMatrix mvMatrix
 
-        buf1 <- makeBuffer [0.0,  1.0,  0.0,
+        buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
                            (-1.0), (-1.0),  0.0,
                             1.0, (-1.0),  0.0]
-        drawBuffer shaderProgram buf1 aVertexPosition _TRIANGLES 3
+        drawArr buf1 aVertexPosition _TRIANGLES
 
         let mvMatrix' = M4.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
-        setMatrix shaderProgram uMVMatrix mvMatrix'
+        setMatrix uMVMatrix mvMatrix'
 
-        buf2 <- makeBuffer [1.0,  1.0,  0.0,
+        buf2 <- makeBufferSimple [1.0,  1.0,  0.0,
                            (-1.0), 1.0,  0.0,
                             1.0, (-1.0),  0.0,
                            (-1.0), (-1.0),  0.0]
-        drawBuffer shaderProgram buf2 aVertexPosition _TRIANGLE_STRIP 4
+        drawArr buf2 aVertexPosition _TRIANGLE_STRIP
 
         trace "WebGL completed"

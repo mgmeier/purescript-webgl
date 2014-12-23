@@ -5,6 +5,7 @@ import Control.Monad.Eff.WebGLRaw
 import qualified Data.Matrix4 as M4
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
+import qualified Data.TypedArray as T
 
 import Control.Monad.Eff
 import Control.Monad
@@ -45,14 +46,14 @@ vshaderSource =
 type State eff = {
                     context :: WebGLContext eff,
                     shaderProgram :: WebGLProgram,
-                    aVertexPosition :: AttributeBinding,
-                    aVertexColor  :: AttributeBinding,
-                    uPMatrix :: MatrixBinding,
-                    uMVMatrix :: MatrixBinding,
-                    buf1 ::WebGLBuffer,
-                    buf1Colors :: WebGLBuffer,
-                    buf2 :: WebGLBuffer,
-                    buf2Colors :: WebGLBuffer,
+                    aVertexPosition :: VecBind,
+                    aVertexColor  :: VecBind,
+                    uPMatrix :: MatBind,
+                    uMVMatrix :: MatBind,
+                    buf1 :: Buffer T.Float32,
+                    buf1Colors :: Buffer T.Float32,
+                    buf2 :: Buffer T.Float32,
+                    buf2Colors :: Buffer T.Float32,
                     lastTime :: Maybe Number,
                     rTri :: Number,
                     rSquare :: Number
@@ -67,23 +68,23 @@ main =
         trace "WebGL started"
         withShaders fshaderSource
                     vshaderSource
-                    [Tuple "aVertexPosition" 3, Tuple "aVertexColor" 4]
-                    ["uPMatrix","uMVMatrix"]
+                    [Vec3 "aVertexPosition", Vec3 "aVertexColor"]
+                    [Mat4 "uPMatrix", Mat4 "uMVMatrix"]
                     (\s -> alert s)
                       \ shaderProgram [aVertexPosition, aVertexColor] [uPMatrix,uMVMatrix] -> do
-          buf1 <- makeBuffer [0.0,  1.0,  0.0,
+          buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
                               (-1.0), (-1.0),  0.0,
                               1.0, (-1.0),  0.0]
-          buf1Colors <- makeBuffer  [
+          buf1Colors <- makeBufferSimple  [
                               1.0, 0.0, 0.0, 1.0,
                               0.0, 1.0, 0.0, 1.0,
                               0.0, 0.0, 1.0, 1.0
                               ]
-          buf2 <- makeBuffer [1.0,  1.0,  0.0,
+          buf2 <- makeBufferSimple [1.0,  1.0,  0.0,
                              (-1.0), 1.0,  0.0,
                               1.0, (-1.0),  0.0,
                              (-1.0), (-1.0),  0.0]
-          buf2Colors <- makeBuffer
+          buf2Colors <- makeBufferSimple
                              [0.5, 0.5, 1.0, 1.0,
                              0.5, 0.5, 1.0, 1.0,
                              0.5, 0.5, 1.0, 1.0,
@@ -127,32 +128,30 @@ animate state = do
                        rSquare = state.rSquare + (75 * elapsed) / 1000.0}
 
 drawScene :: forall eff. State (now :: Now |eff)  -> EffWebGL (now :: Now |eff) Unit
-drawScene state = do
-      canvasWidth <- state.context.getCanvasWidth
-      canvasHeight <- state.context.getCanvasHeight
+drawScene s = do
+      canvasWidth <- s.context.getCanvasWidth
+      canvasHeight <- s.context.getCanvasHeight
       viewport 0 0 canvasWidth canvasHeight
       clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
 
       let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-      setMatrix state.shaderProgram state.uPMatrix pMatrix
+      setMatrix s.uPMatrix pMatrix
       let mvMatrix =
-          M4.rotate (degToRad state.rTri) (V3.vec3' [0, 1, 0])
+          M4.rotate (degToRad s.rTri) (V3.vec3' [0, 1, 0])
             $ M4.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M4.identity
 
-      setMatrix state.shaderProgram state.uMVMatrix mvMatrix
+      setMatrix s.uMVMatrix mvMatrix
 
-      bindBuffer _ARRAY_BUFFER state.buf1Colors
-      vertexPointer state.shaderProgram state.aVertexColor
-      drawBuffer state.shaderProgram state.buf1 state.aVertexPosition _TRIANGLES 3
+      bindPointBuf s.buf1Colors s.aVertexColor
+      drawArr s.buf1 s.aVertexPosition _TRIANGLES
 
       let mvMatrix =
-          M4.rotate (degToRad state.rSquare) (V3.vec3' [1, 0, 0])
+          M4.rotate (degToRad s.rSquare) (V3.vec3' [1, 0, 0])
             $ M4.translate  (V3.vec3 (1.5) 0.0 (-7.0)) M4.identity
-      setMatrix state.shaderProgram state.uMVMatrix mvMatrix
+      setMatrix s.uMVMatrix mvMatrix
 
-      bindBuffer _ARRAY_BUFFER state.buf2Colors
-      vertexPointer state.shaderProgram state.aVertexColor
-      drawBuffer state.shaderProgram state.buf2 state.aVertexPosition _TRIANGLE_STRIP 4
+      bindPointBuf s.buf2Colors s.aVertexColor
+      drawArr s.buf2 s.aVertexPosition _TRIANGLE_STRIP
 
 -- | Convert from radians to degrees.
 radToDeg :: Number -> Number

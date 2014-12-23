@@ -16,34 +16,48 @@
 
 ### Types
 
-    type AttributeBinding = Tuple GLint Number
+    type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
 
     type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
 
-    type MatrixBinding = WebGLUniformLocation
+    type MatBind = { itemType :: Number, itemSize :: Number, location :: WebGLUniformLocation }
 
-    data ShaderType where
-      FragmentShader :: ShaderType
-      VertexShader :: ShaderType
+    data MatDescr where
+      Mat2 :: String -> MatDescr
+      Mat3 :: String -> MatDescr
+      Mat4 :: String -> MatDescr
+
+    type VecBind = { itemType :: Number, itemSize :: Number, location :: GLint }
+
+    data VecDescr where
+      Vec2 :: String -> VecDescr
+      Vec3 :: String -> VecDescr
+      Vec4 :: String -> VecDescr
 
     type WebGLContext eff = { getCanvasHeight :: Eff (webgl :: WebGl | eff) Number, getCanvasWidth :: Eff (webgl :: WebGl | eff) Number, canvasName :: String }
 
 
 ### Values
 
-    drawBuffer :: forall eff. WebGLProgram -> WebGLBuffer -> AttributeBinding -> Number -> Number -> EffWebGL eff Unit
+    bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 
-    makeBuffer :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) WebGLBuffer
+    bindPointBuf :: forall a eff. Buffer a -> VecBind -> Eff (webgl :: WebGl | eff) Unit
+
+    drawArr :: forall a eff. Buffer a -> VecBind -> Number -> EffWebGL eff Unit
+
+    makeBuffer :: forall a eff. Number -> ([Number] -> ArrayBuffer a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
+
+    makeBufferSimple :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer Float32)
 
     requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
     runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext eff -> EffWebGL eff a) -> Eff eff a
 
-    setMatrix :: forall eff. WebGLProgram -> MatrixBinding -> M4.Mat4 -> EffWebGL eff Unit
+    setMatrix :: forall eff. MatBind -> M4.Mat4 -> EffWebGL eff Unit
 
-    vertexPointer :: forall eff. WebGLProgram -> AttributeBinding -> EffWebGL eff Unit
+    vertexPointer :: forall eff. VecBind -> EffWebGL eff Unit
 
-    withShaders :: forall a eff. String -> String -> [Tuple String Number] -> [String] -> (String -> EffWebGL eff a) -> (WebGLProgram -> [AttributeBinding] -> [MatrixBinding] -> EffWebGL eff a) -> EffWebGL eff a
+    withShaders :: forall a eff. String -> String -> [VecDescr] -> [MatDescr] -> (String -> EffWebGL eff a) -> (WebGLProgram -> [VecBind] -> [MatBind] -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Control.Monad.Eff.WebGLRaw
@@ -1269,7 +1283,7 @@
 
 ### Types
 
-    type State eff = { rSquare :: Number, rTri :: Number, lastTime :: Maybe Number, buf2Colors :: WebGLBuffer, buf2 :: WebGLBuffer, buf1Colors :: WebGLBuffer, buf1 :: WebGLBuffer, uMVMatrix :: MatrixBinding, uPMatrix :: MatrixBinding, aVertexColor :: AttributeBinding, aVertexPosition :: AttributeBinding, shaderProgram :: WebGLProgram, context :: WebGLContext eff }
+    type State eff = { rCube :: Number, rPyramid :: Number, lastTime :: Maybe Number, cubeVertexIndices :: Buffer T.Uint16, cubeColors :: Buffer T.Float32, cubeVertices :: Buffer T.Float32, pyramidColors :: Buffer T.Float32, pyramidVertices :: Buffer T.Float32, uMVMatrix :: MatBind, uPMatrix :: MatBind, aVertexColor :: VecBind, aVertexPosition :: VecBind, shaderProgram :: WebGLProgram, context :: WebGLContext eff }
 
 
 ### Values
