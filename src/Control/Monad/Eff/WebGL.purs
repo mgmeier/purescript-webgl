@@ -30,17 +30,15 @@ module Control.Monad.Eff.WebGL
 
   ) where
 
+import qualified Data.Matrix4 as M4
+import Control.Monad.Eff.WebGLRaw
+import Data.TypedArray
+
 import Control.Monad.Eff
 import Control.Monad
-import qualified Data.Matrix4 as M4
-import Data.Maybe
-import Data.Either
 import Data.Tuple
+import Data.Maybe
 import Data.Array (reverse)
-
-import Control.Monad.Eff.WebGLRaw
-import Control.Monad.Eff.Alert
-import Data.TypedArray
 
 data ShaderType = FragmentShader
                   | VertexShader
@@ -112,7 +110,6 @@ addMatrix prog list key = do
   val <- makeMatrix prog key
   return (val : list)
 
-
 makeMatrix :: forall eff. WebGLProgram -> String -> EffWebGL eff WebGLUniformLocation
 makeMatrix prog name = do
  loc <- getUniformLocation prog name
@@ -156,7 +153,6 @@ initShaders fragmentShader vertexShader = do
         return (Just shaderProgram)
     else return Nothing
 
-
 makeBuffer :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) WebGLBuffer
 makeBuffer vertices = do
   buffer <- createBuffer
@@ -164,7 +160,6 @@ makeBuffer vertices = do
   let typedArray = asFloat32Array vertices
   bufferData _ARRAY_BUFFER typedArray _STATIC_DRAW
   return buffer
-
 
 -- * Some hand writte foreign functions
 
