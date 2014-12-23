@@ -14,9 +14,11 @@
 
 module Control.Monad.Eff.WebGL
   (
-    ShaderProgram(..)
+    AttributeBinding(..)
+  , MatrixBinding(..)
   , EffWebGL(..)
   , ShaderType(..)
+  , WebGLContext(..)
 
   , runWebGL
   , withShaders
@@ -25,10 +27,6 @@ module Control.Monad.Eff.WebGL
   , drawBuffer
 
   , vertexPointer
-  , makeShader
-  , initShaders
-  , getCanvasWidth
-  , getCanvasHeight
 
   ) where
 
@@ -37,7 +35,8 @@ import Control.Monad
 import qualified Data.Matrix4 as M4
 import Data.Maybe
 import Data.Either
-import qualified Data.StrMap as SMap
+import Data.Tuple
+import Data.Array (reverse)
 
 import Control.Monad.Eff.WebGLRaw
 import Control.Monad.Eff.Alert
@@ -48,44 +47,48 @@ data ShaderType = FragmentShader
 
 type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
 
-type ShaderProgram = {
-    glProgram :: WebGLProgram,
-    attributes :: SMap.StrMap GLint,
-    matrices :: SMap.StrMap WebGLUniformLocation
+type AttributeBinding = Tuple GLint Number
+type MatrixBinding = WebGLUniformLocation
+
+type WebGLContext eff = {
+    canvasName :: String,
+    getCanvasWidth :: EffWebGL eff Number,
+    getCanvasHeight :: EffWebGL eff Number
   }
 
-drawBuffer :: forall eff. ShaderProgram -> WebGLBuffer -> String -> Number -> Number -> EffWebGL eff Unit
-drawBuffer shaderProgram buf attrString typ size = do
+drawBuffer :: forall eff. WebGLProgram -> WebGLBuffer -> AttributeBinding -> Number -> Number -> EffWebGL eff Unit
+drawBuffer shaderProgram buf attr typ size = do
   bindBuffer _ARRAY_BUFFER buf
-  vertexPointer shaderProgram "aVertexPosition"
+  vertexPointer shaderProgram attr
   drawArrays typ 0 size
 
-vertexPointer ::  forall eff. ShaderProgram -> String -> EffWebGL eff Unit
-vertexPointer prog key =
-  case SMap.lookup key prog.attributes of
-    Just loc -> vertexAttribPointer loc 3 _FLOAT false 0 0
+vertexPointer ::  forall eff. WebGLProgram -> AttributeBinding -> EffWebGL eff Unit
+vertexPointer prog (Tuple loc itemSize) = vertexAttribPointer loc itemSize _FLOAT false 0 0
 
-setMatrix :: forall eff. ShaderProgram -> String -> M4.Mat4 -> EffWebGL eff Unit
-setMatrix prog key mat =
-  case SMap.lookup key prog.matrices of
-    Just uni -> uniformMatrix4fv uni false (asArrayBuffer mat)
-
+setMatrix :: forall eff. WebGLProgram -> MatrixBinding -> M4.Mat4 -> EffWebGL eff Unit
+setMatrix prog uni mat = uniformMatrix4fv uni false (asArrayBuffer mat)
 
 asArrayBuffer :: M4.Mat4 -> ArrayBuffer Float32
 asArrayBuffer (M4.Mat4 v) = asFloat32Array v
 
--- | Returns either a (Left) continuation which takes a String in the error case,
+-- | Returns either a continuation which takes a String in the error case,
 --   which happens when WebGL is not present, or a (Right) continuation with the WebGL
 --   effect.
-runWebGL :: forall a eff. String -> (String -> Eff eff a) -> EffWebGL eff a -> Eff eff a
+runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext eff -> EffWebGL eff a) -> Eff eff a
 runWebGL canvasId failure success = do
   res <- initGL canvasId
   if res
-    then runWebGl_ success
+    then runWebGl_ (success makeContext)
     else failure "Unable to initialize WebGL. Your browser may not support it."
+    where
+      makeContext = {
+          canvasName : canvasId,
+          getCanvasWidth : getCanvasWidth canvasId,
+          getCanvasHeight : getCanvasHeight canvasId
+        }
 
-withShaders :: forall a eff. String -> String -> [String] -> [String] -> (String -> EffWebGL eff a) ->
-                (ShaderProgram -> EffWebGL eff a) -> EffWebGL eff a
+withShaders :: forall a eff. String -> String -> [Tuple String Number] -> [String] -> (String -> EffWebGL eff a) ->
+                (WebGLProgram -> [AttributeBinding] -> [MatrixBinding] -> EffWebGL eff a) -> EffWebGL eff a
 withShaders fragmetShaderSource vertexShaderSource attributes matrices failure success = do
   condFShader <- makeShader FragmentShader fragmetShaderSource -- (unlines fshaderSource)
   case condFShader of
@@ -99,15 +102,15 @@ withShaders fragmetShaderSource vertexShaderSource attributes matrices failure s
             case condProg of
                 Nothing -> failure "Can't init shaders"
                 Just p -> do
-                  attributeMap <- foldM (addAttribute p) SMap.empty attributes
-                  matricesMap <- foldM (addMatrix p) SMap.empty matrices
-                  success {glProgram : p,attributes : attributeMap, matrices : matricesMap}
+                  attributes <- foldM (addAttribute p) [] attributes
+                  matrices <- foldM (addMatrix p) [] matrices
+                  success p (reverse attributes) (reverse matrices)
 
-addMatrix :: forall eff. WebGLProgram -> SMap.StrMap WebGLUniformLocation -> String
-                  -> EffWebGL eff (SMap.StrMap WebGLUniformLocation)
-addMatrix prog smap key = do
+addMatrix :: forall eff. WebGLProgram -> [WebGLUniformLocation] -> String
+                  -> EffWebGL eff [WebGLUniformLocation]
+addMatrix prog list key = do
   val <- makeMatrix prog key
-  return (SMap.insert key val smap)
+  return (val : list)
 
 
 makeMatrix :: forall eff. WebGLProgram -> String -> EffWebGL eff WebGLUniformLocation
@@ -115,11 +118,11 @@ makeMatrix prog name = do
  loc <- getUniformLocation prog name
  return loc
 
-addAttribute :: forall eff. WebGLProgram -> SMap.StrMap GLint -> String -> EffWebGL eff (SMap.StrMap GLint)
-addAttribute prog smap key = do
-  val <- makeAttribute prog key
-  return (SMap.insert key val smap)
-
+addAttribute :: forall eff. WebGLProgram -> [Tuple GLint Number] -> (Tuple String Number)
+                    -> EffWebGL eff [Tuple GLint Number]
+addAttribute prog list (Tuple name itemSize) = do
+  val <- makeAttribute prog name
+  return ((Tuple val itemSize) : list)
 
 makeAttribute :: forall eff. WebGLProgram -> String -> EffWebGL eff GLint
 makeAttribute prog name = do
@@ -189,12 +192,14 @@ foreign import initGL """
 
 foreign import getCanvasWidth """
         function getCanvasWidth(canvasId) {
+          return function() {
             var canvas = document.getElementById(canvasId);
             return canvas.width;
-            } """ :: String -> Number
+            };} """ ::  forall eff. String -> Eff (webgl :: WebGl | eff) Number
 
 foreign import getCanvasHeight """
         function getCanvasHeight(canvasId) {
+          return function() {
             var canvas = document.getElementById(canvasId);
             return canvas.height;
-            } """ :: String -> Number
+            };}""" :: forall eff. String -> Eff (webgl :: WebGl | eff) Number

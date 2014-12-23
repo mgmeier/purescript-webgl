@@ -16,36 +16,32 @@
 
 ### Types
 
+    type AttributeBinding = Tuple GLint Number
+
     type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
 
-    type ShaderProgram = { matrices :: SMap.StrMap WebGLUniformLocation, attributes :: SMap.StrMap GLint, glProgram :: WebGLProgram }
+    type MatrixBinding = WebGLUniformLocation
 
     data ShaderType where
       FragmentShader :: ShaderType
       VertexShader :: ShaderType
 
+    type WebGLContext eff = { getCanvasHeight :: EffWebGL eff Number, getCanvasWidth :: EffWebGL eff Number, canvasName :: String }
+
 
 ### Values
 
-    drawBuffer :: forall eff. ShaderProgram -> WebGLBuffer -> String -> Number -> Number -> EffWebGL eff Unit
-
-    getCanvasHeight :: String -> Number
-
-    getCanvasWidth :: String -> Number
-
-    initShaders :: forall eff. WebGLShader -> WebGLShader -> Eff (webgl :: WebGl | eff) (Maybe WebGLProgram)
+    drawBuffer :: forall eff. WebGLProgram -> WebGLBuffer -> AttributeBinding -> Number -> Number -> EffWebGL eff Unit
 
     makeBuffer :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) WebGLBuffer
 
-    makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Maybe WebGLShader)
+    runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext eff -> EffWebGL eff a) -> Eff eff a
 
-    runWebGL :: forall a eff. String -> (String -> Eff eff a) -> EffWebGL eff a -> Eff eff a
+    setMatrix :: forall eff. WebGLProgram -> MatrixBinding -> M4.Mat4 -> EffWebGL eff Unit
 
-    setMatrix :: forall eff. ShaderProgram -> String -> M4.Mat4 -> EffWebGL eff Unit
+    vertexPointer :: forall eff. WebGLProgram -> AttributeBinding -> EffWebGL eff Unit
 
-    vertexPointer :: forall eff. ShaderProgram -> String -> EffWebGL eff Unit
-
-    withShaders :: forall a eff. String -> String -> [String] -> [String] -> (String -> EffWebGL eff a) -> (ShaderProgram -> EffWebGL eff a) -> EffWebGL eff a
+    withShaders :: forall a eff. String -> String -> [Tuple String Number] -> [String] -> (String -> EffWebGL eff a) -> (WebGLProgram -> [AttributeBinding] -> [MatrixBinding] -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Control.Monad.Eff.WebGLRaw
@@ -1270,8 +1266,6 @@
 ## Module Main
 
 ### Values
-
-    asArg :: M4.Mat4 -> ArrayBuffer Float32
 
     fshaderSource :: String
 

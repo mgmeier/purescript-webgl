@@ -9,8 +9,7 @@
     "purescript-arrays": "*",
     "purescript-math": "*",
     "purescript-monoid": "*",
-    "purescript-foldable-traversable": "*",
-    "purescript-maps": "*"
+    "purescript-foldable-traversable": "*"
   },
   "license": "Apache-2.0"
 }
