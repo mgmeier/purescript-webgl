@@ -16,9 +16,308 @@
 
 ### Types
 
-    type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
-
     type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
+
+    data WebGl :: !
+
+
+### Values
+
+    runWebGl_ :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
+
+
+## Module Data.Matrix4
+
+### Types
+
+    newtype Mat4 where
+      Mat4 :: [Number] -> Mat4
+
+    type Vec3N = V3.Vec3 Number
+
+
+### Values
+
+    identity :: Mat4
+
+    inverseOrthonormal :: Mat4 -> Mat4
+
+    makeBasis :: Vec3N -> Vec3N -> Vec3N -> Mat4
+
+    makeFrustum :: Number -> Number -> Number -> Number -> Number -> Number -> Mat4
+
+    makeLookAt :: Vec3N -> Vec3N -> Vec3N -> Mat4
+
+    makeOrtho :: Number -> Number -> Number -> Number -> Number -> Number -> Mat4
+
+    makeOrtho2D :: Number -> Number -> Number -> Number -> Mat4
+
+    makePerspective :: Number -> Number -> Number -> Number -> Mat4
+
+    makeRotate :: Number -> Vec3N -> Mat4
+
+    makeScale :: Vec3N -> Mat4
+
+    makeScale3 :: Number -> Number -> Number -> Mat4
+
+    makeTranslate :: Vec3N -> Mat4
+
+    makeTranslate3 :: Number -> Number -> Number -> Mat4
+
+    mat4 :: [Number] -> Mat4
+
+    mul :: Mat4 -> Mat4 -> Mat4
+
+    mulAffine :: Mat4 -> Mat4 -> Mat4
+
+    rotate :: Number -> Vec3N -> Mat4 -> Mat4
+
+    scale :: Vec3N -> Mat4 -> Mat4
+
+    scale3 :: Number -> Number -> Number -> Mat4 -> Mat4
+
+    transform :: Mat4 -> Vec3N -> Vec3N
+
+    translate :: Vec3N -> Mat4 -> Mat4
+
+    translate3 :: Number -> Number -> Number -> Mat4 -> Mat4
+
+    transpose :: Mat4 -> Mat4
+
+
+## Module Data.TypedArray
+
+### Types
+
+    data ArrayBuffer :: * -> *
+
+    data Float32
+
+    type Float32Array = ArrayBuffer Float32
+
+    data Float64
+
+    type Float64Array = ArrayBuffer Float64
+
+    data Int16
+
+    type Int16Array = ArrayBuffer Int16
+
+    data Int32
+
+    type Int32Array = ArrayBuffer Int32
+
+    data Int8
+
+    type Int8Array = ArrayBuffer Int8
+
+    data Uint16
+
+    type Uint16Array = ArrayBuffer Uint16
+
+    data Uint32
+
+    type Uint32Array = ArrayBuffer Uint32
+
+    data Uint8
+
+    type Uint8Array = ArrayBuffer Uint8
+
+    data Uint8Clamped
+
+    type Uint8ClampedArray = ArrayBuffer Uint8Clamped
+
+
+### Values
+
+    (!!) :: forall a. ArrayBuffer a -> Number -> Maybe Number
+
+    asArray :: forall a. ArrayBuffer a -> [Number]
+
+    asFloat32Array :: [Number] -> ArrayBuffer Float32
+
+    asFloat64Array :: [Number] -> ArrayBuffer Float64
+
+    asInt16Array :: [Number] -> ArrayBuffer Int16
+
+    asInt32Array :: [Number] -> ArrayBuffer Int32
+
+    asInt8Array :: [Number] -> ArrayBuffer Int8
+
+    asUint16Array :: [Number] -> ArrayBuffer Uint16
+
+    asUint32Array :: [Number] -> ArrayBuffer Uint32
+
+    asUint8Array :: [Number] -> ArrayBuffer Uint8
+
+    asUint8ClampedArray :: [Number] -> ArrayBuffer Uint8ClampedArray
+
+    byteLength :: forall a. ArrayBuffer a -> Number
+
+    insertAt :: forall a. Number -> a -> ArrayBuffer a -> ArrayBuffer a
+
+    length :: forall a. ArrayBuffer a -> Number
+
+    unsafeIndex :: forall a. ArrayBuffer a -> Number -> Number
+
+
+## Module Data.Vector
+
+### Types
+
+    newtype Vec s a where
+      Vec :: [a] -> Vec s a
+
+
+### Type Class Instances
+
+    instance applyVec :: Apply (Vec s)
+
+    instance eqVec :: (Eq a) => Eq (Vec s a)
+
+    instance foldableVector :: Foldable (Vec s)
+
+    instance functorVec :: Functor (Vec s)
+
+    instance showVec :: (Show a) => Show (Vec s a)
+
+
+### Values
+
+    add :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
+
+    direction :: forall s. Vec s Number -> Vec s Number -> Vec s Number
+
+    distance :: forall s. Vec s Number -> Vec s Number -> Number
+
+    distanceSquared :: forall s. Vec s Number -> Vec s Number -> Number
+
+    dot :: forall s. Vec s Number -> Vec s Number -> Number
+
+    mult :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
+
+    normalize :: forall s. Vec s Number -> Vec s Number
+
+    scale :: forall a s. (Num a) => a -> Vec s a -> Vec s a
+
+    sub :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
+
+    vlength :: forall s. Vec s Number -> Number
+
+    vlengthSquared :: forall s. Vec s Number -> Number
+
+    vnegate :: forall a s. (Num a) => Vec s a -> Vec s a
+
+
+## Module Data.Vector2
+
+### Types
+
+    data Two
+
+    type Vec2 = Vec Two
+
+
+### Values
+
+    getX :: forall a. Vec2 a -> a
+
+    getY :: forall a. Vec2 a -> a
+
+    i :: Vec2 Number
+
+    j :: Vec2 Number
+
+    setX :: forall a. a -> Vec2 a -> Vec2 a
+
+    setY :: forall a. a -> Vec2 a -> Vec2 a
+
+    vec2 :: forall a. a -> a -> Vec2 a
+
+    vec2' :: forall a. [a] -> Vec2 a
+
+
+## Module Data.Vector3
+
+### Types
+
+    data Three
+
+    type Vec3 = Vec Three
+
+
+### Values
+
+    cross :: forall a. (Num a) => Vec3 a -> Vec3 a -> Vec3 a
+
+    getX :: forall a. Vec3 a -> a
+
+    getY :: forall a. Vec3 a -> a
+
+    getZ :: forall a. Vec3 a -> a
+
+    i :: Vec3 Number
+
+    j :: Vec3 Number
+
+    k :: Vec3 Number
+
+    setX :: forall a. a -> Vec3 a -> Vec3 a
+
+    setY :: forall a. a -> Vec3 a -> Vec3 a
+
+    setZ :: forall a. a -> Vec3 a -> Vec3 a
+
+    vec3 :: forall a. a -> a -> a -> Vec3 a
+
+    vec3' :: forall a. [a] -> Vec3 a
+
+
+## Module Data.Vector4
+
+### Types
+
+    data Four
+
+    type Vec4 = Vec Four
+
+
+### Values
+
+    getU :: forall a. Vec4 a -> a
+
+    getX :: forall a. Vec4 a -> a
+
+    getY :: forall a. Vec4 a -> a
+
+    getZ :: forall a. Vec4 a -> a
+
+    i :: Vec4 Number
+
+    j :: Vec4 Number
+
+    k :: Vec4 Number
+
+    l :: Vec4 Number
+
+    setU :: forall a. a -> Vec4 a -> Vec4 a
+
+    setX :: forall a. a -> Vec4 a -> Vec4 a
+
+    setY :: forall a. a -> Vec4 a -> Vec4 a
+
+    setZ :: forall a. a -> Vec4 a -> Vec4 a
+
+    vec4 :: forall a. a -> a -> a -> a -> Vec4 a
+
+    vec4' :: forall a. [a] -> Vec4 a
+
+
+## Module Graphics.WebGL
+
+### Types
+
+    type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
 
     type MatBind = { itemType :: Number, itemSize :: Number, location :: WebGLUniformLocation }
 
@@ -60,7 +359,7 @@
     withShaders :: forall a eff. String -> String -> [VecDescr] -> [MatDescr] -> (String -> EffWebGL eff a) -> (WebGLProgram -> [VecBind] -> [MatBind] -> EffWebGL eff a) -> EffWebGL eff a
 
 
-## Module Control.Monad.Eff.WebGLRaw
+## Module Graphics.WebGLRaw
 
 ### Types
 
@@ -119,8 +418,6 @@
     data WebGLTexture :: *
 
     data WebGLUniformLocation :: *
-
-    data WebGl :: !
 
 
 ### Values
@@ -990,293 +1287,6 @@
     vertexAttribPointer :: forall eff. GLuint -> GLint -> GLenum -> GLboolean -> GLsizei -> GLintptr -> Eff (webgl :: WebGl | eff) Unit
 
     viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
-
-
-## Module Data.Matrix4
-
-### Types
-
-    newtype Mat4 where
-      Mat4 :: [Number] -> Mat4
-
-    type Vec3N = V3.Vec3 Number
-
-
-### Values
-
-    identity :: Mat4
-
-    inverseOrthonormal :: Mat4 -> Mat4
-
-    makeBasis :: Vec3N -> Vec3N -> Vec3N -> Mat4
-
-    makeFrustum :: Number -> Number -> Number -> Number -> Number -> Number -> Mat4
-
-    makeLookAt :: Vec3N -> Vec3N -> Vec3N -> Mat4
-
-    makeOrtho :: Number -> Number -> Number -> Number -> Number -> Number -> Mat4
-
-    makeOrtho2D :: Number -> Number -> Number -> Number -> Mat4
-
-    makePerspective :: Number -> Number -> Number -> Number -> Mat4
-
-    makeRotate :: Number -> Vec3N -> Mat4
-
-    makeScale :: Vec3N -> Mat4
-
-    makeScale3 :: Number -> Number -> Number -> Mat4
-
-    makeTranslate :: Vec3N -> Mat4
-
-    makeTranslate3 :: Number -> Number -> Number -> Mat4
-
-    mat4 :: [Number] -> Mat4
-
-    mul :: Mat4 -> Mat4 -> Mat4
-
-    mulAffine :: Mat4 -> Mat4 -> Mat4
-
-    rotate :: Number -> Vec3N -> Mat4 -> Mat4
-
-    scale :: Vec3N -> Mat4 -> Mat4
-
-    scale3 :: Number -> Number -> Number -> Mat4 -> Mat4
-
-    transform :: Mat4 -> Vec3N -> Vec3N
-
-    translate :: Vec3N -> Mat4 -> Mat4
-
-    translate3 :: Number -> Number -> Number -> Mat4 -> Mat4
-
-    transpose :: Mat4 -> Mat4
-
-
-## Module Data.TypedArray
-
-### Types
-
-    data ArrayBuffer :: * -> *
-
-    data Float32
-
-    type Float32Array = ArrayBuffer Float32
-
-    data Float64
-
-    type Float64Array = ArrayBuffer Float64
-
-    data Int16
-
-    type Int16Array = ArrayBuffer Int16
-
-    data Int32
-
-    type Int32Array = ArrayBuffer Int32
-
-    data Int8
-
-    type Int8Array = ArrayBuffer Int8
-
-    data Uint16
-
-    type Uint16Array = ArrayBuffer Uint16
-
-    data Uint32
-
-    type Uint32Array = ArrayBuffer Uint32
-
-    data Uint8
-
-    type Uint8Array = ArrayBuffer Uint8
-
-    data Uint8Clamped
-
-    type Uint8ClampedArray = ArrayBuffer Uint8Clamped
-
-
-### Values
-
-    (!!) :: forall a. ArrayBuffer a -> Number -> Maybe Number
-
-    asArray :: forall a. ArrayBuffer a -> [Number]
-
-    asFloat32Array :: [Number] -> ArrayBuffer Float32
-
-    asFloat64Array :: [Number] -> ArrayBuffer Float64
-
-    asInt16Array :: [Number] -> ArrayBuffer Int16
-
-    asInt32Array :: [Number] -> ArrayBuffer Int32
-
-    asInt8Array :: [Number] -> ArrayBuffer Int8
-
-    asUint16Array :: [Number] -> ArrayBuffer Uint16
-
-    asUint32Array :: [Number] -> ArrayBuffer Uint32
-
-    asUint8Array :: [Number] -> ArrayBuffer Uint8
-
-    asUint8ClampedArray :: [Number] -> ArrayBuffer Uint8ClampedArray
-
-    byteLength :: forall a. ArrayBuffer a -> Number
-
-    insertAt :: forall a. Number -> a -> ArrayBuffer a -> ArrayBuffer a
-
-    length :: forall a. ArrayBuffer a -> Number
-
-    unsafeIndex :: forall a. ArrayBuffer a -> Number -> Number
-
-
-## Module Data.Vector
-
-### Types
-
-    newtype Vec s a where
-      Vec :: [a] -> Vec s a
-
-
-### Type Class Instances
-
-    instance applyVec :: Apply (Vec s)
-
-    instance eqVec :: (Eq a) => Eq (Vec s a)
-
-    instance foldableVector :: Foldable (Vec s)
-
-    instance functorVec :: Functor (Vec s)
-
-    instance showVec :: (Show a) => Show (Vec s a)
-
-
-### Values
-
-    add :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
-
-    direction :: forall s. Vec s Number -> Vec s Number -> Vec s Number
-
-    distance :: forall s. Vec s Number -> Vec s Number -> Number
-
-    distanceSquared :: forall s. Vec s Number -> Vec s Number -> Number
-
-    dot :: forall s. Vec s Number -> Vec s Number -> Number
-
-    mult :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
-
-    normalize :: forall s. Vec s Number -> Vec s Number
-
-    scale :: forall a s. (Num a) => a -> Vec s a -> Vec s a
-
-    sub :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
-
-    vlength :: forall s. Vec s Number -> Number
-
-    vlengthSquared :: forall s. Vec s Number -> Number
-
-    vnegate :: forall a s. (Num a) => Vec s a -> Vec s a
-
-
-## Module Data.Vector2
-
-### Types
-
-    data Two
-
-    type Vec2 = Vec Two
-
-
-### Values
-
-    getX :: forall a. Vec2 a -> a
-
-    getY :: forall a. Vec2 a -> a
-
-    i :: Vec2 Number
-
-    j :: Vec2 Number
-
-    setX :: forall a. a -> Vec2 a -> Vec2 a
-
-    setY :: forall a. a -> Vec2 a -> Vec2 a
-
-    vec2 :: forall a. a -> a -> Vec2 a
-
-    vec2' :: forall a. [a] -> Vec2 a
-
-
-## Module Data.Vector3
-
-### Types
-
-    data Three
-
-    type Vec3 = Vec Three
-
-
-### Values
-
-    cross :: forall a. (Num a) => Vec3 a -> Vec3 a -> Vec3 a
-
-    getX :: forall a. Vec3 a -> a
-
-    getY :: forall a. Vec3 a -> a
-
-    getZ :: forall a. Vec3 a -> a
-
-    i :: Vec3 Number
-
-    j :: Vec3 Number
-
-    k :: Vec3 Number
-
-    setX :: forall a. a -> Vec3 a -> Vec3 a
-
-    setY :: forall a. a -> Vec3 a -> Vec3 a
-
-    setZ :: forall a. a -> Vec3 a -> Vec3 a
-
-    vec3 :: forall a. a -> a -> a -> Vec3 a
-
-    vec3' :: forall a. [a] -> Vec3 a
-
-
-## Module Data.Vector4
-
-### Types
-
-    data Four
-
-    type Vec4 = Vec Four
-
-
-### Values
-
-    getU :: forall a. Vec4 a -> a
-
-    getX :: forall a. Vec4 a -> a
-
-    getY :: forall a. Vec4 a -> a
-
-    getZ :: forall a. Vec4 a -> a
-
-    i :: Vec4 Number
-
-    j :: Vec4 Number
-
-    k :: Vec4 Number
-
-    l :: Vec4 Number
-
-    setU :: forall a. a -> Vec4 a -> Vec4 a
-
-    setX :: forall a. a -> Vec4 a -> Vec4 a
-
-    setY :: forall a. a -> Vec4 a -> Vec4 a
-
-    setZ :: forall a. a -> Vec4 a -> Vec4 a
-
-    vec4 :: forall a. a -> a -> a -> a -> Vec4 a
-
-    vec4' :: forall a. [a] -> Vec4 a
 
 
 ## Module Main

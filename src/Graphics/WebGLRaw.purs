@@ -1,10 +1,10 @@
 -- Auto generated: don't change manually, use purescript-webgl-generator to modify!!
-module Control.Monad.Eff.WebGLRaw where
+module Graphics.WebGLRaw where
 
 import Control.Monad.Eff
+import Control.Monad.Eff.WebGL
 import Data.TypedArray
 
-foreign import data WebGl :: !
 
 type GLenum = Number
 type GLboolean = Boolean
