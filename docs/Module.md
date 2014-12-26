@@ -313,6 +313,13 @@
     vec4' :: forall a. [a] -> Vec4 a
 
 
+## Module Graphics.CanvasM
+
+### Types
+
+    data Image :: *
+
+
 ## Module Graphics.WebGL
 
 ### Types
@@ -1289,11 +1296,57 @@
     viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 
 
+## Module Graphics.WebGLTexture
+
+### Types
+
+    data InternalFormat where
+      IF_ALPHA :: InternalFormat
+      IF_LUMINANCE :: InternalFormat
+      IF_LUMINANCE_ALPHA :: InternalFormat
+      IF_RGB :: InternalFormat
+      IF_RGBA :: InternalFormat
+
+    data TargetType where
+      TEXTURE_2D :: TargetType
+      TEXTURE_CUBE_MAP_POSITIVE_X :: TargetType
+      TEXTURE_CUBE_MAP_NEGATIVE_X :: TargetType
+      TEXTURE_CUBE_MAP_POSITIVE_Y :: TargetType
+      TEXTURE_CUBE_MAP_NEGATIVE_Y :: TargetType
+      TEXTURE_CUBE_MAP_POSITIVE_Z :: TargetType
+      TEXTURE_CUBE_MAP_NEGATIVE_Z :: TargetType
+
+    data TextureType where
+      UNSIGNED_BYTE :: TextureType
+      RGBA :: TextureType
+      FLOAT :: TextureType
+      UNSIGNED_SHORT_5_6_5 :: TextureType
+      UNSIGNED_SHORT_4_4_4_4 :: TextureType
+      UNSIGNED_SHORT_5_5_5_1 :: TextureType
+
+
+### Values
+
+    handleLoad :: forall eff. WebGLTexture -> Image -> EffWebGL eff Unit
+
+    internalFormatToConst :: InternalFormat -> Number
+
+    loadImage :: forall a eff. String -> (Image -> EffWebGL eff a) -> EffWebGL eff Unit
+
+    targetTypeToConst :: TargetType -> Number
+
+    texImage2D_ :: forall a eff. GLenum -> GLint -> GLenum -> GLenum -> GLenum -> Image -> EffWebGL eff Unit
+
+    textureFor :: forall a eff. String -> (WebGLTexture -> EffWebGL eff a) -> EffWebGL eff Unit
+
+    textureTypeToConst :: TextureType -> Number
+
+
 ## Module Main
 
 ### Types
 
-    type State eff = { rCube :: Number, rPyramid :: Number, lastTime :: Maybe Number, cubeVertexIndices :: Buffer T.Uint16, cubeColors :: Buffer T.Float32, cubeVertices :: Buffer T.Float32, pyramidColors :: Buffer T.Float32, pyramidVertices :: Buffer T.Float32, uMVMatrix :: MatBind, uPMatrix :: MatBind, aVertexColor :: VecBind, aVertexPosition :: VecBind, shaderProgram :: WebGLProgram, context :: WebGLContext eff }
+    type State eff = { rot :: Number, lastTime :: Maybe Number, texture :: WebGLTexture, cubeVertexIndices :: Buffer T.Uint16, textureCoords :: Buffer T.Float32, cubeVertices :: Buffer T.Float32, uSampler :: MatBind, uMVMatrix :: MatBind, uPMatrix :: MatBind, aTextureCoord :: VecBind, aVertexPosition :: VecBind, shaderProgram :: WebGLProgram, context :: WebGLContext eff }
 
 
 ### Values

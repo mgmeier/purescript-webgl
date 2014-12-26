@@ -2,6 +2,7 @@
   "name": "purescript-webgl",
   "version": "0.0.1",
   "dependencies": {
+    "purescript-canvas" : "*",
     "purescript-datetime" : "*",
     "purescript-maybe" : "*",
     "purescript-either": "*",
