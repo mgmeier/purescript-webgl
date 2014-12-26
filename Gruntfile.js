@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 
     psc: {
         options: {
-            modules: ["Main",] // "Graphics.WebGL"]
+            modules: ["Main"]
         },
       example1: {
       src: ["examples/Example1.purs","<%=srcFiles%>"],

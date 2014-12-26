@@ -29,7 +29,7 @@ void main(void) {
     }
 """
 
-vshaderSource :: StringB
+vshaderSource :: String
 vshaderSource =
 """
     attribute vec3 aVertexPosition;

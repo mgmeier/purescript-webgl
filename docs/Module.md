@@ -1307,6 +1307,13 @@
       IF_RGB :: InternalFormat
       IF_RGBA :: InternalFormat
 
+    data SymbolicParameter where
+      PACK_ALIGNMENT :: SymbolicParameter
+      UNPACK_ALIGNMENT :: SymbolicParameter
+      UNPACK_FLIP_Y_WEBGL :: SymbolicParameter
+      UNPACK_PREMULTIPLY_ALPHA_WEBGL :: SymbolicParameter
+      UNPACK_COLORSPACE_CONVERSION_WEBGL :: SymbolicParameter
+
     data TargetType where
       TEXTURE_2D :: TargetType
       TEXTURE_CUBE_MAP_POSITIVE_X :: TargetType
@@ -1315,6 +1322,17 @@
       TEXTURE_CUBE_MAP_NEGATIVE_Y :: TargetType
       TEXTURE_CUBE_MAP_POSITIVE_Z :: TargetType
       TEXTURE_CUBE_MAP_NEGATIVE_Z :: TargetType
+
+    data TexParName where
+      TEXTURE_MIN_FILTER :: TexParName
+      TEXTURE_MAG_FILTER :: TexParName
+      TEXTURE_WRAP_S :: TexParName
+      TEXTURE_WRAP_T :: TexParName
+      TEXTURE_MAX_ANISOTROPY_EXT :: TexParName
+
+    data TexTarget where
+      TTEXTURE_2D :: TexTarget
+      TTEXTURE_CUBE_MAP :: TexTarget
 
     data TextureType where
       UNSIGNED_BYTE :: TextureType
@@ -1327,16 +1345,30 @@
 
 ### Values
 
+    bindTexture_ :: forall eff. TargetType -> WebGLTexture -> EffWebGL eff Unit
+
     handleLoad :: forall eff. WebGLTexture -> Image -> EffWebGL eff Unit
 
-    internalFormatToConst :: InternalFormat -> Number
+    internalFormatToConst :: InternalFormat -> GLenum
 
     loadImage :: forall a eff. String -> (Image -> EffWebGL eff a) -> EffWebGL eff Unit
 
-    targetTypeToConst :: TargetType -> Number
+    pixelStorei_ :: forall eff. SymbolicParameter -> Number -> EffWebGL eff Unit
+
+    symbolicParameterToConst :: SymbolicParameter -> GLenum
+
+    targetTypeToConst :: TargetType -> GLenum
 
     texImage2D_ :: forall a eff. GLenum -> GLint -> GLenum -> GLenum -> GLenum -> Image -> EffWebGL eff Unit
 
+    texImage2D__ :: forall eff. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> Image -> EffWebGL eff Unit
+
+    texParNameToConst :: TexParName -> GLenum
+
+    texParameteri_ :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
+
+    texTargetToConst :: TexTarget -> GLenum
+
     textureFor :: forall a eff. String -> (WebGLTexture -> EffWebGL eff a) -> EffWebGL eff Unit
 
-    textureTypeToConst :: TextureType -> Number
+    textureTypeToConst :: TextureType -> GLenum
