@@ -1340,29 +1340,3 @@
     textureFor :: forall a eff. String -> (WebGLTexture -> EffWebGL eff a) -> EffWebGL eff Unit
 
     textureTypeToConst :: TextureType -> Number
-
-
-## Module Main
-
-### Types
-
-    type State eff = { rot :: Number, lastTime :: Maybe Number, texture :: WebGLTexture, cubeVertexIndices :: Buffer T.Uint16, textureCoords :: Buffer T.Float32, cubeVertices :: Buffer T.Float32, uSampler :: MatBind, uMVMatrix :: MatBind, uPMatrix :: MatBind, aTextureCoord :: VecBind, aVertexPosition :: VecBind, shaderProgram :: WebGLProgram, context :: WebGLContext eff }
-
-
-### Values
-
-    animate :: forall eff. State (now :: Now | eff) -> EffWebGL (now :: Now | eff) (State (now :: Now | eff))
-
-    degToRad :: Number -> Number
-
-    drawScene :: forall eff. State (now :: Now | eff) -> EffWebGL (now :: Now | eff) Unit
-
-    fshaderSource :: String
-
-    main :: Eff (now :: Now, alert :: Alert, trace :: Trace) Unit
-
-    radToDeg :: Number -> Number
-
-    tick :: forall eff. State (now :: Now, trace :: Trace | eff) -> EffWebGL (now :: Now, trace :: Trace | eff) Unit
-
-    vshaderSource :: String

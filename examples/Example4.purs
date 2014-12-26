@@ -1,7 +1,8 @@
 module Main where
 
 import Control.Monad.Eff.WebGL
-import Control.Monad.Eff.WebGLRaw
+import Graphics.WebGL
+import Graphics.WebGLRaw
 import qualified Data.Matrix4 as M4
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
@@ -28,7 +29,7 @@ void main(void) {
     }
 """
 
-vshaderSource :: String
+vshaderSource :: StringB
 vshaderSource =
 """
     attribute vec3 aVertexPosition;

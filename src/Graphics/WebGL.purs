@@ -255,24 +255,6 @@ foreign import getCanvasHeight """
             return canvas.height;
             };}""" :: forall eff. String -> Eff (webgl :: WebGl | eff) Number
 
-foreign import requestAnimationFrame """
-  var rAF = (function(){
-    return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            function( callback ){
-              window.setTimeout(callback, 1000 / 60);
-            };
-  })();
-
-  function requestAnimationFrame(x){
-    return function(){
-      return rAF(x);
-    };
-  };
-""" :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
-
-{-
 
 foreign import requestAnimationFrame """
   if (typeof rAF === 'undefined') {
@@ -291,8 +273,6 @@ foreign import requestAnimationFrame """
     };
   };
 """ :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
-
--}
 
 foreign import bufferData_ """
     function bufferData_(target)

@@ -1,6 +1,7 @@
 -- needs todays compiler fixes, to allow underscores in constructor names.
 -- need to start chrome with --allow-file-access-from-files to be able to load local files
--- need line 73:   let stupid = Mat3 "stupid", cause otherwise Mat3 is unknown
+-- need line 7?:   let stupid = Mat3 "stupid", cause otherwise Mat3 is unknown
+-- or need to add Graphics.WebGL as options/modules to gruntfile. 
 module Main where
 
 import Control.Monad.Eff.WebGL
@@ -74,7 +75,7 @@ type State eff = {
 
 main :: Eff (trace :: Trace, alert :: Alert, now :: Now) Unit
 main = do
-  let stupid = Mat3 "stupid"
+--  let stupid = Mat3 "stupid"
   runWebGL
     "glcanvas"
     (\s -> alert s)
