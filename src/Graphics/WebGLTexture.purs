@@ -12,7 +12,22 @@
 --
 -----------------------------------------------------------------------------
 
-module Graphics.WebGLTexture where
+module Graphics.WebGLTexture
+(
+    TargetType(..)
+  , InternalFormat(..)
+  , TextureType(..)
+  , SymbolicParameter(..)
+  , TexTarget(..)
+  , TexParName(..)
+  , WebGLTex(..)
+
+  , textureFor
+  , activeTexture
+  , bindTexture
+  , uniform1i
+
+)where
 
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
@@ -21,6 +36,7 @@ import Graphics.CanvasM
 
 import Control.Monad.Eff
 
+newtype WebGLTex = WebGLTex WebGLTexture
 
 data TargetType =     TEXTURE_2D
                     | TEXTURE_CUBE_MAP_POSITIVE_X
@@ -105,37 +121,41 @@ texParNameToConst TEXTURE_WRAP_S = _TEXTURE_WRAP_S
 texParNameToConst TEXTURE_WRAP_T = _TEXTURE_WRAP_T
 -- texParNameToConst TEXTURE_MAX_ANISOTROPY_EXT = _TEXTURE_MAX_ANISOTROPY_EXT
 
-textureFor :: forall a eff. String -> (WebGLTexture -> EffWebGL eff a) -> EffWebGL eff Unit
+textureFor :: forall a eff. String -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
 textureFor name continuation = do
-  texture <- createTexture
+  texture <- createTexture_
   loadImage name \image -> do
     handleLoad texture image
-    continuation texture
+    continuation (WebGLTex texture)
 
 handleLoad :: forall eff. WebGLTexture -> Image -> EffWebGL eff Unit
 handleLoad texture image = do
-  bindTexture_ TEXTURE_2D texture
-  pixelStorei_ UNPACK_FLIP_Y_WEBGL 1
-  texImage2D__ TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE image
-  texParameteri_ TTEXTURE_2D TEXTURE_MAG_FILTER _NEAREST
-  texParameteri_ TTEXTURE_2D TEXTURE_MIN_FILTER _NEAREST
+  bindTexture TEXTURE_2D (WebGLTex texture)
+  pixelStorei UNPACK_FLIP_Y_WEBGL 1
+  texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE image
+  texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER _NEAREST
+  texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER _NEAREST
 --  bindTexture _TEXTURE_2D 0
 
-texParameteri_ :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
-texParameteri_ target pname param = texParameteri (texTargetToConst target) (texParNameToConst pname) param
+texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
+texParameteri target pname param = texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
 
-pixelStorei_ :: forall eff. SymbolicParameter -> Number -> EffWebGL eff Unit
-pixelStorei_ symbolicParameter num = pixelStorei (symbolicParameterToConst symbolicParameter) num
+pixelStorei :: forall eff. SymbolicParameter -> Number -> EffWebGL eff Unit
+pixelStorei symbolicParameter num = pixelStorei_ (symbolicParameterToConst symbolicParameter) num
 
-bindTexture_ :: forall eff. TargetType -> WebGLTexture -> EffWebGL eff Unit
-bindTexture_ tt texture = bindTexture (targetTypeToConst tt) texture
+bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
+bindTexture tt (WebGLTex texture) = bindTexture_ (targetTypeToConst tt) texture
 
-texImage2D__ :: forall eff. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> Image
+texImage2D :: forall eff. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> Image
                     -> EffWebGL eff Unit
-texImage2D__ target level internalFormat format typ pixels =
-  texImage2D_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+texImage2D target level internalFormat format typ pixels =
+  texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     (internalFormatToConst format) (textureTypeToConst typ) pixels
 
+activeTexture :: forall eff. Number -> Eff (webgl :: WebGl | eff) Unit
+activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
+
+uniform1i = uniform1i_
 
 foreign import loadImage
 """
@@ -150,8 +170,8 @@ foreign import loadImage
                      (Image -> EffWebGL eff a)
                      -> EffWebGL eff Unit
 
-foreign import texImage2D_
-  """function texImage2D_(target)
+foreign import texImage2D__
+  """function texImage2D__(target)
    {return function(level)
     {return function(internalformat)
         {return function(format)

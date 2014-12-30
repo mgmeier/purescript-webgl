@@ -940,32 +940,32 @@ _BROWSER_DEFAULT_WEBGL = 37444
 
 
 -- *Methods
-foreign import getContextAttributes
-  """function getContextAttributes()
+foreign import getContextAttributes_
+  """function getContextAttributes_()
    {var res = window.gl.getContextAttributes();
     if (res === undefined){
       throw "Undefined in  getContextAttributes"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLContextAttributes)
 
-foreign import isContextLost
-  """function isContextLost()
+foreign import isContextLost_
+  """function isContextLost_()
    {var res = window.gl.isContextLost();
     if (res === undefined){
       throw "Undefined in  isContextLost"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) Boolean)
 
-foreign import getSupportedExtensions
-  """function getSupportedExtensions()
+foreign import getSupportedExtensions_
+  """function getSupportedExtensions_()
    {var res = window.gl.getSupportedExtensions();
     if (res === undefined){
       throw "Undefined in  getSupportedExtensions"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) String)
 
-foreign import getExtension
-  """function getExtension(name)
+foreign import getExtension_
+  """function getExtension_(name)
    {return function()
     {var res = window.gl.getExtension(name);
      if (res === undefined){
@@ -973,14 +973,14 @@ foreign import getExtension
      return res;};};"""
     :: forall eff ret. String -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import activeTexture
-  """function activeTexture(texture)
+foreign import activeTexture_
+  """function activeTexture_(texture)
    {return function()
     {window.gl.activeTexture(texture);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import attachShader
-  """function attachShader(program)
+foreign import attachShader_
+  """function attachShader_(program)
    {return function(shader)
     {return function()
      {window.gl.attachShader(program,shader);};};};"""
@@ -988,8 +988,8 @@ foreign import attachShader
                    WebGLShader
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindAttribLocation
-  """function bindAttribLocation(program)
+foreign import bindAttribLocation_
+  """function bindAttribLocation_(program)
    {return function(index)
     {return function(name)
      {return function()
@@ -999,8 +999,8 @@ foreign import bindAttribLocation
                    String
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindBuffer
-  """function bindBuffer(target)
+foreign import bindBuffer_
+  """function bindBuffer_(target)
    {return function(buffer)
     {return function()
      {window.gl.bindBuffer(target,buffer);};};};"""
@@ -1008,8 +1008,8 @@ foreign import bindBuffer
                    WebGLBuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindFramebuffer
-  """function bindFramebuffer(target)
+foreign import bindFramebuffer_
+  """function bindFramebuffer_(target)
    {return function(framebuffer)
     {return function()
      {window.gl.bindFramebuffer(target,framebuffer);};};};"""
@@ -1017,8 +1017,8 @@ foreign import bindFramebuffer
                    WebGLFramebuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindRenderbuffer
-  """function bindRenderbuffer(target)
+foreign import bindRenderbuffer_
+  """function bindRenderbuffer_(target)
    {return function(renderbuffer)
     {return function()
      {window.gl.bindRenderbuffer(target,renderbuffer);};};};"""
@@ -1026,8 +1026,8 @@ foreign import bindRenderbuffer
                    WebGLRenderbuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindTexture
-  """function bindTexture(target)
+foreign import bindTexture_
+  """function bindTexture_(target)
    {return function(texture)
     {return function()
      {window.gl.bindTexture(target,texture);};};};"""
@@ -1035,8 +1035,8 @@ foreign import bindTexture
                    WebGLTexture
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendColor
-  """function blendColor(red)
+foreign import blendColor_
+  """function blendColor_(red)
    {return function(green)
     {return function(blue)
      {return function(alpha)
@@ -1048,28 +1048,28 @@ foreign import blendColor
                    GLclampf
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendEquation
-  """function blendEquation(mode)
+foreign import blendEquation_
+  """function blendEquation_(mode)
    {return function()
     {window.gl.blendEquation(mode);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendEquationSeparate
-  """function blendEquationSeparate(modeRGB)
+foreign import blendEquationSeparate_
+  """function blendEquationSeparate_(modeRGB)
    {return function(modeAlpha)
     {return function()
      {window.gl.blendEquationSeparate(modeRGB,modeAlpha);};};};"""
     :: forall eff. GLenum-> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendFunc
-  """function blendFunc(sfactor)
+foreign import blendFunc_
+  """function blendFunc_(sfactor)
    {return function(dfactor)
     {return function()
      {window.gl.blendFunc(sfactor,dfactor);};};};"""
     :: forall eff. GLenum-> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendFuncSeparate
-  """function blendFuncSeparate(srcRGB)
+foreign import blendFuncSeparate_
+  """function blendFuncSeparate_(srcRGB)
    {return function(dstRGB)
     {return function(srcAlpha)
      {return function(dstAlpha)
@@ -1081,8 +1081,8 @@ foreign import blendFuncSeparate
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bufferData
-  """function bufferData(target)
+foreign import bufferData_
+  """function bufferData_(target)
    {return function(data)
     {return function(usage)
      {return function()
@@ -1092,8 +1092,8 @@ foreign import bufferData
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bufferSubData
-  """function bufferSubData(target)
+foreign import bufferSubData_
+  """function bufferSubData_(target)
    {return function(offset)
     {return function(data)
      {return function()
@@ -1103,8 +1103,8 @@ foreign import bufferSubData
                    ArrayBuffer Float32
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import checkFramebufferStatus
-  """function checkFramebufferStatus(target)
+foreign import checkFramebufferStatus_
+  """function checkFramebufferStatus_(target)
    {return function()
     {var res = window.gl.checkFramebufferStatus(target);
      if (res === undefined){
@@ -1112,14 +1112,14 @@ foreign import checkFramebufferStatus
      return res;};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLenum)
 
-foreign import clear
-  """function clear(mask)
+foreign import clear_
+  """function clear_(mask)
    {return function()
     {window.gl.clear(mask);};};"""
     :: forall eff. GLbitfield -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import clearColor
-  """function clearColor(red)
+foreign import clearColor_
+  """function clearColor_(red)
    {return function(green)
     {return function(blue)
      {return function(alpha)
@@ -1131,20 +1131,20 @@ foreign import clearColor
                    GLclampf
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import clearDepth
-  """function clearDepth(depth)
+foreign import clearDepth_
+  """function clearDepth_(depth)
    {return function()
     {window.gl.clearDepth(depth);};};"""
     :: forall eff. GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import clearStencil
-  """function clearStencil(s)
+foreign import clearStencil_
+  """function clearStencil_(s)
    {return function()
     {window.gl.clearStencil(s);};};"""
     :: forall eff. GLint -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import colorMask
-  """function colorMask(red)
+foreign import colorMask_
+  """function colorMask_(red)
    {return function(green)
     {return function(blue)
      {return function(alpha)
@@ -1156,14 +1156,14 @@ foreign import colorMask
                    GLboolean
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import compileShader
-  """function compileShader(shader)
+foreign import compileShader_
+  """function compileShader_(shader)
    {return function()
     {window.gl.compileShader(shader);};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import copyTexImage2D
-  """function copyTexImage2D(target)
+foreign import copyTexImage2D_
+  """function copyTexImage2D_(target)
    {return function(level)
     {return function(internalformat)
      {return function(x)
@@ -1183,8 +1183,8 @@ foreign import copyTexImage2D
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import copyTexSubImage2D
-  """function copyTexSubImage2D(target)
+foreign import copyTexSubImage2D_
+  """function copyTexSubImage2D_(target)
    {return function(level)
     {return function(xoffset)
      {return function(yoffset)
@@ -1204,40 +1204,40 @@ foreign import copyTexSubImage2D
                    GLsizei
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import createBuffer
-  """function createBuffer()
+foreign import createBuffer_
+  """function createBuffer_()
    {var res = window.gl.createBuffer();
     if (res === undefined){
       throw "Undefined in  createBuffer"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLBuffer)
 
-foreign import createFramebuffer
-  """function createFramebuffer()
+foreign import createFramebuffer_
+  """function createFramebuffer_()
    {var res = window.gl.createFramebuffer();
     if (res === undefined){
       throw "Undefined in  createFramebuffer"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLFramebuffer)
 
-foreign import createProgram
-  """function createProgram()
+foreign import createProgram_
+  """function createProgram_()
    {var res = window.gl.createProgram();
     if (res === undefined){
       throw "Undefined in  createProgram"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLProgram)
 
-foreign import createRenderbuffer
-  """function createRenderbuffer()
+foreign import createRenderbuffer_
+  """function createRenderbuffer_()
    {var res = window.gl.createRenderbuffer();
     if (res === undefined){
       throw "Undefined in  createRenderbuffer"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLRenderbuffer)
 
-foreign import createShader
-  """function createShader(type)
+foreign import createShader_
+  """function createShader_(type)
    {return function()
     {var res = window.gl.createShader(type);
      if (res === undefined){
@@ -1245,72 +1245,72 @@ foreign import createShader
      return res;};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) WebGLShader)
 
-foreign import createTexture
-  """function createTexture()
+foreign import createTexture_
+  """function createTexture_()
    {var res = window.gl.createTexture();
     if (res === undefined){
       throw "Undefined in  createTexture"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) WebGLTexture)
 
-foreign import cullFace
-  """function cullFace(mode)
+foreign import cullFace_
+  """function cullFace_(mode)
    {return function()
     {window.gl.cullFace(mode);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import deleteBuffer
-  """function deleteBuffer(buffer)
+foreign import deleteBuffer_
+  """function deleteBuffer_(buffer)
    {return function()
     {window.gl.deleteBuffer(buffer);};};"""
     :: forall eff. WebGLBuffer -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import deleteFramebuffer
-  """function deleteFramebuffer(framebuffer)
+foreign import deleteFramebuffer_
+  """function deleteFramebuffer_(framebuffer)
    {return function()
     {window.gl.deleteFramebuffer(framebuffer);};};"""
     :: forall eff. WebGLFramebuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import deleteProgram
-  """function deleteProgram(program)
+foreign import deleteProgram_
+  """function deleteProgram_(program)
    {return function()
     {window.gl.deleteProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import deleteRenderbuffer
-  """function deleteRenderbuffer(renderbuffer)
+foreign import deleteRenderbuffer_
+  """function deleteRenderbuffer_(renderbuffer)
    {return function()
     {window.gl.deleteRenderbuffer(renderbuffer);};};"""
     :: forall eff. WebGLRenderbuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import deleteShader
-  """function deleteShader(shader)
+foreign import deleteShader_
+  """function deleteShader_(shader)
    {return function()
     {window.gl.deleteShader(shader);};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import deleteTexture
-  """function deleteTexture(texture)
+foreign import deleteTexture_
+  """function deleteTexture_(texture)
    {return function()
     {window.gl.deleteTexture(texture);};};"""
     :: forall eff. WebGLTexture -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import depthFunc
-  """function depthFunc(func)
+foreign import depthFunc_
+  """function depthFunc_(func)
    {return function()
     {window.gl.depthFunc(func);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import depthMask
-  """function depthMask(flag)
+foreign import depthMask_
+  """function depthMask_(flag)
    {return function()
     {window.gl.depthMask(flag);};};"""
     :: forall eff. GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import depthRange
-  """function depthRange(zNear)
+foreign import depthRange_
+  """function depthRange_(zNear)
    {return function(zFar)
     {return function()
      {window.gl.depthRange(zNear,zFar);};};};"""
@@ -1318,8 +1318,8 @@ foreign import depthRange
                    GLclampf
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import detachShader
-  """function detachShader(program)
+foreign import detachShader_
+  """function detachShader_(program)
    {return function(shader)
     {return function()
      {window.gl.detachShader(program,shader);};};};"""
@@ -1327,20 +1327,20 @@ foreign import detachShader
                    WebGLShader
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import disable
-  """function disable(cap)
+foreign import disable_
+  """function disable_(cap)
    {return function()
     {window.gl.disable(cap);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import disableVertexAttribArray
-  """function disableVertexAttribArray(index)
+foreign import disableVertexAttribArray_
+  """function disableVertexAttribArray_(index)
    {return function()
     {window.gl.disableVertexAttribArray(index);};};"""
     :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import drawArrays
-  """function drawArrays(mode)
+foreign import drawArrays_
+  """function drawArrays_(mode)
    {return function(first)
     {return function(count)
      {return function()
@@ -1350,8 +1350,8 @@ foreign import drawArrays
                    GLsizei
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import drawElements
-  """function drawElements(mode)
+foreign import drawElements_
+  """function drawElements_(mode)
    {return function(count)
     {return function(type)
      {return function(offset)
@@ -1363,30 +1363,30 @@ foreign import drawElements
                    GLintptr
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import enable
-  """function enable(cap)
+foreign import enable_
+  """function enable_(cap)
    {return function()
     {window.gl.enable(cap);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import enableVertexAttribArray
-  """function enableVertexAttribArray(index)
+foreign import enableVertexAttribArray_
+  """function enableVertexAttribArray_(index)
    {return function()
     {window.gl.enableVertexAttribArray(index);};};"""
     :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import finish
-  """function finish()
+foreign import finish_
+  """function finish_()
    {window.gl.finish();};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import flush
-  """function flush()
+foreign import flush_
+  """function flush_()
    {window.gl.flush();};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import framebufferRenderbuffer
-  """function framebufferRenderbuffer(target)
+foreign import framebufferRenderbuffer_
+  """function framebufferRenderbuffer_(target)
    {return function(attachment)
     {return function(renderbuffertarget)
      {return function(renderbuffer)
@@ -1398,8 +1398,8 @@ foreign import framebufferRenderbuffer
                    WebGLRenderbuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import framebufferTexture2D
-  """function framebufferTexture2D(target)
+foreign import framebufferTexture2D_
+  """function framebufferTexture2D_(target)
    {return function(attachment)
     {return function(textarget)
      {return function(texture)
@@ -1413,20 +1413,20 @@ foreign import framebufferTexture2D
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import frontFace
-  """function frontFace(mode)
+foreign import frontFace_
+  """function frontFace_(mode)
    {return function()
     {window.gl.frontFace(mode);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import generateMipmap
-  """function generateMipmap(target)
+foreign import generateMipmap_
+  """function generateMipmap_(target)
    {return function()
     {window.gl.generateMipmap(target);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import getActiveAttrib
-  """function getActiveAttrib(program)
+foreign import getActiveAttrib_
+  """function getActiveAttrib_(program)
    {return function(index)
     {return function()
      {var res = window.gl.getActiveAttrib(program,index);
@@ -1437,8 +1437,8 @@ foreign import getActiveAttrib
                    GLuint
                    -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
 
-foreign import getActiveUniform
-  """function getActiveUniform(program)
+foreign import getActiveUniform_
+  """function getActiveUniform_(program)
    {return function(index)
     {return function()
      {var res = window.gl.getActiveUniform(program,index);
@@ -1449,8 +1449,8 @@ foreign import getActiveUniform
                    GLuint
                    -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
 
-foreign import getAttachedShaders
-  """function getAttachedShaders(program)
+foreign import getAttachedShaders_
+  """function getAttachedShaders_(program)
    {return function()
     {var res = window.gl.getAttachedShaders(program);
      if (res === undefined){
@@ -1459,8 +1459,8 @@ foreign import getAttachedShaders
     :: forall eff. WebGLProgram
                    -> (Eff (webgl :: WebGl | eff) WebGLShader)
 
-foreign import getAttribLocation
-  """function getAttribLocation(program)
+foreign import getAttribLocation_
+  """function getAttribLocation_(program)
    {return function(name)
     {return function()
      {var res = window.gl.getAttribLocation(program,name);
@@ -1471,8 +1471,8 @@ foreign import getAttribLocation
                    String
                    -> (Eff (webgl :: WebGl | eff) GLint)
 
-foreign import getParameter
-  """function getParameter(pname)
+foreign import getParameter_
+  """function getParameter_(pname)
    {return function()
     {var res = window.gl.getParameter(pname);
      if (res === undefined){
@@ -1480,8 +1480,8 @@ foreign import getParameter
      return res;};};"""
     :: forall eff ret. GLenum -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getBufferParameter
-  """function getBufferParameter(target)
+foreign import getBufferParameter_
+  """function getBufferParameter_(target)
    {return function(pname)
     {return function()
      {var res = window.gl.getBufferParameter(target,pname);
@@ -1492,16 +1492,16 @@ foreign import getBufferParameter
                        GLenum
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getError
-  """function getError()
+foreign import getError_
+  """function getError_()
    {var res = window.gl.getError();
     if (res === undefined){
       throw "Undefined in  getError"};
     return res;};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) GLenum)
 
-foreign import getFramebufferAttachmentParameter
-  """function getFramebufferAttachmentParameter(target)
+foreign import getFramebufferAttachmentParameter_
+  """function getFramebufferAttachmentParameter_(target)
    {return function(attachment)
     {return function(pname)
      {return function()
@@ -1514,8 +1514,8 @@ foreign import getFramebufferAttachmentParameter
                        GLenum
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getProgramParameter
-  """function getProgramParameter(program)
+foreign import getProgramParameter_
+  """function getProgramParameter_(program)
    {return function(pname)
     {return function()
      {var res = window.gl.getProgramParameter(program,pname);
@@ -1526,8 +1526,8 @@ foreign import getProgramParameter
                        GLenum
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getProgramInfoLog
-  """function getProgramInfoLog(program)
+foreign import getProgramInfoLog_
+  """function getProgramInfoLog_(program)
    {return function()
     {var res = window.gl.getProgramInfoLog(program);
      if (res === undefined){
@@ -1535,8 +1535,8 @@ foreign import getProgramInfoLog
      return res;};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) String)
 
-foreign import getRenderbufferParameter
-  """function getRenderbufferParameter(target)
+foreign import getRenderbufferParameter_
+  """function getRenderbufferParameter_(target)
    {return function(pname)
     {return function()
      {var res = window.gl.getRenderbufferParameter(target,pname);
@@ -1547,8 +1547,8 @@ foreign import getRenderbufferParameter
                        GLenum
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getShaderParameter
-  """function getShaderParameter(shader)
+foreign import getShaderParameter_
+  """function getShaderParameter_(shader)
    {return function(pname)
     {return function()
      {var res = window.gl.getShaderParameter(shader,pname);
@@ -1559,8 +1559,8 @@ foreign import getShaderParameter
                        GLenum
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getShaderInfoLog
-  """function getShaderInfoLog(shader)
+foreign import getShaderInfoLog_
+  """function getShaderInfoLog_(shader)
    {return function()
     {var res = window.gl.getShaderInfoLog(shader);
      if (res === undefined){
@@ -1568,8 +1568,8 @@ foreign import getShaderInfoLog
      return res;};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
 
-foreign import getShaderSource
-  """function getShaderSource(shader)
+foreign import getShaderSource_
+  """function getShaderSource_(shader)
    {return function()
     {var res = window.gl.getShaderSource(shader);
      if (res === undefined){
@@ -1577,8 +1577,8 @@ foreign import getShaderSource
      return res;};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
 
-foreign import getTexParameter
-  """function getTexParameter(target)
+foreign import getTexParameter_
+  """function getTexParameter_(target)
    {return function(pname)
     {return function()
      {var res = window.gl.getTexParameter(target,pname);
@@ -1589,8 +1589,8 @@ foreign import getTexParameter
                        GLenum
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getUniform
-  """function getUniform(program)
+foreign import getUniform_
+  """function getUniform_(program)
    {return function(location)
     {return function()
      {var res = window.gl.getUniform(program,location);
@@ -1601,8 +1601,8 @@ foreign import getUniform
                        WebGLUniformLocation
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getUniformLocation
-  """function getUniformLocation(program)
+foreign import getUniformLocation_
+  """function getUniformLocation_(program)
    {return function(name)
     {return function()
      {var res = window.gl.getUniformLocation(program,name);
@@ -1613,8 +1613,8 @@ foreign import getUniformLocation
                    String
                    -> (Eff (webgl :: WebGl | eff) WebGLUniformLocation)
 
-foreign import getVertexAttrib
-  """function getVertexAttrib(index)
+foreign import getVertexAttrib_
+  """function getVertexAttrib_(index)
    {return function(pname)
     {return function()
      {var res = window.gl.getVertexAttrib(index,pname);
@@ -1625,8 +1625,8 @@ foreign import getVertexAttrib
                        GLenum
                        -> (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getVertexAttribOffset
-  """function getVertexAttribOffset(index)
+foreign import getVertexAttribOffset_
+  """function getVertexAttribOffset_(index)
    {return function(pname)
     {return function()
      {var res = window.gl.getVertexAttribOffset(index,pname);
@@ -1637,15 +1637,15 @@ foreign import getVertexAttribOffset
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) GLsizeiptr)
 
-foreign import hint
-  """function hint(target)
+foreign import hint_
+  """function hint_(target)
    {return function(mode)
     {return function()
      {window.gl.hint(target,mode);};};};"""
     :: forall eff. GLenum-> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import isBuffer
-  """function isBuffer(buffer)
+foreign import isBuffer_
+  """function isBuffer_(buffer)
    {return function()
     {var res = window.gl.isBuffer(buffer);
      if (res === undefined){
@@ -1654,8 +1654,8 @@ foreign import isBuffer
     :: forall eff. WebGLBuffer
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
-foreign import isEnabled
-  """function isEnabled(cap)
+foreign import isEnabled_
+  """function isEnabled_(cap)
    {return function()
     {var res = window.gl.isEnabled(cap);
      if (res === undefined){
@@ -1663,8 +1663,8 @@ foreign import isEnabled
      return res;};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLboolean)
 
-foreign import isFramebuffer
-  """function isFramebuffer(framebuffer)
+foreign import isFramebuffer_
+  """function isFramebuffer_(framebuffer)
    {return function()
     {var res = window.gl.isFramebuffer(framebuffer);
      if (res === undefined){
@@ -1673,8 +1673,8 @@ foreign import isFramebuffer
     :: forall eff. WebGLFramebuffer
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
-foreign import isProgram
-  """function isProgram(program)
+foreign import isProgram_
+  """function isProgram_(program)
    {return function()
     {var res = window.gl.isProgram(program);
      if (res === undefined){
@@ -1683,8 +1683,8 @@ foreign import isProgram
     :: forall eff. WebGLProgram
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
-foreign import isRenderbuffer
-  """function isRenderbuffer(renderbuffer)
+foreign import isRenderbuffer_
+  """function isRenderbuffer_(renderbuffer)
    {return function()
     {var res = window.gl.isRenderbuffer(renderbuffer);
      if (res === undefined){
@@ -1693,8 +1693,8 @@ foreign import isRenderbuffer
     :: forall eff. WebGLRenderbuffer
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
-foreign import isShader
-  """function isShader(shader)
+foreign import isShader_
+  """function isShader_(shader)
    {return function()
     {var res = window.gl.isShader(shader);
      if (res === undefined){
@@ -1703,8 +1703,8 @@ foreign import isShader
     :: forall eff. WebGLShader
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
-foreign import isTexture
-  """function isTexture(texture)
+foreign import isTexture_
+  """function isTexture_(texture)
    {return function()
     {var res = window.gl.isTexture(texture);
      if (res === undefined){
@@ -1713,27 +1713,27 @@ foreign import isTexture
     :: forall eff. WebGLTexture
                    -> (Eff (webgl :: WebGl | eff) GLboolean)
 
-foreign import lineWidth
-  """function lineWidth(width)
+foreign import lineWidth_
+  """function lineWidth_(width)
    {return function()
     {window.gl.lineWidth(width);};};"""
     :: forall eff. GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import linkProgram
-  """function linkProgram(program)
+foreign import linkProgram_
+  """function linkProgram_(program)
    {return function()
     {window.gl.linkProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import pixelStorei
-  """function pixelStorei(pname)
+foreign import pixelStorei_
+  """function pixelStorei_(pname)
    {return function(param)
     {return function()
      {window.gl.pixelStorei(pname,param);};};};"""
     :: forall eff. GLenum-> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import polygonOffset
-  """function polygonOffset(factor)
+foreign import polygonOffset_
+  """function polygonOffset_(factor)
    {return function(units)
     {return function()
      {window.gl.polygonOffset(factor,units);};};};"""
@@ -1741,8 +1741,8 @@ foreign import polygonOffset
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import readPixels
-  """function readPixels(x)
+foreign import readPixels_
+  """function readPixels_(x)
    {return function(y)
     {return function(width)
      {return function(height)
@@ -1760,8 +1760,8 @@ foreign import readPixels
                    ArrayBufferView
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import renderbufferStorage
-  """function renderbufferStorage(target)
+foreign import renderbufferStorage_
+  """function renderbufferStorage_(target)
    {return function(internalformat)
     {return function(width)
      {return function(height)
@@ -1773,8 +1773,8 @@ foreign import renderbufferStorage
                    GLsizei
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import sampleCoverage
-  """function sampleCoverage(value)
+foreign import sampleCoverage_
+  """function sampleCoverage_(value)
    {return function(invert)
     {return function()
      {window.gl.sampleCoverage(value,invert);};};};"""
@@ -1782,8 +1782,8 @@ foreign import sampleCoverage
                    GLboolean
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import scissor
-  """function scissor(x)
+foreign import scissor_
+  """function scissor_(x)
    {return function(y)
     {return function(width)
      {return function(height)
@@ -1795,8 +1795,8 @@ foreign import scissor
                    GLsizei
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import shaderSource
-  """function shaderSource(shader)
+foreign import shaderSource_
+  """function shaderSource_(shader)
    {return function(source)
     {return function()
      {window.gl.shaderSource(shader,source);};};};"""
@@ -1804,8 +1804,8 @@ foreign import shaderSource
                    String
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilFunc
-  """function stencilFunc(func)
+foreign import stencilFunc_
+  """function stencilFunc_(func)
    {return function(ref)
     {return function(mask)
      {return function()
@@ -1815,8 +1815,8 @@ foreign import stencilFunc
                    GLuint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilFuncSeparate
-  """function stencilFuncSeparate(face)
+foreign import stencilFuncSeparate_
+  """function stencilFuncSeparate_(face)
    {return function(func)
     {return function(ref)
      {return function(mask)
@@ -1828,21 +1828,21 @@ foreign import stencilFuncSeparate
                    GLuint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilMask
-  """function stencilMask(mask)
+foreign import stencilMask_
+  """function stencilMask_(mask)
    {return function()
     {window.gl.stencilMask(mask);};};"""
     :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilMaskSeparate
-  """function stencilMaskSeparate(face)
+foreign import stencilMaskSeparate_
+  """function stencilMaskSeparate_(face)
    {return function(mask)
     {return function()
      {window.gl.stencilMaskSeparate(face,mask);};};};"""
     :: forall eff. GLenum-> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilOp
-  """function stencilOp(fail)
+foreign import stencilOp_
+  """function stencilOp_(fail)
    {return function(zfail)
     {return function(zpass)
      {return function()
@@ -1852,8 +1852,8 @@ foreign import stencilOp
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilOpSeparate
-  """function stencilOpSeparate(face)
+foreign import stencilOpSeparate_
+  """function stencilOpSeparate_(face)
    {return function(fail)
     {return function(zfail)
      {return function(zpass)
@@ -1865,8 +1865,8 @@ foreign import stencilOpSeparate
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texImage2D
-  """function texImage2D(target)
+foreign import texImage2D_
+  """function texImage2D_(target)
    {return function(level)
     {return function(internalformat)
      {return function(width)
@@ -1888,8 +1888,8 @@ foreign import texImage2D
                    ArrayBufferView
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texParameterf
-  """function texParameterf(target)
+foreign import texParameterf_
+  """function texParameterf_(target)
    {return function(pname)
     {return function(param)
      {return function()
@@ -1899,8 +1899,8 @@ foreign import texParameterf
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texParameteri
-  """function texParameteri(target)
+foreign import texParameteri_
+  """function texParameteri_(target)
    {return function(pname)
     {return function(param)
      {return function()
@@ -1910,8 +1910,8 @@ foreign import texParameteri
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texSubImage2D
-  """function texSubImage2D(target)
+foreign import texSubImage2D_
+  """function texSubImage2D_(target)
    {return function(level)
     {return function(xoffset)
      {return function(yoffset)
@@ -1933,8 +1933,8 @@ foreign import texSubImage2D
                    ArrayBufferView
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1f
-  """function uniform1f(location)
+foreign import uniform1f_
+  """function uniform1f_(location)
    {return function(x)
     {return function()
      {window.gl.uniform1f(location,x);};};};"""
@@ -1942,8 +1942,8 @@ foreign import uniform1f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1fv
-  """function uniform1fv(location)
+foreign import uniform1fv_
+  """function uniform1fv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform1fv(location,v);};};};"""
@@ -1951,8 +1951,8 @@ foreign import uniform1fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1i
-  """function uniform1i(location)
+foreign import uniform1i_
+  """function uniform1i_(location)
    {return function(x)
     {return function()
      {window.gl.uniform1i(location,x);};};};"""
@@ -1960,8 +1960,8 @@ foreign import uniform1i
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1iv
-  """function uniform1iv(location)
+foreign import uniform1iv_
+  """function uniform1iv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform1iv(location,v);};};};"""
@@ -1969,8 +1969,8 @@ foreign import uniform1iv
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2f
-  """function uniform2f(location)
+foreign import uniform2f_
+  """function uniform2f_(location)
    {return function(x)
     {return function(y)
      {return function()
@@ -1980,8 +1980,8 @@ foreign import uniform2f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2fv
-  """function uniform2fv(location)
+foreign import uniform2fv_
+  """function uniform2fv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform2fv(location,v);};};};"""
@@ -1989,8 +1989,8 @@ foreign import uniform2fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2i
-  """function uniform2i(location)
+foreign import uniform2i_
+  """function uniform2i_(location)
    {return function(x)
     {return function(y)
      {return function()
@@ -2000,8 +2000,8 @@ foreign import uniform2i
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2iv
-  """function uniform2iv(location)
+foreign import uniform2iv_
+  """function uniform2iv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform2iv(location,v);};};};"""
@@ -2009,8 +2009,8 @@ foreign import uniform2iv
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3f
-  """function uniform3f(location)
+foreign import uniform3f_
+  """function uniform3f_(location)
    {return function(x)
     {return function(y)
      {return function(z)
@@ -2022,8 +2022,8 @@ foreign import uniform3f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3fv
-  """function uniform3fv(location)
+foreign import uniform3fv_
+  """function uniform3fv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform3fv(location,v);};};};"""
@@ -2031,8 +2031,8 @@ foreign import uniform3fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3i
-  """function uniform3i(location)
+foreign import uniform3i_
+  """function uniform3i_(location)
    {return function(x)
     {return function(y)
      {return function(z)
@@ -2044,8 +2044,8 @@ foreign import uniform3i
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3iv
-  """function uniform3iv(location)
+foreign import uniform3iv_
+  """function uniform3iv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform3iv(location,v);};};};"""
@@ -2053,8 +2053,8 @@ foreign import uniform3iv
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4f
-  """function uniform4f(location)
+foreign import uniform4f_
+  """function uniform4f_(location)
    {return function(x)
     {return function(y)
      {return function(z)
@@ -2068,8 +2068,8 @@ foreign import uniform4f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4fv
-  """function uniform4fv(location)
+foreign import uniform4fv_
+  """function uniform4fv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform4fv(location,v);};};};"""
@@ -2077,8 +2077,8 @@ foreign import uniform4fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4i
-  """function uniform4i(location)
+foreign import uniform4i_
+  """function uniform4i_(location)
    {return function(x)
     {return function(y)
      {return function(z)
@@ -2092,8 +2092,8 @@ foreign import uniform4i
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4iv
-  """function uniform4iv(location)
+foreign import uniform4iv_
+  """function uniform4iv_(location)
    {return function(v)
     {return function()
      {window.gl.uniform4iv(location,v);};};};"""
@@ -2101,8 +2101,8 @@ foreign import uniform4iv
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniformMatrix2fv
-  """function uniformMatrix2fv(location)
+foreign import uniformMatrix2fv_
+  """function uniformMatrix2fv_(location)
    {return function(transpose)
     {return function(value)
      {return function()
@@ -2112,8 +2112,8 @@ foreign import uniformMatrix2fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniformMatrix3fv
-  """function uniformMatrix3fv(location)
+foreign import uniformMatrix3fv_
+  """function uniformMatrix3fv_(location)
    {return function(transpose)
     {return function(value)
      {return function()
@@ -2123,8 +2123,8 @@ foreign import uniformMatrix3fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniformMatrix4fv
-  """function uniformMatrix4fv(location)
+foreign import uniformMatrix4fv_
+  """function uniformMatrix4fv_(location)
    {return function(transpose)
     {return function(value)
      {return function()
@@ -2134,20 +2134,20 @@ foreign import uniformMatrix4fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import useProgram
-  """function useProgram(program)
+foreign import useProgram_
+  """function useProgram_(program)
    {return function()
     {window.gl.useProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import validateProgram
-  """function validateProgram(program)
+foreign import validateProgram_
+  """function validateProgram_(program)
    {return function()
     {window.gl.validateProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib1f
-  """function vertexAttrib1f(indx)
+foreign import vertexAttrib1f_
+  """function vertexAttrib1f_(indx)
    {return function(x)
     {return function()
      {window.gl.vertexAttrib1f(indx,x);};};};"""
@@ -2155,8 +2155,8 @@ foreign import vertexAttrib1f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib1fv
-  """function vertexAttrib1fv(indx)
+foreign import vertexAttrib1fv_
+  """function vertexAttrib1fv_(indx)
    {return function(values)
     {return function()
      {window.gl.vertexAttrib1fv(indx,values);};};};"""
@@ -2164,8 +2164,8 @@ foreign import vertexAttrib1fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib2f
-  """function vertexAttrib2f(indx)
+foreign import vertexAttrib2f_
+  """function vertexAttrib2f_(indx)
    {return function(x)
     {return function(y)
      {return function()
@@ -2175,8 +2175,8 @@ foreign import vertexAttrib2f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib2fv
-  """function vertexAttrib2fv(indx)
+foreign import vertexAttrib2fv_
+  """function vertexAttrib2fv_(indx)
    {return function(values)
     {return function()
      {window.gl.vertexAttrib2fv(indx,values);};};};"""
@@ -2184,8 +2184,8 @@ foreign import vertexAttrib2fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib3f
-  """function vertexAttrib3f(indx)
+foreign import vertexAttrib3f_
+  """function vertexAttrib3f_(indx)
    {return function(x)
     {return function(y)
      {return function(z)
@@ -2197,8 +2197,8 @@ foreign import vertexAttrib3f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib3fv
-  """function vertexAttrib3fv(indx)
+foreign import vertexAttrib3fv_
+  """function vertexAttrib3fv_(indx)
    {return function(values)
     {return function()
      {window.gl.vertexAttrib3fv(indx,values);};};};"""
@@ -2206,8 +2206,8 @@ foreign import vertexAttrib3fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib4f
-  """function vertexAttrib4f(indx)
+foreign import vertexAttrib4f_
+  """function vertexAttrib4f_(indx)
    {return function(x)
     {return function(y)
      {return function(z)
@@ -2221,8 +2221,8 @@ foreign import vertexAttrib4f
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib4fv
-  """function vertexAttrib4fv(indx)
+foreign import vertexAttrib4fv_
+  """function vertexAttrib4fv_(indx)
    {return function(values)
     {return function()
      {window.gl.vertexAttrib4fv(indx,values);};};};"""
@@ -2230,8 +2230,8 @@ foreign import vertexAttrib4fv
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttribPointer
-  """function vertexAttribPointer(indx)
+foreign import vertexAttribPointer_
+  """function vertexAttribPointer_(indx)
    {return function(size)
     {return function(type)
      {return function(normalized)
@@ -2247,8 +2247,8 @@ foreign import vertexAttribPointer
                    GLintptr
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import viewport
-  """function viewport(x)
+foreign import viewport_
+  """function viewport_(x)
    {return function(y)
     {return function(width)
      {return function(height)

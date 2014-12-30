@@ -2,7 +2,6 @@ module Main where
 
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
-import Graphics.WebGLRaw
 import qualified Data.Matrix4 as M4
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
@@ -44,21 +43,21 @@ vshaderSource =
     }
 """
 
-type State eff = {
-                    context :: WebGLContext eff,
-                    shaderProgram :: WebGLProgram,
-                    aVertexPosition :: VecBind,
-                    aVertexColor  :: VecBind,
-                    uPMatrix :: MatBind,
-                    uMVMatrix :: MatBind,
-                    buf1 :: Buffer T.Float32,
-                    buf1Colors :: Buffer T.Float32,
-                    buf2 :: Buffer T.Float32,
-                    buf2Colors :: Buffer T.Float32,
-                    lastTime :: Maybe Number,
-                    rTri :: Number,
-                    rSquare :: Number
-                }
+type State = {
+                context :: WebGLContext,
+                shaderProgram :: WebGLProg,
+                aVertexPosition :: VecBind,
+                aVertexColor  :: VecBind,
+                uPMatrix :: MatBind,
+                uMVMatrix :: MatBind,
+                buf1 :: Buffer T.Float32,
+                buf1Colors :: Buffer T.Float32,
+                buf2 :: Buffer T.Float32,
+                buf2Colors :: Buffer T.Float32,
+                lastTime :: Maybe Number,
+                rTri :: Number,
+                rSquare :: Number
+            }
 
 main :: Eff (trace :: Trace, alert :: Alert, now :: Now) Unit
 main =
@@ -91,7 +90,7 @@ main =
                              0.5, 0.5, 1.0, 1.0,
                              0.5, 0.5, 1.0, 1.0]
           clearColor 0.0 0.0 0.0 1.0
-          enable _DEPTH_TEST
+          enable DEPTH_TEST
           let state = {
                         context : context,
                         shaderProgram : shaderProgram,
@@ -109,7 +108,7 @@ main =
                       }
           tick state
 
-tick :: forall eff. State (trace :: Trace, now :: Now |eff)  ->  EffWebGL (trace :: Trace, now :: Now |eff) Unit
+tick :: forall eff. State ->  EffWebGL (trace :: Trace, now :: Now |eff) Unit
 tick state = do
 --  trace ("tick: " ++ show state.lastTime)
   drawScene state
@@ -117,7 +116,7 @@ tick state = do
   return unit
   requestAnimationFrame (tick state')
 
-animate ::  forall eff. State (now :: Now | eff) -> EffWebGL (now :: Now |eff) (State (now :: Now |eff))
+animate ::  forall eff. State -> EffWebGL (now :: Now |eff) State
 animate state = do
   timeNow <- liftM1 toEpochMilliseconds now
   case state.lastTime of
@@ -128,12 +127,12 @@ animate state = do
                        rTri = state.rTri + (90 * elapsed) / 1000.0,
                        rSquare = state.rSquare + (75 * elapsed) / 1000.0}
 
-drawScene :: forall eff. State (now :: Now |eff)  -> EffWebGL (now :: Now |eff) Unit
+drawScene :: forall eff. State  -> EffWebGL (now :: Now |eff) Unit
 drawScene s = do
-      canvasWidth <- s.context.getCanvasWidth
-      canvasHeight <- s.context.getCanvasHeight
+      canvasWidth <- getCanvasWidth s.context
+      canvasHeight <- getCanvasHeight s.context
       viewport 0 0 canvasWidth canvasHeight
-      clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
+      clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
       let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
       setMatrix s.uPMatrix pMatrix
@@ -144,7 +143,7 @@ drawScene s = do
       setMatrix s.uMVMatrix mvMatrix
 
       bindPointBuf s.buf1Colors s.aVertexColor
-      drawArr s.buf1 s.aVertexPosition _TRIANGLES
+      drawArr TRIANGLES s.buf1 s.aVertexPosition
 
       let mvMatrix =
           M4.rotate (degToRad s.rSquare) (V3.vec3' [1, 0, 0])
@@ -152,7 +151,7 @@ drawScene s = do
       setMatrix s.uMVMatrix mvMatrix
 
       bindPointBuf s.buf2Colors s.aVertexColor
-      drawArr s.buf2 s.aVertexPosition _TRIANGLE_STRIP
+      drawArr TRIANGLE_STRIP s.buf2 s.aVertexPosition
 
 -- | Convert from radians to degrees.
 radToDeg :: Number -> Number

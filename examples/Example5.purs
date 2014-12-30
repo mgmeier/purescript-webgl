@@ -1,11 +1,10 @@
 -- needs todays compiler fixes, to allow underscores in constructor names.
 -- need to start chrome with --allow-file-access-from-files to be able to load local files
 -- need line 7?:   let stupid = Mat3 "stupid", cause otherwise Mat3 is unknown
--- or need to add Graphics.WebGL as options/modules to gruntfile. 
+-- or need to add Graphics.WebGL as options/modules to gruntfile.
 module Main where
 
 import Control.Monad.Eff.WebGL
-import Graphics.WebGLRaw
 import Graphics.WebGL
 import Graphics.WebGLTexture
 import qualified Data.Matrix4 as M4
@@ -54,24 +53,24 @@ vshaderSource =
     }
 """
 
-type State eff = {
-                    context :: WebGLContext eff,
-                    shaderProgram :: WebGLProgram,
+type State = {
+                context :: WebGLContext,
+                shaderProgram :: WebGLProg,
 
-                    aVertexPosition :: VecBind,
-                    aTextureCoord :: VecBind,
-                    uPMatrix :: MatBind,
-                    uMVMatrix :: MatBind,
-                    uSampler :: MatBind,
+                aVertexPosition :: VecBind,
+                aTextureCoord :: VecBind,
+                uPMatrix :: MatBind,
+                uMVMatrix :: MatBind,
+                uSampler :: MatBind,
 
-                    cubeVertices :: Buffer T.Float32,
-                    textureCoords :: Buffer T.Float32,
-                    cubeVertexIndices :: Buffer T.Uint16,
-                    texture :: WebGLTexture,
+                cubeVertices :: Buffer T.Float32,
+                textureCoords :: Buffer T.Float32,
+                cubeVertexIndices :: Buffer T.Uint16,
+                texture :: WebGLTex,
 
-                    lastTime :: Maybe Number,
-                    rot :: Number
-                }
+                lastTime :: Maybe Number,
+                rot :: Number
+            }
 
 main :: Eff (trace :: Trace, alert :: Alert, now :: Now) Unit
 main = do
@@ -161,7 +160,7 @@ main = do
                             1.0, 1.0,
                             0.0, 1.0
                           ]
-          cubeVertexIndices <- makeBuffer _ELEMENT_ARRAY_BUFFER T.asUint16Array
+          cubeVertexIndices <- makeBuffer ELEMENT_ARRAY_BUFFER T.asUint16Array
                           [
                             0, 1, 2,      0, 2, 3,    -- Front face
                             4, 5, 6,      4, 6, 7,    -- Back face
@@ -171,7 +170,7 @@ main = do
                             20, 21, 22,   20, 22, 23  -- Left face
                           ]
           clearColor 0.0 0.0 0.0 1.0
-          enable _DEPTH_TEST
+          enable DEPTH_TEST
           textureFor "test.png" \texture ->
             tick {
                   context : context,
@@ -192,14 +191,14 @@ main = do
                 }
 
 
-tick :: forall eff. State (trace :: Trace, now :: Now |eff)  ->  EffWebGL (trace :: Trace, now :: Now |eff) Unit
+tick :: forall eff. State  ->  EffWebGL (trace :: Trace, now :: Now |eff) Unit
 tick state = do
 --  trace ("tick: " ++ show state.lastTime)
   drawScene state
   state' <- animate state
   requestAnimationFrame (tick state')
 
-animate ::  forall eff. State (now :: Now | eff) -> EffWebGL (now :: Now |eff) (State (now :: Now |eff))
+animate ::  forall eff. State -> EffWebGL (now :: Now |eff) State
 animate state = do
   timeNow <- liftM1 toEpochMilliseconds now
   case state.lastTime of
@@ -210,12 +209,12 @@ animate state = do
                        rot = state.rot + (90 * elapsed) / 1000.0
                        }
 
-drawScene :: forall eff. State (now :: Now |eff)  -> EffWebGL (now :: Now |eff) Unit
+drawScene :: forall eff. State -> EffWebGL (now :: Now |eff) Unit
 drawScene s = do
-      canvasWidth <- s.context.getCanvasWidth
-      canvasHeight <- s.context.getCanvasHeight
+      canvasWidth <- getCanvasWidth s.context
+      canvasHeight <- getCanvasHeight s.context
       viewport 0 0 canvasWidth canvasHeight
-      clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
+      clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
       let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
       setMatrix s.uPMatrix pMatrix
@@ -232,12 +231,12 @@ drawScene s = do
       bindPointBuf s.cubeVertices s.aVertexPosition
       bindPointBuf s.textureCoords s.aTextureCoord
 
-      activeTexture _TEXTURE0
-      bindTexture _TEXTURE_2D s.texture
+      activeTexture 0
+      bindTexture TEXTURE_2D s.texture
 
       uniform1i s.uSampler.location 0
       bindBuf s.cubeVertexIndices
-      drawElements _TRIANGLES s.cubeVertexIndices.bufferSize _UNSIGNED_SHORT 0
+      drawElements TRIANGLES s.cubeVertexIndices.bufferSize
 
 -- | Convert from radians to degrees.
 radToDeg :: Number -> Number

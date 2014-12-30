@@ -3,7 +3,6 @@ module Main where
 
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
-import Graphics.WebGLRaw
 import qualified Data.Matrix4 as M4
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
@@ -46,12 +45,12 @@ main = runWebGL "glcanvas" (\s -> alert s)
                 (\s -> alert s)
       \ shaderProgram [aVertexPosition] [uPMatrix,uMVMatrix] -> do
         clearColor 0.0 0.0 0.0 1.0
-        enable _DEPTH_TEST
+        enable DEPTH_TEST
 
-        canvasWidth <- context.getCanvasWidth
-        canvasHeight <- context.getCanvasHeight
+        canvasWidth <- getCanvasWidth context
+        canvasHeight <- getCanvasHeight context
         viewport 0 0 canvasWidth canvasHeight
-        clear (_COLOR_BUFFER_BIT .|. _DEPTH_BUFFER_BIT)
+        clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
         let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
         setMatrix uPMatrix pMatrix
@@ -62,7 +61,7 @@ main = runWebGL "glcanvas" (\s -> alert s)
         buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
                            (-1.0), (-1.0),  0.0,
                             1.0, (-1.0),  0.0]
-        drawArr buf1 aVertexPosition _TRIANGLES
+        drawArr TRIANGLES buf1 aVertexPosition
 
         let mvMatrix' = M4.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
         setMatrix uMVMatrix mvMatrix'
@@ -71,6 +70,6 @@ main = runWebGL "glcanvas" (\s -> alert s)
                            (-1.0), 1.0,  0.0,
                             1.0, (-1.0),  0.0,
                            (-1.0), (-1.0),  0.0]
-        drawArr buf2 aVertexPosition _TRIANGLE_STRIP
+        drawArr TRIANGLE_STRIP buf2 aVertexPosition
 
         trace "WebGL completed"

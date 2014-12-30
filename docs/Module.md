@@ -326,12 +326,37 @@
 
     type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
 
+    data BufferTarget where
+      ARRAY_BUFFER :: BufferTarget
+      ELEMENT_ARRAY_BUFFER :: BufferTarget
+
+    data Capacity where
+      BLEND :: Capacity
+      DEPTH_TEST :: Capacity
+      CULL_FACE :: Capacity
+      POLYGON_OFFSET_FILL :: Capacity
+      SCISSOR_TEST :: Capacity
+
+    data Mask where
+      DEPTH_BUFFER_BIT :: Mask
+      STENCIL_BUFFER_BIT :: Mask
+      COLOR_BUFFER_BIT :: Mask
+
     type MatBind = { itemType :: Number, itemSize :: Number, location :: WebGLUniformLocation }
 
     data MatDescr where
       Mat2 :: String -> MatDescr
       Mat3 :: String -> MatDescr
       Mat4 :: String -> MatDescr
+
+    data Mode where
+      POINTS :: Mode
+      LINES :: Mode
+      LINE_STRIP :: Mode
+      LINE_LOOP :: Mode
+      TRIANGLES :: Mode
+      TRIANGLE_STRIP :: Mode
+      TRIANGLE_FAN :: Mode
 
     type VecBind = { itemType :: Number, itemSize :: Number, location :: GLint }
 
@@ -340,7 +365,10 @@
       Vec3 :: String -> VecDescr
       Vec4 :: String -> VecDescr
 
-    type WebGLContext eff = { getCanvasHeight :: Eff (webgl :: WebGl | eff) Number, getCanvasWidth :: Eff (webgl :: WebGl | eff) Number, canvasName :: String }
+    type WebGLContext = { canvasName :: String }
+
+    newtype WebGLProg where
+      WebGLProg :: WebGLProgram -> WebGLProg
 
 
 ### Values
@@ -349,21 +377,31 @@
 
     bindPointBuf :: forall a eff. Buffer a -> VecBind -> Eff (webgl :: WebGl | eff) Unit
 
-    drawArr :: forall a eff. Buffer a -> VecBind -> Number -> EffWebGL eff Unit
+    clear :: forall eff. [Mask] -> Eff (webgl :: WebGl | eff) Unit
 
-    makeBuffer :: forall a eff. Number -> ([Number] -> ArrayBuffer a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
+    drawArr :: forall a eff. Mode -> Buffer a -> VecBind -> EffWebGL eff Unit
+
+    drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit
+
+    enable :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Unit
+
+    getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+
+    getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+
+    makeBuffer :: forall a eff. BufferTarget -> ([Number] -> ArrayBuffer a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
 
     makeBufferSimple :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer Float32)
 
     requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
-    runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext eff -> EffWebGL eff a) -> Eff eff a
+    runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 
     setMatrix :: forall eff. MatBind -> M4.Mat4 -> EffWebGL eff Unit
 
     vertexPointer :: forall eff. VecBind -> EffWebGL eff Unit
 
-    withShaders :: forall a eff. String -> String -> [VecDescr] -> [MatDescr] -> (String -> EffWebGL eff a) -> (WebGLProgram -> [VecBind] -> [MatBind] -> EffWebGL eff a) -> EffWebGL eff a
+    withShaders :: forall a eff. String -> String -> [VecDescr] -> [MatDescr] -> (String -> EffWebGL eff a) -> (WebGLProg -> [VecBind] -> [MatBind] -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Graphics.WebGLRaw
@@ -1029,271 +1067,271 @@
 
     _ZERO :: Number
 
-    activeTexture :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    activeTexture_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    attachShader :: forall eff. WebGLProgram -> WebGLShader -> Eff (webgl :: WebGl | eff) Unit
+    attachShader_ :: forall eff. WebGLProgram -> WebGLShader -> Eff (webgl :: WebGl | eff) Unit
 
-    bindAttribLocation :: forall eff. WebGLProgram -> GLuint -> String -> Eff (webgl :: WebGl | eff) Unit
+    bindAttribLocation_ :: forall eff. WebGLProgram -> GLuint -> String -> Eff (webgl :: WebGl | eff) Unit
 
-    bindBuffer :: forall eff. GLenum -> WebGLBuffer -> Eff (webgl :: WebGl | eff) Unit
+    bindBuffer_ :: forall eff. GLenum -> WebGLBuffer -> Eff (webgl :: WebGl | eff) Unit
 
-    bindFramebuffer :: forall eff. GLenum -> WebGLFramebuffer -> Eff (webgl :: WebGl | eff) Unit
+    bindFramebuffer_ :: forall eff. GLenum -> WebGLFramebuffer -> Eff (webgl :: WebGl | eff) Unit
 
-    bindRenderbuffer :: forall eff. GLenum -> WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) Unit
+    bindRenderbuffer_ :: forall eff. GLenum -> WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) Unit
 
-    bindTexture :: forall eff. GLenum -> WebGLTexture -> Eff (webgl :: WebGl | eff) Unit
+    bindTexture_ :: forall eff. GLenum -> WebGLTexture -> Eff (webgl :: WebGl | eff) Unit
 
-    blendColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+    blendColor_ :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
 
-    blendEquation :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    blendEquationSeparate_ :: forall eff. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    blendEquationSeparate :: forall eff. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+    blendEquation_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    blendFunc :: forall eff. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+    blendFuncSeparate_ :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    blendFuncSeparate :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+    blendFunc_ :: forall eff. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    bufferData :: forall eff. GLenum -> ArrayBuffer Float32 -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+    bufferData_ :: forall eff. GLenum -> ArrayBuffer Float32 -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    bufferSubData :: forall eff. GLenum -> GLintptr -> ArrayBuffer Float32 -> Eff (webgl :: WebGl | eff) Unit
+    bufferSubData_ :: forall eff. GLenum -> GLintptr -> ArrayBuffer Float32 -> Eff (webgl :: WebGl | eff) Unit
 
-    checkFramebufferStatus :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLenum
+    checkFramebufferStatus_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLenum
 
-    clear :: forall eff. GLbitfield -> Eff (webgl :: WebGl | eff) Unit
+    clearColor_ :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
 
-    clearColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+    clearDepth_ :: forall eff. GLclampf -> Eff (webgl :: WebGl | eff) Unit
 
-    clearDepth :: forall eff. GLclampf -> Eff (webgl :: WebGl | eff) Unit
+    clearStencil_ :: forall eff. GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    clearStencil :: forall eff. GLint -> Eff (webgl :: WebGl | eff) Unit
+    clear_ :: forall eff. GLbitfield -> Eff (webgl :: WebGl | eff) Unit
 
-    colorMask :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
+    colorMask_ :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
 
-    compileShader :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) Unit
+    compileShader_ :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) Unit
 
-    copyTexImage2D :: forall eff. GLenum -> GLint -> GLenum -> GLint -> GLint -> GLsizei -> GLsizei -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    copyTexImage2D_ :: forall eff. GLenum -> GLint -> GLenum -> GLint -> GLint -> GLsizei -> GLsizei -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    copyTexSubImage2D :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
+    copyTexSubImage2D_ :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 
-    createBuffer :: forall eff. Eff (webgl :: WebGl | eff) WebGLBuffer
+    createBuffer_ :: forall eff. Eff (webgl :: WebGl | eff) WebGLBuffer
 
-    createFramebuffer :: forall eff. Eff (webgl :: WebGl | eff) WebGLFramebuffer
+    createFramebuffer_ :: forall eff. Eff (webgl :: WebGl | eff) WebGLFramebuffer
 
-    createProgram :: forall eff. Eff (webgl :: WebGl | eff) WebGLProgram
+    createProgram_ :: forall eff. Eff (webgl :: WebGl | eff) WebGLProgram
 
-    createRenderbuffer :: forall eff. Eff (webgl :: WebGl | eff) WebGLRenderbuffer
+    createRenderbuffer_ :: forall eff. Eff (webgl :: WebGl | eff) WebGLRenderbuffer
 
-    createShader :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) WebGLShader
+    createShader_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) WebGLShader
 
-    createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTexture
+    createTexture_ :: forall eff. Eff (webgl :: WebGl | eff) WebGLTexture
 
-    cullFace :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    cullFace_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    deleteBuffer :: forall eff. WebGLBuffer -> Eff (webgl :: WebGl | eff) Unit
+    deleteBuffer_ :: forall eff. WebGLBuffer -> Eff (webgl :: WebGl | eff) Unit
 
-    deleteFramebuffer :: forall eff. WebGLFramebuffer -> Eff (webgl :: WebGl | eff) Unit
+    deleteFramebuffer_ :: forall eff. WebGLFramebuffer -> Eff (webgl :: WebGl | eff) Unit
 
-    deleteProgram :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
+    deleteProgram_ :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
 
-    deleteRenderbuffer :: forall eff. WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) Unit
+    deleteRenderbuffer_ :: forall eff. WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) Unit
 
-    deleteShader :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) Unit
+    deleteShader_ :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) Unit
 
-    deleteTexture :: forall eff. WebGLTexture -> Eff (webgl :: WebGl | eff) Unit
+    deleteTexture_ :: forall eff. WebGLTexture -> Eff (webgl :: WebGl | eff) Unit
 
-    depthFunc :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    depthFunc_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    depthMask :: forall eff. GLboolean -> Eff (webgl :: WebGl | eff) Unit
+    depthMask_ :: forall eff. GLboolean -> Eff (webgl :: WebGl | eff) Unit
 
-    depthRange :: forall eff. GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+    depthRange_ :: forall eff. GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
 
-    detachShader :: forall eff. WebGLProgram -> WebGLShader -> Eff (webgl :: WebGl | eff) Unit
+    detachShader_ :: forall eff. WebGLProgram -> WebGLShader -> Eff (webgl :: WebGl | eff) Unit
 
-    disable :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    disableVertexAttribArray_ :: forall eff. GLuint -> Eff (webgl :: WebGl | eff) Unit
 
-    disableVertexAttribArray :: forall eff. GLuint -> Eff (webgl :: WebGl | eff) Unit
+    disable_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    drawArrays :: forall eff. GLenum -> GLint -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
+    drawArrays_ :: forall eff. GLenum -> GLint -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 
-    drawElements :: forall eff. GLenum -> GLsizei -> GLenum -> GLintptr -> Eff (webgl :: WebGl | eff) Unit
+    drawElements_ :: forall eff. GLenum -> GLsizei -> GLenum -> GLintptr -> Eff (webgl :: WebGl | eff) Unit
 
-    enable :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    enableVertexAttribArray_ :: forall eff. GLuint -> Eff (webgl :: WebGl | eff) Unit
 
-    enableVertexAttribArray :: forall eff. GLuint -> Eff (webgl :: WebGl | eff) Unit
+    enable_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    finish :: forall eff. Eff (webgl :: WebGl | eff) Unit
+    finish_ :: forall eff. Eff (webgl :: WebGl | eff) Unit
 
-    flush :: forall eff. Eff (webgl :: WebGl | eff) Unit
+    flush_ :: forall eff. Eff (webgl :: WebGl | eff) Unit
 
-    framebufferRenderbuffer :: forall eff. GLenum -> GLenum -> GLenum -> WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) Unit
+    framebufferRenderbuffer_ :: forall eff. GLenum -> GLenum -> GLenum -> WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) Unit
 
-    framebufferTexture2D :: forall eff. GLenum -> GLenum -> GLenum -> WebGLTexture -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    framebufferTexture2D_ :: forall eff. GLenum -> GLenum -> GLenum -> WebGLTexture -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    frontFace :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    frontFace_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    generateMipmap :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+    generateMipmap_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    getActiveAttrib :: forall eff. WebGLProgram -> GLuint -> Eff (webgl :: WebGl | eff) WebGLActiveInfo
+    getActiveAttrib_ :: forall eff. WebGLProgram -> GLuint -> Eff (webgl :: WebGl | eff) WebGLActiveInfo
 
-    getActiveUniform :: forall eff. WebGLProgram -> GLuint -> Eff (webgl :: WebGl | eff) WebGLActiveInfo
+    getActiveUniform_ :: forall eff. WebGLProgram -> GLuint -> Eff (webgl :: WebGl | eff) WebGLActiveInfo
 
-    getAttachedShaders :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) WebGLShader
+    getAttachedShaders_ :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) WebGLShader
 
-    getAttribLocation :: forall eff. WebGLProgram -> String -> Eff (webgl :: WebGl | eff) GLint
+    getAttribLocation_ :: forall eff. WebGLProgram -> String -> Eff (webgl :: WebGl | eff) GLint
 
-    getBufferParameter :: forall eff ret. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
+    getBufferParameter_ :: forall eff ret. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    getContextAttributes :: forall eff. Eff (webgl :: WebGl | eff) WebGLContextAttributes
+    getContextAttributes_ :: forall eff. Eff (webgl :: WebGl | eff) WebGLContextAttributes
 
-    getError :: forall eff. Eff (webgl :: WebGl | eff) GLenum
+    getError_ :: forall eff. Eff (webgl :: WebGl | eff) GLenum
 
-    getExtension :: forall eff ret. String -> Eff (webgl :: WebGl | eff) ret
+    getExtension_ :: forall eff ret. String -> Eff (webgl :: WebGl | eff) ret
 
-    getFramebufferAttachmentParameter :: forall eff ret. GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
+    getFramebufferAttachmentParameter_ :: forall eff ret. GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    getParameter :: forall eff ret. GLenum -> Eff (webgl :: WebGl | eff) ret
+    getParameter_ :: forall eff ret. GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    getProgramInfoLog :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) String
+    getProgramInfoLog_ :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) String
 
-    getProgramParameter :: forall eff ret. WebGLProgram -> GLenum -> Eff (webgl :: WebGl | eff) ret
+    getProgramParameter_ :: forall eff ret. WebGLProgram -> GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    getRenderbufferParameter :: forall eff ret. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
+    getRenderbufferParameter_ :: forall eff ret. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    getShaderInfoLog :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) String
+    getShaderInfoLog_ :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) String
 
-    getShaderParameter :: forall eff ret. WebGLShader -> GLenum -> Eff (webgl :: WebGl | eff) ret
+    getShaderParameter_ :: forall eff ret. WebGLShader -> GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    getShaderSource :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) String
+    getShaderSource_ :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) String
 
-    getSupportedExtensions :: forall eff. Eff (webgl :: WebGl | eff) String
+    getSupportedExtensions_ :: forall eff. Eff (webgl :: WebGl | eff) String
 
-    getTexParameter :: forall eff ret. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
+    getTexParameter_ :: forall eff ret. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    getUniform :: forall eff ret. WebGLProgram -> WebGLUniformLocation -> Eff (webgl :: WebGl | eff) ret
+    getUniformLocation_ :: forall eff. WebGLProgram -> String -> Eff (webgl :: WebGl | eff) WebGLUniformLocation
 
-    getUniformLocation :: forall eff. WebGLProgram -> String -> Eff (webgl :: WebGl | eff) WebGLUniformLocation
+    getUniform_ :: forall eff ret. WebGLProgram -> WebGLUniformLocation -> Eff (webgl :: WebGl | eff) ret
 
-    getVertexAttrib :: forall eff ret. GLuint -> GLenum -> Eff (webgl :: WebGl | eff) ret
+    getVertexAttribOffset_ :: forall eff. GLuint -> GLenum -> Eff (webgl :: WebGl | eff) GLsizeiptr
 
-    getVertexAttribOffset :: forall eff. GLuint -> GLenum -> Eff (webgl :: WebGl | eff) GLsizeiptr
+    getVertexAttrib_ :: forall eff ret. GLuint -> GLenum -> Eff (webgl :: WebGl | eff) ret
 
-    hint :: forall eff. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+    hint_ :: forall eff. GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    isBuffer :: forall eff. WebGLBuffer -> Eff (webgl :: WebGl | eff) GLboolean
+    isBuffer_ :: forall eff. WebGLBuffer -> Eff (webgl :: WebGl | eff) GLboolean
 
-    isContextLost :: forall eff. Eff (webgl :: WebGl | eff) Boolean
+    isContextLost_ :: forall eff. Eff (webgl :: WebGl | eff) Boolean
 
-    isEnabled :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLboolean
+    isEnabled_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLboolean
 
-    isFramebuffer :: forall eff. WebGLFramebuffer -> Eff (webgl :: WebGl | eff) GLboolean
+    isFramebuffer_ :: forall eff. WebGLFramebuffer -> Eff (webgl :: WebGl | eff) GLboolean
 
-    isProgram :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) GLboolean
+    isProgram_ :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) GLboolean
 
-    isRenderbuffer :: forall eff. WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) GLboolean
+    isRenderbuffer_ :: forall eff. WebGLRenderbuffer -> Eff (webgl :: WebGl | eff) GLboolean
 
-    isShader :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) GLboolean
+    isShader_ :: forall eff. WebGLShader -> Eff (webgl :: WebGl | eff) GLboolean
 
-    isTexture :: forall eff. WebGLTexture -> Eff (webgl :: WebGl | eff) GLboolean
+    isTexture_ :: forall eff. WebGLTexture -> Eff (webgl :: WebGl | eff) GLboolean
 
-    lineWidth :: forall eff. GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    lineWidth_ :: forall eff. GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    linkProgram :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
+    linkProgram_ :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
 
-    pixelStorei :: forall eff. GLenum -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    pixelStorei_ :: forall eff. GLenum -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    polygonOffset :: forall eff. GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    polygonOffset_ :: forall eff. GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    readPixels :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> Eff (webgl :: WebGl | eff) Unit
+    readPixels_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> Eff (webgl :: WebGl | eff) Unit
 
-    renderbufferStorage :: forall eff. GLenum -> GLenum -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
+    renderbufferStorage_ :: forall eff. GLenum -> GLenum -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 
-    sampleCoverage :: forall eff. GLclampf -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
+    sampleCoverage_ :: forall eff. GLclampf -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
 
-    scissor :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
+    scissor_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 
-    shaderSource :: forall eff. WebGLShader -> String -> Eff (webgl :: WebGl | eff) Unit
+    shaderSource_ :: forall eff. WebGLShader -> String -> Eff (webgl :: WebGl | eff) Unit
 
-    stencilFunc :: forall eff. GLenum -> GLint -> GLuint -> Eff (webgl :: WebGl | eff) Unit
+    stencilFuncSeparate_ :: forall eff. GLenum -> GLenum -> GLint -> GLuint -> Eff (webgl :: WebGl | eff) Unit
 
-    stencilFuncSeparate :: forall eff. GLenum -> GLenum -> GLint -> GLuint -> Eff (webgl :: WebGl | eff) Unit
+    stencilFunc_ :: forall eff. GLenum -> GLint -> GLuint -> Eff (webgl :: WebGl | eff) Unit
 
-    stencilMask :: forall eff. GLuint -> Eff (webgl :: WebGl | eff) Unit
+    stencilMaskSeparate_ :: forall eff. GLenum -> GLuint -> Eff (webgl :: WebGl | eff) Unit
 
-    stencilMaskSeparate :: forall eff. GLenum -> GLuint -> Eff (webgl :: WebGl | eff) Unit
+    stencilMask_ :: forall eff. GLuint -> Eff (webgl :: WebGl | eff) Unit
 
-    stencilOp :: forall eff. GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+    stencilOpSeparate_ :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    stencilOpSeparate :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+    stencilOp_ :: forall eff. GLenum -> GLenum -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 
-    texImage2D :: forall eff. GLenum -> GLint -> GLenum -> GLsizei -> GLsizei -> GLint -> GLenum -> GLenum -> ArrayBufferView -> Eff (webgl :: WebGl | eff) Unit
+    texImage2D_ :: forall eff. GLenum -> GLint -> GLenum -> GLsizei -> GLsizei -> GLint -> GLenum -> GLenum -> ArrayBufferView -> Eff (webgl :: WebGl | eff) Unit
 
-    texParameterf :: forall eff. GLenum -> GLenum -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    texParameterf_ :: forall eff. GLenum -> GLenum -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    texParameteri :: forall eff. GLenum -> GLenum -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    texParameteri_ :: forall eff. GLenum -> GLenum -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    texSubImage2D :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> Eff (webgl :: WebGl | eff) Unit
+    texSubImage2D_ :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform1f :: forall eff. WebGLUniformLocation -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    uniform1f_ :: forall eff. WebGLUniformLocation -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform1fv :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    uniform1fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform1i :: forall eff. WebGLUniformLocation -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    uniform1i_ :: forall eff. WebGLUniformLocation -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform1iv :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
+    uniform1iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform2f :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    uniform2f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform2fv :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    uniform2fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform2i :: forall eff. WebGLUniformLocation -> GLint -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    uniform2i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform2iv :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
+    uniform2iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform3f :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    uniform3f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform3fv :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    uniform3fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform3i :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    uniform3i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform3iv :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
+    uniform3iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform4f :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    uniform4f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform4fv :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    uniform4fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform4i :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> GLint -> Eff (webgl :: WebGl | eff) Unit
+    uniform4i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> GLint -> Eff (webgl :: WebGl | eff) Unit
 
-    uniform4iv :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
+    uniform4iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> Eff (webgl :: WebGl | eff) Unit
 
-    uniformMatrix2fv :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    uniformMatrix2fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    uniformMatrix3fv :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    uniformMatrix3fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    uniformMatrix4fv :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    uniformMatrix4fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    useProgram :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
+    useProgram_ :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
 
-    validateProgram :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
+    validateProgram_ :: forall eff. WebGLProgram -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib1f :: forall eff. GLuint -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib1f_ :: forall eff. GLuint -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib1fv :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib1fv_ :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib2f :: forall eff. GLuint -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib2f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib2fv :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib2fv_ :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib3f :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib3f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib3fv :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib3fv_ :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib4f :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib4f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttrib4fv :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttrib4fv_ :: forall eff. GLuint -> FloatArray -> Eff (webgl :: WebGl | eff) Unit
 
-    vertexAttribPointer :: forall eff. GLuint -> GLint -> GLenum -> GLboolean -> GLsizei -> GLintptr -> Eff (webgl :: WebGl | eff) Unit
+    vertexAttribPointer_ :: forall eff. GLuint -> GLint -> GLenum -> GLboolean -> GLsizei -> GLintptr -> Eff (webgl :: WebGl | eff) Unit
 
-    viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
+    viewport_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 
 
 ## Module Graphics.WebGLTexture
@@ -1342,33 +1380,14 @@
       UNSIGNED_SHORT_4_4_4_4 :: TextureType
       UNSIGNED_SHORT_5_5_5_1 :: TextureType
 
+    newtype WebGLTex where
+      WebGLTex :: WebGLTexture -> WebGLTex
+
 
 ### Values
 
-    bindTexture_ :: forall eff. TargetType -> WebGLTexture -> EffWebGL eff Unit
+    activeTexture :: forall eff. Number -> Eff (webgl :: WebGl | eff) Unit
 
-    handleLoad :: forall eff. WebGLTexture -> Image -> EffWebGL eff Unit
+    bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 
-    internalFormatToConst :: InternalFormat -> GLenum
-
-    loadImage :: forall a eff. String -> (Image -> EffWebGL eff a) -> EffWebGL eff Unit
-
-    pixelStorei_ :: forall eff. SymbolicParameter -> Number -> EffWebGL eff Unit
-
-    symbolicParameterToConst :: SymbolicParameter -> GLenum
-
-    targetTypeToConst :: TargetType -> GLenum
-
-    texImage2D_ :: forall a eff. GLenum -> GLint -> GLenum -> GLenum -> GLenum -> Image -> EffWebGL eff Unit
-
-    texImage2D__ :: forall eff. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> Image -> EffWebGL eff Unit
-
-    texParNameToConst :: TexParName -> GLenum
-
-    texParameteri_ :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
-
-    texTargetToConst :: TexTarget -> GLenum
-
-    textureFor :: forall a eff. String -> (WebGLTexture -> EffWebGL eff a) -> EffWebGL eff Unit
-
-    textureTypeToConst :: TextureType -> GLenum
+    textureFor :: forall a eff. String -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
