@@ -21,6 +21,7 @@ module Graphics.WebGLTexture
   , TexTarget(..)
   , TexParName(..)
   , WebGLTex(..)
+  , TexFilterSpec(..)
 
   , textureFor
   , activeTexture
@@ -121,21 +122,38 @@ texParNameToConst TEXTURE_WRAP_S = _TEXTURE_WRAP_S
 texParNameToConst TEXTURE_WRAP_T = _TEXTURE_WRAP_T
 -- texParNameToConst TEXTURE_MAX_ANISOTROPY_EXT = _TEXTURE_MAX_ANISOTROPY_EXT
 
-textureFor :: forall a eff. String -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
-textureFor name continuation = do
+data TexFilterSpec =
+  NEAREST
+  | LINEAR
+  | MIPMAP
+
+texFilterSpecToMagConst :: TexFilterSpec -> GLenum
+texFilterSpecToMagConst NEAREST = _NEAREST
+texFilterSpecToMagConst LINEAR = _LINEAR
+texFilterSpecToMagConst MIPMAP = _LINEAR
+
+texFilterSpecToMinConst :: TexFilterSpec -> GLenum
+texFilterSpecToMinConst NEAREST = _NEAREST
+texFilterSpecToMinConst LINEAR = _LINEAR
+texFilterSpecToMinConst MIPMAP = _LINEAR_MIPMAP_NEAREST
+
+textureFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
+textureFor name filterSpec continuation = do
   texture <- createTexture_
   loadImage name \image -> do
-    handleLoad texture image
+    handleLoad texture filterSpec image
     continuation (WebGLTex texture)
 
-handleLoad :: forall eff. WebGLTexture -> Image -> EffWebGL eff Unit
-handleLoad texture image = do
+handleLoad :: forall eff. WebGLTexture -> TexFilterSpec -> Image -> EffWebGL eff Unit
+handleLoad texture filterSpec image = do
   bindTexture TEXTURE_2D (WebGLTex texture)
   pixelStorei UNPACK_FLIP_Y_WEBGL 1
   texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE image
-  texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER _NEAREST
-  texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER _NEAREST
---  bindTexture _TEXTURE_2D 0
+  texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
+  texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
+  case filterSpec of
+    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    _ -> return unit
 
 texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
 texParameteri target pname param = texParameteri_ (texTargetToConst target) (texParNameToConst pname) param

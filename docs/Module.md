@@ -1361,6 +1361,11 @@
       TEXTURE_CUBE_MAP_POSITIVE_Z :: TargetType
       TEXTURE_CUBE_MAP_NEGATIVE_Z :: TargetType
 
+    data TexFilterSpec where
+      NEAREST :: TexFilterSpec
+      LINEAR :: TexFilterSpec
+      MIPMAP :: TexFilterSpec
+
     data TexParName where
       TEXTURE_MIN_FILTER :: TexParName
       TEXTURE_MAG_FILTER :: TexParName
@@ -1390,4 +1395,4 @@
 
     bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 
-    textureFor :: forall a eff. String -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
+    textureFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit

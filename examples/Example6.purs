@@ -53,6 +53,91 @@ vshaderSource =
     }
 """
 
+cubeV = [
+        -- Front face
+        -1.0, -1.0,  1.0,
+         1.0, -1.0,  1.0,
+         1.0,  1.0,  1.0,
+        -1.0,  1.0,  1.0,
+
+        -- Back face
+        -1.0, -1.0, -1.0,
+        -1.0,  1.0, -1.0,
+         1.0,  1.0, -1.0,
+         1.0, -1.0, -1.0,
+
+        -- Top face
+        -1.0,  1.0, -1.0,
+        -1.0,  1.0,  1.0,
+         1.0,  1.0,  1.0,
+         1.0,  1.0, -1.0,
+
+        -- Bottom face
+        -1.0, -1.0, -1.0,
+         1.0, -1.0, -1.0,
+         1.0, -1.0,  1.0,
+        -1.0, -1.0,  1.0,
+
+        -- Right face
+         1.0, -1.0, -1.0,
+         1.0,  1.0, -1.0,
+         1.0,  1.0,  1.0,
+         1.0, -1.0,  1.0,
+
+        -- Left face
+        -1.0, -1.0, -1.0,
+        -1.0, -1.0,  1.0,
+        -1.0,  1.0,  1.0,
+        -1.0,  1.0, -1.0
+      ]
+
+texCoo = [
+          -- Front face
+          0.0, 0.0,
+          1.0, 0.0,
+          1.0, 1.0,
+          0.0, 1.0,
+
+          -- Back face
+          1.0, 0.0,
+          1.0, 1.0,
+          0.0, 1.0,
+          0.0, 0.0,
+
+          -- Top face
+          0.0, 1.0,
+          0.0, 0.0,
+          1.0, 0.0,
+          1.0, 1.0,
+
+          -- Bottom face
+          1.0, 1.0,
+          0.0, 1.0,
+          0.0, 0.0,
+          1.0, 0.0,
+
+          -- Right face
+          1.0, 0.0,
+          1.0, 1.0,
+          0.0, 1.0,
+          0.0, 0.0,
+
+          -- Left face
+          0.0, 0.0,
+          1.0, 0.0,
+          1.0, 1.0,
+          0.0, 1.0
+        ]
+
+cvi = [
+        0, 1, 2,      0, 2, 3,    -- Front face
+        4, 5, 6,      4, 6, 7,    -- Back face
+        8, 9, 10,     8, 10, 11,  -- Top face
+        12, 13, 14,   12, 14, 15, -- Bottom face
+        16, 17, 18,   16, 18, 19, -- Right face
+        20, 21, 22,   20, 22, 23  -- Left face
+      ]
+
 type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
@@ -91,89 +176,10 @@ main = do
                     [Mat4 "uPMatrix", Mat4 "uMVMatrix", Mat2 "uSampler"]
                     (\s -> alert s)
                       \ shaderProgram [aVertexPosition, aTextureCoord] [uPMatrix,uMVMatrix,uSampler] -> do
-          cubeVertices <- makeBufferSimple [
-                            -- Front face
-                            -1.0, -1.0,  1.0,
-                             1.0, -1.0,  1.0,
-                             1.0,  1.0,  1.0,
-                            -1.0,  1.0,  1.0,
+          cubeVertices <- makeBufferSimple cubeV
 
-                            -- Back face
-                            -1.0, -1.0, -1.0,
-                            -1.0,  1.0, -1.0,
-                             1.0,  1.0, -1.0,
-                             1.0, -1.0, -1.0,
-
-                            -- Top face
-                            -1.0,  1.0, -1.0,
-                            -1.0,  1.0,  1.0,
-                             1.0,  1.0,  1.0,
-                             1.0,  1.0, -1.0,
-
-                            -- Bottom face
-                            -1.0, -1.0, -1.0,
-                             1.0, -1.0, -1.0,
-                             1.0, -1.0,  1.0,
-                            -1.0, -1.0,  1.0,
-
-                            -- Right face
-                             1.0, -1.0, -1.0,
-                             1.0,  1.0, -1.0,
-                             1.0,  1.0,  1.0,
-                             1.0, -1.0,  1.0,
-
-                            -- Left face
-                            -1.0, -1.0, -1.0,
-                            -1.0, -1.0,  1.0,
-                            -1.0,  1.0,  1.0,
-                            -1.0,  1.0, -1.0]
-
-          textureCoords <- makeBufferSimple [
-                            -- Front face
-                            0.0, 0.0,
-                            1.0, 0.0,
-                            1.0, 1.0,
-                            0.0, 1.0,
-
-                            -- Back face
-                            1.0, 0.0,
-                            1.0, 1.0,
-                            0.0, 1.0,
-                            0.0, 0.0,
-
-                            -- Top face
-                            0.0, 1.0,
-                            0.0, 0.0,
-                            1.0, 0.0,
-                            1.0, 1.0,
-
-                            -- Bottom face
-                            1.0, 1.0,
-                            0.0, 1.0,
-                            0.0, 0.0,
-                            1.0, 0.0,
-
-                            -- Right face
-                            1.0, 0.0,
-                            1.0, 1.0,
-                            0.0, 1.0,
-                            0.0, 0.0,
-
-                            -- Left face
-                            0.0, 0.0,
-                            1.0, 0.0,
-                            1.0, 1.0,
-                            0.0, 1.0
-                          ]
-          cubeVertexIndices <- makeBuffer ELEMENT_ARRAY_BUFFER T.asUint16Array
-                          [
-                            0, 1, 2,      0, 2, 3,    -- Front face
-                            4, 5, 6,      4, 6, 7,    -- Back face
-                            8, 9, 10,     8, 10, 11,  -- Top face
-                            12, 13, 14,   12, 14, 15, -- Bottom face
-                            16, 17, 18,   16, 18, 19, -- Right face
-                            20, 21, 22,   20, 22, 23  -- Left face
-                          ]
+          textureCoords <- makeBufferSimple texCoo
+          cubeVertexIndices <- makeBuffer ELEMENT_ARRAY_BUFFER T.asUint16Array cvi
           clearColor 0.0 0.0 0.0 1.0
           enable DEPTH_TEST
           textureFor "crate.gif" \texture -> do
@@ -228,30 +234,7 @@ animate stRef = do
                               })
   return unit
 
-handleKeys ::  forall h eff . STRef h State -> EffWebGL (trace :: Trace, st :: ST h |eff) Unit
-handleKeys stRef = do
-  s <- readSTRef stRef
-  let z' = if elemIndex 33 s.currentlyPressedKeys /= -1
-              then s.z - 0.05
-              else s.z
-  let z'' = if elemIndex 34 s.currentlyPressedKeys /= -1
-              then z' + 0.05
-              else z'
-  let ySpeed' = if elemIndex 37 s.currentlyPressedKeys /= -1
-              then s.ySpeed - 1
-              else s.ySpeed
-  let ySpeed'' = if elemIndex 39 s.currentlyPressedKeys /= -1
-              then ySpeed' + 1
-              else ySpeed'
-  let xSpeed' = if elemIndex 38 s.currentlyPressedKeys /= -1
-              then s.xSpeed - 1
-              else s.xSpeed
-  let xSpeed'' = if elemIndex 40 s.currentlyPressedKeys /= -1
-              then xSpeed' + 1
-              else xSpeed'
-  writeSTRef stRef (s{z=z'',ySpeed=ySpeed'',xSpeed=xSpeed''})
-  trace (show s.currentlyPressedKeys)
-  return unit
+
 
 drawScene :: forall h eff . STRef h State -> EffWebGL (st :: ST h |eff) Unit
 drawScene stRef = do
@@ -290,6 +273,61 @@ radToDeg x = x/pi*180
 degToRad :: Number -> Number
 degToRad x = x/180*pi
 
+-- * Key handling
+
+handleKeys ::  forall h eff . STRef h State -> EffWebGL (trace :: Trace, st :: ST h |eff) Unit
+handleKeys stRef = do
+  s <- readSTRef stRef
+  if null s.currentlyPressedKeys
+    then return unit
+    else
+      let z' = if elemIndex 33 s.currentlyPressedKeys /= -1
+                  then s.z - 0.05
+                  else s.z
+          z'' = if elemIndex 34 s.currentlyPressedKeys /= -1
+                  then z' + 0.05
+                  else z'
+          ySpeed' = if elemIndex 37 s.currentlyPressedKeys /= -1
+                  then s.ySpeed - 1
+                  else s.ySpeed
+          ySpeed'' = if elemIndex 39 s.currentlyPressedKeys /= -1
+                  then ySpeed' + 1
+                  else ySpeed'
+          xSpeed' = if elemIndex 38 s.currentlyPressedKeys /= -1
+                  then s.xSpeed - 1
+                  else s.xSpeed
+          xSpeed'' = if elemIndex 40 s.currentlyPressedKeys /= -1
+                  then xSpeed' + 1
+                  else xSpeed'
+      in do
+        writeSTRef stRef (s{z=z'',ySpeed=ySpeed'',xSpeed=xSpeed''})
+        trace (show s.currentlyPressedKeys)
+        return unit
+
+handleKeyD :: forall h eff. STRef h State -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
+handleKeyD stRef event = do
+  trace "handleKeyDown"
+  let key = eventGetKeyCode event
+  s <- readSTRef stRef
+  if elemIndex key s.currentlyPressedKeys /= -1
+    then return unit
+    else do
+      writeSTRef stRef (s {currentlyPressedKeys = (key : s.currentlyPressedKeys)})
+      trace (show s.currentlyPressedKeys)
+      return unit
+
+handleKeyU :: forall h eff. STRef h State -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
+handleKeyU stRef event = do
+  trace "handleKeyUp"
+  let key = eventGetKeyCode event
+  s <- readSTRef stRef
+  if elemIndex key s.currentlyPressedKeys == -1
+    then return unit
+    else do
+      writeSTRef stRef (s {currentlyPressedKeys = delete key s.currentlyPressedKeys})
+      trace (show s.currentlyPressedKeys)
+      return unit
+
 foreign import data Event :: *
 
 foreign import onKeyDown
@@ -316,27 +354,3 @@ foreign import eventGetKeyCode
       return (event.keyCode);
       }
 """ :: Event -> Number
-
-handleKeyD :: forall h eff. STRef h State -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
-handleKeyD stRef event = do
-  trace "handleKeyDown"
-  let key = eventGetKeyCode event
-  s <- readSTRef stRef
-  if elemIndex key s.currentlyPressedKeys /= -1
-    then return unit
-    else do
-      writeSTRef stRef (s {currentlyPressedKeys = (key : s.currentlyPressedKeys)})
-      trace (show s.currentlyPressedKeys)
-      return unit
-
-handleKeyU :: forall h eff. STRef h State -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
-handleKeyU stRef event = do
-  trace "handleKeyUp"
-  let key = eventGetKeyCode event
-  s <- readSTRef stRef
-  if elemIndex key s.currentlyPressedKeys == -1
-    then return unit
-    else do
-      writeSTRef stRef (s {currentlyPressedKeys = delete key s.currentlyPressedKeys})
-      trace (show s.currentlyPressedKeys)
-      return unit
