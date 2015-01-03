@@ -79,15 +79,15 @@ main =
           clear [COLOR_BUFFER_BIT , DEPTH_BUFFER_BIT]
 
           let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-          setMatrix uPMatrix pMatrix
+          setMatrix4 uPMatrix pMatrix
           let mvMatrix = M.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M.identity
-          setMatrix uMVMatrix mvMatrix
+          setMatrix4 uMVMatrix mvMatrix
 
           bindPointBuf buf1Colors aVertexColor
           drawArr TRIANGLES buf1 aVertexPosition
 
           let mvMatrix' = M.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
-          setMatrix uMVMatrix mvMatrix'
+          setMatrix4 uMVMatrix mvMatrix'
 
           bindPointBuf buf2Colors aVertexColor
           drawArr TRIANGLE_STRIP buf2 aVertexPosition

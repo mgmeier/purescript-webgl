@@ -219,7 +219,7 @@ drawScene s = do
       clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
       let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-      setMatrix s.uPMatrix pMatrix
+      setMatrix4 s.uPMatrix pMatrix
 
       let mvMatrix = M.rotate (degToRad s.rot) (V3.vec3' [1, 0, 0])
                         $ M.rotate (degToRad s.rot) (V3.vec3' [0, 1, 0])
@@ -227,7 +227,7 @@ drawScene s = do
                             $ M.translate  (V3.vec3 0.0 0.0 (-8.0))
                               $ M.identity
 
-      setMatrix s.uMVMatrix mvMatrix
+      setMatrix4 s.uMVMatrix mvMatrix
 
       bindPointBuf s.cubeVertices s.aVertexPosition
       bindPointBuf s.textureCoords s.aTextureCoord

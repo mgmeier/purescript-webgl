@@ -90,6 +90,8 @@
 
     mat3 :: [Number] -> Mat3
 
+    normalFromMat4 :: Mat Four Number -> Maybe Mat3
+
 
 ## Module Data.Matrix4
 
@@ -408,7 +410,11 @@
 
 ### Types
 
-    type AttrLocation = { aItemType :: Number, aItemSize :: Number, aLocation :: GLint }
+    data Attr where
+      Attr :: Size -> String -> Attr
+      VecAttr :: Size -> String -> Attr
+
+    type AttrLocation = { aItemType :: Number, aItemSize :: Number, aAttr :: Attr, aLocation :: GLint }
 
     type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
 
@@ -422,15 +428,6 @@
       CULL_FACE :: Capacity
       POLYGON_OFFSET_FILL :: Capacity
       SCISSOR_TEST :: Capacity
-
-    data Descr where
-      Vec2 :: String -> Descr
-      Vec3 :: String -> Descr
-      Vec4 :: String -> Descr
-      Mat2 :: String -> Descr
-      Mat3 :: String -> Descr
-      Mat4 :: String -> Descr
-      Bool :: String -> Descr
 
     data Mask where
       DEPTH_BUFFER_BIT :: Mask
@@ -446,7 +443,23 @@
       TRIANGLE_STRIP :: Mode
       TRIANGLE_FAN :: Mode
 
-    type UniLocation = { uItemType :: Number, uItemSize :: Number, uLocation :: WebGLUniformLocation }
+    data Size where
+      One :: Size
+      Two :: Size
+      Three :: Size
+      Four :: Size
+
+    type UniLocation = { uUniform :: Uniform, uLocation :: WebGLUniformLocation }
+
+    data Uniform where
+      Float :: Size -> String -> Uniform
+      Bool :: Size -> String -> Uniform
+      Int :: Size -> String -> Uniform
+      Vec :: Size -> String -> Uniform
+      VecInt :: Size -> String -> Uniform
+      VecBool :: Size -> String -> Uniform
+      Matrix :: Size -> String -> Uniform
+      Sampler2D :: String -> Uniform
 
     type WebGLContext = { canvasName :: String }
 
@@ -472,19 +485,31 @@
 
     getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
 
-    makeBuffer :: forall a eff. BufferTarget -> ([Number] -> ArrayBuffer a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
+    makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayBuffer a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
 
-    makeBufferSimple :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer Float32)
+    makeBufferSimple :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 
     requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
     runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 
-    setMatrix :: forall eff. UniLocation -> M4.Mat4 -> EffWebGL eff Unit
+    setBool1 :: forall eff. UniLocation -> Boolean -> EffWebGL eff Unit
+
+    setMatrix2 :: forall eff. UniLocation -> M.Mat Two Number -> EffWebGL eff Unit
+
+    setMatrix3 :: forall eff. UniLocation -> M.Mat Three Number -> EffWebGL eff Unit
+
+    setMatrix4 :: forall eff. UniLocation -> M.Mat Four Number -> EffWebGL eff Unit
+
+    setVector2 :: forall eff. UniLocation -> V.Vec Two Number -> EffWebGL eff Unit
+
+    setVector3 :: forall eff. UniLocation -> V.Vec Three Number -> EffWebGL eff Unit
+
+    setVector4 :: forall eff. UniLocation -> V.Vec Four Number -> EffWebGL eff Unit
 
     vertexPointer :: forall eff. AttrLocation -> EffWebGL eff Unit
 
-    withShaders :: forall a eff. String -> String -> [Descr] -> [Descr] -> (String -> EffWebGL eff a) -> (WebGLProg -> [AttrLocation] -> [UniLocation] -> EffWebGL eff a) -> EffWebGL eff a
+    withShaders :: forall a eff. String -> String -> [Attr] -> [Uniform] -> (String -> EffWebGL eff a) -> (WebGLProg -> [AttrLocation] -> [UniLocation] -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Graphics.WebGLRaw
@@ -1478,4 +1503,6 @@
 
     bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 
-    textureFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
+    texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
+
+    withTexture2D :: forall eff. WebGLTex -> Number -> UniLocation -> Number -> EffWebGL eff Unit

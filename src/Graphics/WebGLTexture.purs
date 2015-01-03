@@ -27,8 +27,6 @@ module Graphics.WebGLTexture
   , withTexture2D
   , activeTexture
   , bindTexture
-  , uniform1i
-
 )where
 
 import Control.Monad.Eff.WebGL

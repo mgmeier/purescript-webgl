@@ -247,24 +247,25 @@ drawScene stRef = do
   clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
   let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-  setMatrix s.uPMatrix pMatrix
+  setMatrix4 s.uPMatrix pMatrix
 
   let mvMatrix =
       M.rotate (degToRad s.xRot) (V3.vec3' [1, 0, 0])
         $ M.rotate (degToRad s.yRot) (V3.vec3' [0, 1, 0])
           $ M.translate  (V3.vec3 0.0 0.0 s.z)
             $ M.identity
-
-  setMatrix s.uMVMatrix mvMatrix
+  setMatrix4 s.uMVMatrix mvMatrix
 
   bindPointBuf s.cubeVertices s.aVertexPosition
   bindPointBuf s.textureCoords s.aTextureCoord
+
+  withTexture2D (fromJust $ s.textures !! s.filterInd) 0 s.uSampler 0
 
   bindBuf s.cubeVertexIndices
   drawElements TRIANGLES s.cubeVertexIndices.bufferSize
 
 
-  withTexture2D (fromJust $ s.textures !! s.filterInd) 0 s.uSampler 0
+
 -- | Convert from radians to degrees.
 radToDeg :: Number -> Number
 radToDeg x = x/pi*180

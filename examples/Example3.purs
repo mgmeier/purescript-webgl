@@ -136,12 +136,12 @@ drawScene s = do
       clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
       let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-      setMatrix s.uPMatrix pMatrix
+      setMatrix4 s.uPMatrix pMatrix
       let mvMatrix =
           M.rotate (degToRad s.rTri) (V3.vec3' [0, 1, 0])
             $ M.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M.identity
 
-      setMatrix s.uMVMatrix mvMatrix
+      setMatrix4 s.uMVMatrix mvMatrix
 
       bindPointBuf s.buf1Colors s.aVertexColor
       drawArr TRIANGLES s.buf1 s.aVertexPosition
@@ -149,7 +149,7 @@ drawScene s = do
       let mvMatrix =
           M.rotate (degToRad s.rSquare) (V3.vec3' [1, 0, 0])
             $ M.translate  (V3.vec3 (1.5) 0.0 (-7.0)) M.identity
-      setMatrix s.uMVMatrix mvMatrix
+      setMatrix4 s.uMVMatrix mvMatrix
 
       bindPointBuf s.buf2Colors s.aVertexColor
       drawArr TRIANGLE_STRIP s.buf2 s.aVertexPosition
