@@ -9,6 +9,7 @@
 -- Portability :
 --
 -- | Binding to Typed Arrays of Javascript (which are only useful for FFI interfaces)
+-- | It makes sense to import this module qualified.
 --
 -----------------------------------------------------------------------------
 

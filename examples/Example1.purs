@@ -3,7 +3,8 @@ module Main where
 
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
-import qualified Data.Matrix4 as M4
+import qualified Data.Matrix4 as M
+import qualified Data.Matrix as M
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
 
@@ -40,10 +41,11 @@ main = runWebGL "glcanvas" (\s -> alert s)
     trace "WebGL started"
     withShaders fshaderSource
                 vshaderSource
-                [Vec3 "aVertexPosition"]
-                [Mat4 "uPMatrix",Mat4 "uMVMatrix"]
+                [VecAttr Three "aVertexPosition"]
+                [Matrix Four "uPMatrix", Matrix Four "uMVMatrix"]
                 (\s -> alert s)
-      \ shaderProgram [aVertexPosition] [uPMatrix,uMVMatrix] -> do
+      \ shaderProgram [aVertexPosition] [uPMatrix, uMVMatrix] -> do
+        trace (show aVertexPosition.aLocation)
         clearColor 0.0 0.0 0.0 1.0
         enable DEPTH_TEST
 
@@ -52,10 +54,10 @@ main = runWebGL "glcanvas" (\s -> alert s)
         viewport 0 0 canvasWidth canvasHeight
         clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
-        let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
+        let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
         setMatrix uPMatrix pMatrix
 
-        let mvMatrix = M4.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M4.identity
+        let mvMatrix = M.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M.identity
         setMatrix uMVMatrix mvMatrix
 
         buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
@@ -63,7 +65,7 @@ main = runWebGL "glcanvas" (\s -> alert s)
                             1.0, (-1.0),  0.0]
         drawArr TRIANGLES buf1 aVertexPosition
 
-        let mvMatrix' = M4.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
+        let mvMatrix' = M.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
         setMatrix uMVMatrix mvMatrix'
 
         buf2 <- makeBufferSimple [1.0,  1.0,  0.0,

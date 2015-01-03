@@ -23,7 +23,8 @@ module Graphics.WebGLTexture
   , WebGLTex(..)
   , TexFilterSpec(..)
 
-  , textureFor
+  , texture2DFor
+  , withTexture2D
   , activeTexture
   , bindTexture
   , uniform1i
@@ -137,15 +138,15 @@ texFilterSpecToMinConst NEAREST = _NEAREST
 texFilterSpecToMinConst LINEAR = _LINEAR
 texFilterSpecToMinConst MIPMAP = _LINEAR_MIPMAP_NEAREST
 
-textureFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
-textureFor name filterSpec continuation = do
+texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
+texture2DFor name filterSpec continuation = do
   texture <- createTexture_
   loadImage name \image -> do
-    handleLoad texture filterSpec image
+    handleLoad2D texture filterSpec image
     continuation (WebGLTex texture)
 
-handleLoad :: forall eff. WebGLTexture -> TexFilterSpec -> Image -> EffWebGL eff Unit
-handleLoad texture filterSpec image = do
+handleLoad2D :: forall eff. WebGLTexture -> TexFilterSpec -> Image -> EffWebGL eff Unit
+handleLoad2D texture filterSpec image = do
   bindTexture TEXTURE_2D (WebGLTex texture)
   pixelStorei UNPACK_FLIP_Y_WEBGL 1
   texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE image
@@ -160,6 +161,13 @@ texParameteri target pname param = texParameteri_ (texTargetToConst target) (tex
 
 pixelStorei :: forall eff. SymbolicParameter -> Number -> EffWebGL eff Unit
 pixelStorei symbolicParameter num = pixelStorei_ (symbolicParameterToConst symbolicParameter) num
+
+withTexture2D :: forall eff. WebGLTex -> Number -> UniLocation -> Number -> EffWebGL eff Unit
+withTexture2D texture index sampler pos = do
+  activeTexture index
+  bindTexture TEXTURE_2D texture
+  uniform1i sampler.uLocation pos
+
 
 bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 bindTexture tt (WebGLTex texture) = bindTexture_ (targetTypeToConst tt) texture

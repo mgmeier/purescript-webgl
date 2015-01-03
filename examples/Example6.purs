@@ -6,7 +6,8 @@ module Main where
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLTexture
-import qualified Data.Matrix4 as M4
+import qualified Data.Matrix4 as M
+import qualified Data.Matrix as M
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
 import qualified Data.TypedArray as T
@@ -18,6 +19,7 @@ import Debug.Trace
 import Data.Tuple
 import Data.Date
 import Data.Maybe
+import Data.Maybe.Unsafe (fromJust)
 import Data.Array
 import Math
 
@@ -142,16 +144,16 @@ type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
 
-                aVertexPosition :: VecBind,
-                aTextureCoord :: VecBind,
-                uPMatrix :: MatBind,
-                uMVMatrix :: MatBind,
-                uSampler :: MatBind,
+                aVertexPosition :: AttrLocation,
+                aTextureCoord :: AttrLocation,
+                uPMatrix :: UniLocation,
+                uMVMatrix :: UniLocation,
+                uSampler :: UniLocation,
 
                 cubeVertices :: Buffer T.Float32,
                 textureCoords :: Buffer T.Float32,
                 cubeVertexIndices :: Buffer T.Uint16,
-                texture :: WebGLTex,
+                textures :: [WebGLTex],
 
                 lastTime :: Maybe Number,
                 xRot :: Number,
@@ -172,8 +174,8 @@ main = do
         trace "WebGL started"
         withShaders fshaderSource
                     vshaderSource
-                    [Vec3 "aVertexPosition", Vec2 "aTextureCoord"]
-                    [Mat4 "uPMatrix", Mat4 "uMVMatrix", Mat2 "uSampler"]
+                    [VecAttr Three "aVertexPosition", VecAttr Two "aTextureCoord"]
+                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix", Sampler2D "uSampler"]
                     (\s -> alert s)
                       \ shaderProgram [aVertexPosition, aTextureCoord] [uPMatrix,uMVMatrix,uSampler] -> do
           cubeVertices <- makeBufferSimple cubeV
@@ -182,36 +184,38 @@ main = do
           cubeVertexIndices <- makeBuffer ELEMENT_ARRAY_BUFFER T.asUint16Array cvi
           clearColor 0.0 0.0 0.0 1.0
           enable DEPTH_TEST
-          textureFor "crate.gif" \texture -> do
-            let state = {
-                          context : context,
-                          shaderProgram : shaderProgram,
+          texture2DFor "crate.gif" NEAREST \texture1 ->
+            texture2DFor "crate.gif" LINEAR \texture2 ->
+              texture2DFor "crate.gif" MIPMAP \texture3 -> do
+                let state = {
+                              context : context,
+                              shaderProgram : shaderProgram,
 
-                          aVertexPosition : aVertexPosition,
-                          aTextureCoord : aTextureCoord,
-                          uPMatrix : uPMatrix,
-                          uMVMatrix : uMVMatrix,
-                          uSampler : uSampler,
+                              aVertexPosition : aVertexPosition,
+                              aTextureCoord : aTextureCoord,
+                              uPMatrix : uPMatrix,
+                              uMVMatrix : uMVMatrix,
+                              uSampler : uSampler,
 
-                          cubeVertices : cubeVertices,
-                          textureCoords : textureCoords,
-                          cubeVertexIndices : cubeVertexIndices,
-                          texture : texture,
-                          lastTime : (Nothing :: Maybe Number),
+                              cubeVertices : cubeVertices,
+                              textureCoords : textureCoords,
+                              cubeVertexIndices : cubeVertexIndices,
+                              textures : [texture1,texture2,texture3],
+                              lastTime : (Nothing :: Maybe Number),
 
-                          xRot : 0,
-                          xSpeed : 1.0,
-                          yRot : 0,
-                          ySpeed : 1.0,
-                          z : (-5.0),
-                          filterInd : 0,
-                          currentlyPressedKeys : []
-                        }
-            runST do
-              stRef <- newSTRef state
-              onKeyDown (handleKeyD stRef)
-              onKeyUp (handleKeyU stRef)
-              tick stRef
+                              xRot : 0,
+                              xSpeed : 1.0,
+                              yRot : 0,
+                              ySpeed : 1.0,
+                              z : (-5.0),
+                              filterInd : 0,
+                              currentlyPressedKeys : []
+                            }
+                runST do
+                  stRef <- newSTRef state
+                  onKeyDown (handleKeyD stRef)
+                  onKeyUp (handleKeyU stRef)
+                  tick stRef
 
 tick :: forall h eff. STRef h State ->  EffWebGL (st :: ST h, trace :: Trace, now :: Now |eff) Unit
 tick stRef = do
@@ -234,8 +238,6 @@ animate stRef = do
                               })
   return unit
 
-
-
 drawScene :: forall h eff . STRef h State -> EffWebGL (st :: ST h |eff) Unit
 drawScene stRef = do
   s <- readSTRef stRef
@@ -244,27 +246,25 @@ drawScene stRef = do
   viewport 0 0 canvasWidth canvasHeight
   clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
-  let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
+  let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
   setMatrix s.uPMatrix pMatrix
 
   let mvMatrix =
-      M4.rotate (degToRad s.xRot) (V3.vec3' [1, 0, 0])
-        $ M4.rotate (degToRad s.yRot) (V3.vec3' [0, 1, 0])
-          $ M4.translate  (V3.vec3 0.0 0.0 s.z)
-            $ M4.identity
+      M.rotate (degToRad s.xRot) (V3.vec3' [1, 0, 0])
+        $ M.rotate (degToRad s.yRot) (V3.vec3' [0, 1, 0])
+          $ M.translate  (V3.vec3 0.0 0.0 s.z)
+            $ M.identity
 
   setMatrix s.uMVMatrix mvMatrix
 
   bindPointBuf s.cubeVertices s.aVertexPosition
   bindPointBuf s.textureCoords s.aTextureCoord
 
-  activeTexture 0
-  bindTexture TEXTURE_2D s.texture
-  uniform1i s.uSampler.location 0
-
   bindBuf s.cubeVertexIndices
   drawElements TRIANGLES s.cubeVertexIndices.bufferSize
 
+
+  withTexture2D (fromJust $ s.textures !! s.filterInd) 0 s.uSampler 0
 -- | Convert from radians to degrees.
 radToDeg :: Number -> Number
 radToDeg x = x/pi*180
@@ -309,12 +309,18 @@ handleKeyD stRef event = do
   trace "handleKeyDown"
   let key = eventGetKeyCode event
   s <- readSTRef stRef
-  if elemIndex key s.currentlyPressedKeys /= -1
-    then return unit
-    else do
-      writeSTRef stRef (s {currentlyPressedKeys = (key : s.currentlyPressedKeys)})
-      trace (show s.currentlyPressedKeys)
-      return unit
+  let f = if key == 70
+            then if s.filterInd + 1 == 3
+                    then 0
+                    else s.filterInd + 1
+            else s.filterInd
+      cp = if elemIndex key s.currentlyPressedKeys /= -1
+              then s.currentlyPressedKeys
+              else key : s.currentlyPressedKeys
+  trace ("filterInd: " ++ show f)
+  writeSTRef stRef (s {currentlyPressedKeys = cp, filterInd = f})
+--  trace (show s.currentlyPressedKeys)
+  return unit
 
 handleKeyU :: forall h eff. STRef h State -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
 handleKeyU stRef event = do

@@ -2,7 +2,8 @@ module Main where
 
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
-import qualified Data.Matrix4 as M4
+import qualified Data.Matrix4 as M
+import qualified Data.Matrix as M
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
 import qualified Data.TypedArray as T
@@ -47,10 +48,10 @@ vshaderSource =
 type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
-                aVertexPosition :: VecBind,
-                aVertexColor  :: VecBind,
-                uPMatrix :: MatBind,
-                uMVMatrix :: MatBind,
+                aVertexPosition :: AttrLocation,
+                aVertexColor  :: AttrLocation,
+                uPMatrix :: UniLocation,
+                uMVMatrix :: UniLocation,
                 pyramidVertices ::Buffer T.Float32,
                 pyramidColors :: Buffer T.Float32,
                 cubeVertices :: Buffer T.Float32,
@@ -70,8 +71,8 @@ main =
         trace "WebGL started"
         withShaders fshaderSource
                     vshaderSource
-                    [Vec3 "aVertexPosition", Vec4"aVertexColor"]
-                    [Mat4 "uPMatrix", Mat4 "uMVMatrix"]
+                    [VecAttr Three "aVertexPosition", VecAttr Four "aVertexColor"]
+                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix"]
                     (\s -> alert s)
                       \ shaderProgram [aVertexPosition, aVertexColor] [uPMatrix,uMVMatrix] -> do
           pyramidVertices <- makeBufferSimple [
@@ -210,12 +211,12 @@ drawScene s = do
       clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
 -- The pyramid
-      let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
+      let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
       setMatrix s.uPMatrix pMatrix
       let mvMatrix =
-          M4.rotate (degToRad s.rPyramid) (V3.vec3' [0, 1, 0])
-            $ M4.translate  (V3.vec3 (-1.5) 0.0 (-8.0))
-              $ M4.identity
+          M.rotate (degToRad s.rPyramid) (V3.vec3' [0, 1, 0])
+            $ M.translate  (V3.vec3 (-1.5) 0.0 (-8.0))
+              $ M.identity
 
       setMatrix s.uMVMatrix mvMatrix
       bindPointBuf s.pyramidColors s.aVertexColor
@@ -223,9 +224,9 @@ drawScene s = do
 
 -- The cube
       let mvMatrix =
-          M4.rotate (degToRad s.rCube) (V3.vec3' [1, 1, 1])
-            $ M4.translate  (V3.vec3 (1.5) 0.0 (-8.0))
-              $ M4.identity
+          M.rotate (degToRad s.rCube) (V3.vec3' [1, 1, 1])
+            $ M.translate  (V3.vec3 (1.5) 0.0 (-8.0))
+              $ M.identity
       setMatrix s.uMVMatrix mvMatrix
 
       bindPointBuf s.cubeColors s.aVertexColor

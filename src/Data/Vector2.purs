@@ -15,11 +15,10 @@
 module Data.Vector2 where
 
 import Data.Vector
+import Data.VecMat
 import Data.Array
 import Prelude.Unsafe
 import Math
-
-data Two
 
 type Vec2 = Vec Two
 

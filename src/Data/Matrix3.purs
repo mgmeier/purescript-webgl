@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Matrix
+-- Module      :  Matrix3
 -- Copyright   :  Jürgen Nicklisch-Franken
 -- License     :  Apache-2.0
 --
@@ -8,11 +8,11 @@
 -- Stability   :
 -- Portability :
 --
--- | Inclusion of Mjs library for javascript
+-- | Matrix manipulation for WebGL
 --
 -----------------------------------------------------------------------------
 
-module Data.Matrix4 where
+module Data.Matrix3 where
 
 import Data.VecMat
 import Data.Matrix
@@ -24,12 +24,12 @@ import Prelude.Unsafe
 import Math
 
 
-type Vec3N = V3.Vec3 Number
-type Mat4 = Mat Four Number
+type Mat3 = Mat Three Number
 
-mat4 :: [Number] -> Mat4
-mat4 = fromArray
+mat3 :: [Number] -> Mat3
+mat3 = fromArray
 
+{-
 -- | Multiply a V.Vector by a 4x4 matrix: m * v
 transform :: Mat4 -> Vec3N -> Vec3N
 transform (Mat [x11, x12, x13, x14, x21, x22, x23, x24, x31, x32, x33, x34, x41, x42, x43, x44]) v =
@@ -301,3 +301,4 @@ makeBasis (V.Vec [x0,x1,x2]) (V.Vec [y0,y1,y2]) (V.Vec [z0,z1,z2])=
         y0,y1,y2,0,
         z0,z1,z2,0,
         0,0,0,1]
+-}

@@ -7,7 +7,8 @@ module Main where
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLTexture
-import qualified Data.Matrix4 as M4
+import qualified Data.Matrix4 as M
+import qualified Data.Matrix as M
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
 import qualified Data.TypedArray as T
@@ -53,24 +54,25 @@ vshaderSource =
     }
 """
 
-type State = {
-                context :: WebGLContext,
-                shaderProgram :: WebGLProg,
+type State =
+    {
+        context :: WebGLContext,
+        shaderProgram :: WebGLProg,
 
-                aVertexPosition :: VecBind,
-                aTextureCoord :: VecBind,
-                uPMatrix :: MatBind,
-                uMVMatrix :: MatBind,
-                uSampler :: MatBind,
+        aVertexPosition :: AttrLocation,
+        aTextureCoord :: AttrLocation,
+        uPMatrix :: UniLocation,
+        uMVMatrix :: UniLocation,
+        uSampler :: UniLocation,
 
-                cubeVertices :: Buffer T.Float32,
-                textureCoords :: Buffer T.Float32,
-                cubeVertexIndices :: Buffer T.Uint16,
-                texture :: WebGLTex,
+        cubeVertices :: Buffer T.Float32,
+        textureCoords :: Buffer T.Float32,
+        cubeVertexIndices :: Buffer T.Uint16,
+        texture :: WebGLTex,
 
-                lastTime :: Maybe Number,
-                rot :: Number
-            }
+        lastTime :: Maybe Number,
+        rot :: Number
+    }
 
 main :: Eff (trace :: Trace, alert :: Alert, now :: Now) Unit
 main = do
@@ -82,8 +84,8 @@ main = do
         trace "WebGL started"
         withShaders fshaderSource
                     vshaderSource
-                    [Vec3 "aVertexPosition", Vec2 "aTextureCoord"]
-                    [Mat4 "uPMatrix", Mat4 "uMVMatrix", Mat2 "uSampler"]
+                    [VecAttr Three "aVertexPosition", VecAttr Two "aTextureCoord"]
+                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix", Sampler2D "uSampler"]
                     (\s -> alert s)
                       \ shaderProgram [aVertexPosition, aTextureCoord] [uPMatrix,uMVMatrix,uSampler] -> do
           cubeVertices <- makeBufferSimple [
@@ -171,7 +173,7 @@ main = do
                           ]
           clearColor 0.0 0.0 0.0 1.0
           enable DEPTH_TEST
-          textureFor "test.png" \texture ->
+          texture2DFor "test.png" MIPMAP \texture ->
             tick {
                   context : context,
                   shaderProgram : shaderProgram,
@@ -216,25 +218,22 @@ drawScene s = do
       viewport 0 0 canvasWidth canvasHeight
       clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
-      let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
+      let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
       setMatrix s.uPMatrix pMatrix
 
-      let mvMatrix =
-          M4.rotate (degToRad s.rot) (V3.vec3' [1, 0, 0])
-            $ M4.rotate (degToRad s.rot) (V3.vec3' [0, 1, 0])
-              $ M4.rotate (degToRad s.rot) (V3.vec3' [0, 0, 1])
-                $ M4.translate  (V3.vec3 0.0 0.0 (-8.0))
-                  $ M4.identity
+      let mvMatrix = M.rotate (degToRad s.rot) (V3.vec3' [1, 0, 0])
+                        $ M.rotate (degToRad s.rot) (V3.vec3' [0, 1, 0])
+                          $ M.rotate (degToRad s.rot) (V3.vec3' [0, 0, 1])
+                            $ M.translate  (V3.vec3 0.0 0.0 (-8.0))
+                              $ M.identity
 
       setMatrix s.uMVMatrix mvMatrix
 
       bindPointBuf s.cubeVertices s.aVertexPosition
       bindPointBuf s.textureCoords s.aTextureCoord
 
-      activeTexture 0
-      bindTexture TEXTURE_2D s.texture
+      withTexture2D s.texture 0 s.uSampler 0
 
-      uniform1i s.uSampler.location 0
       bindBuf s.cubeVertexIndices
       drawElements TRIANGLES s.cubeVertexIndices.bufferSize
 

@@ -1,15 +1,18 @@
 -- needs todays compiler fixes, to allow underscores in constructor names.
 -- need to start chrome with --allow-file-access-from-files to be able to load local files
--- Example 6: Keyboard, different tetures, ...
+-- Example 7: Lightning (Open with index7.html)
 module Main where
 
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
+import Graphics.WebGLRaw
 import Graphics.WebGLTexture
+import qualified Data.Matrix as M
 import qualified Data.Matrix4 as M4
+import qualified Data.Vector as V
 import qualified Data.Vector3 as V3
-import Control.Monad.Eff.Alert
 import qualified Data.TypedArray as T
+import Control.Monad.Eff.Alert
 
 import Control.Monad.Eff
 import Control.Monad
@@ -28,11 +31,13 @@ fshaderSource =
     precision mediump float;
 
     varying vec2 vTextureCoord;
+    varying vec3 vLightWeighting;
 
     uniform sampler2D uSampler;
 
     void main(void) {
-        gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
     }
 """
 
@@ -40,17 +45,34 @@ vshaderSource :: String
 vshaderSource =
 """
     attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
     attribute vec2 aTextureCoord;
 
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+
+    uniform vec3 uAmbientColor;
+
+    uniform vec3 uLightingDirection;
+    uniform vec3 uDirectionalColor;
+
+    uniform bool uUseLighting;
 
     varying vec2 vTextureCoord;
-
+    varying vec3 vLightWeighting;
 
     void main(void) {
         gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
         vTextureCoord = aTextureCoord;
+
+        if (!uUseLighting) {
+            vLightWeighting = vec3(1.0, 1.0, 1.0);
+        } else {
+            vec3 transformedNormal = uNMatrix * aVertexNormal;
+            float directionalLightWeighting = max(dot(transformedNormal, uLightingDirection), 0.0);
+            vLightWeighting = uAmbientColor + uDirectionalColor * directionalLightWeighting;
+        }
     }
 """
 
@@ -143,16 +165,22 @@ type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
 
-                aVertexPosition :: VecBind,
-                aTextureCoord :: VecBind,
-                uPMatrix :: MatBind,
-                uMVMatrix :: MatBind,
-                uSampler :: MatBind,
+                aVertexPosition :: AttrLocation,
+                aVertexNormal :: AttrLocation,
+                aTextureCoord :: AttrLocation,
+                uPMatrix :: UniLocation,
+                uMVMatrix :: UniLocation,
+                uNMatrix :: UniLocation,
+                uSampler :: UniLocation,
+                uUseLighting :: UniLocation,
+                uAmbientColor :: UniLocation,
+                uLightingDirection :: UniLocation,
+                uDirectionalColor :: UniLocation,
 
                 cubeVertices :: Buffer T.Float32,
                 textureCoords :: Buffer T.Float32,
                 cubeVertexIndices :: Buffer T.Uint16,
-                textures :: [WebGLTex],
+                texture :: WebGLTex,
 
                 lastTime :: Maybe Number,
                 xRot :: Number,
@@ -160,7 +188,6 @@ type State = {
                 yRot :: Number,
                 ySpeed :: Number,
                 z :: Number,
-                filterInd :: Number,
                 currentlyPressedKeys :: [Number]
               }
 
@@ -173,48 +200,59 @@ main = do
         trace "WebGL started"
         withShaders fshaderSource
                     vshaderSource
-                    [Vec3 "aVertexPosition", Vec2 "aTextureCoord"]
-                    [Mat4 "uPMatrix", Mat4 "uMVMatrix", Mat2 "uSampler"]
+                    [Vec3 "aVertexPosition", Vec3 "aVertexNormal", Vec2 "aTextureCoord"]
+                    [Mat4 "uPMatrix", Mat4 "uMVMatrix", Mat3 "uNMatrix", Mat2 "uSampler",
+                          Bool "uUseLighting", Vec3 "uAmbientColor", Vec3 "uLightingDirection",
+                          Vec3 "uDirectionalColor"]
                     (\s -> alert s)
-                      \ shaderProgram [aVertexPosition, aTextureCoord] [uPMatrix,uMVMatrix,uSampler] -> do
+                      \ shaderProgram [aVertexPosition, aVertexNormal,
+                                      aTextureCoord]
+                          [uPMatrix,uMVMatrix,
+                          uNMatrix,uSampler,
+                          uUseLighting,uAmbientColor,
+                          uLightingDirection,uDirectionalColor]
+                            -> do
           cubeVertices <- makeBufferSimple cubeV
 
           textureCoords <- makeBufferSimple texCoo
           cubeVertexIndices <- makeBuffer ELEMENT_ARRAY_BUFFER T.asUint16Array cvi
           clearColor 0.0 0.0 0.0 1.0
           enable DEPTH_TEST
-          textureFor "crate.gif" NEAREST \texture1 ->
-            textureFor "crate.gif" LINEAR \texture2 ->
-              textureFor "crate.gif" MIPMAP \texture3 -> do
-                let state = {
-                              context : context,
-                              shaderProgram : shaderProgram,
+          textureFor "crate.gif" MIPMAP \texture -> do
+            let state = {
+                          context : context,
+                          shaderProgram : shaderProgram,
 
-                              aVertexPosition : aVertexPosition,
-                              aTextureCoord : aTextureCoord,
-                              uPMatrix : uPMatrix,
-                              uMVMatrix : uMVMatrix,
-                              uSampler : uSampler,
+                          aVertexPosition : aVertexPosition,
+                          aVertexNormal : aVertexNormal,
+                          aTextureCoord : aTextureCoord,
+                          uPMatrix : uPMatrix,
+                          uMVMatrix : uMVMatrix,
+                          uNMatrix : uNMatrix,
+                          uSampler : uSampler,
+                          uUseLighting : uUseLighting,
+                          uAmbientColor : uAmbientColor,
+                          uLightingDirection : uLightingDirection,
+                          uDirectionalColor : uDirectionalColor,
+                          cubeVertices : cubeVertices,
 
-                              cubeVertices : cubeVertices,
-                              textureCoords : textureCoords,
-                              cubeVertexIndices : cubeVertexIndices,
-                              textures : [texture1,texture2,texture3],
-                              lastTime : (Nothing :: Maybe Number),
+                          textureCoords : textureCoords,
+                          cubeVertexIndices : cubeVertexIndices,
+                          texture : texture,
+                          lastTime : (Nothing :: Maybe Number),
 
-                              xRot : 0,
-                              xSpeed : 1.0,
-                              yRot : 0,
-                              ySpeed : 1.0,
-                              z : (-5.0),
-                              filterInd : 0,
-                              currentlyPressedKeys : []
-                            }
-                runST do
-                  stRef <- newSTRef state
-                  onKeyDown (handleKeyD stRef)
-                  onKeyUp (handleKeyU stRef)
-                  tick stRef
+                          xRot : 0,
+                          xSpeed : 1.0,
+                          yRot : 0,
+                          ySpeed : 1.0,
+                          z : (-5.0),
+                          currentlyPressedKeys : []
+                        }
+            runST do
+              stRef <- newSTRef state
+              onKeyDown (handleKeyD stRef)
+              onKeyUp (handleKeyU stRef)
+              tick stRef
 
 tick :: forall h eff. STRef h State ->  EffWebGL (st :: ST h, trace :: Trace, now :: Now |eff) Unit
 tick stRef = do
@@ -249,22 +287,71 @@ drawScene stRef = do
   setMatrix s.uPMatrix pMatrix
 
   let mvMatrix =
-      M4.rotate (degToRad s.xRot) (V3.vec3' [1, 0, 0])
-        $ M4.rotate (degToRad s.yRot) (V3.vec3' [0, 1, 0])
+      M4.rotate (degToRad s.yRot) (V3.vec3' [0, 1, 0])
+        $ M4.rotate (degToRad s.xRot) (V3.vec3' [1, 0, 0])
           $ M4.translate  (V3.vec3 0.0 0.0 s.z)
-            $ M4.identity
-
+            $ M.identity
   setMatrix s.uMVMatrix mvMatrix
+
+  let nMatrix = M.transpose
+                  $ M4.inverseOrthonormal
+                    $ M.identity
+  setMatrix s.uNMatrix nMatrix
 
   bindPointBuf s.cubeVertices s.aVertexPosition
   bindPointBuf s.textureCoords s.aTextureCoord
 
   activeTexture 0
-  bindTexture TEXTURE_2D (fromJust (s.textures !! s.filterInd))
-  uniform1i s.uSampler.location 0
+  bindTexture TEXTURE_2D s.texture
+  uniform1i s.uSampler.uLocation 0
+
+  setLightning s
 
   bindBuf s.cubeVertexIndices
   drawElements TRIANGLES s.cubeVertexIndices.bufferSize
+
+setLightning :: forall eff. State -> EffWebGL eff Unit
+setLightning s = do
+  lighting <- getElementByIdBool "lighting"
+  uniform1i s.uUseLighting.uLocation (if lighting then 1 else 0)
+  if lighting
+    then do
+      ar <- getElementByIdFloat "ambientR"
+      ag <- getElementByIdFloat "ambientG"
+      ab <- getElementByIdFloat "ambientB"
+      uniform3f_ s.uAmbientColor.uLocation ar ag ab
+      lx <- getElementByIdFloat "lightDirectionX"
+      ly <- getElementByIdFloat "lightDirectionY"
+      lz <- getElementByIdFloat "lightDirectionZ"
+      case V.scale (-1)
+                  $ V.normalize
+                    $ V3.vec3 lx ly lz of
+          V.Vec v -> uniform3fv_ s.uLightingDirection.uLocation
+                    (T.asFloat32Array v)
+      dr <- getElementByIdFloat "directionalR"
+      dg <- getElementByIdFloat "directionalG"
+      db <- getElementByIdFloat "directionalB"
+      uniform3f_ s.uDirectionalColor.uLocation dr dg db
+    else return unit
+
+
+foreign import getElementByIdFloat
+"""
+  function getElementByIdFloat(targ_id) {
+      return function () {
+        return parseFloat(document.getElementById(targ_id).value);
+      };
+    }
+""" :: forall eff. String -> (EffWebGL eff Number)
+
+foreign import getElementByIdBool
+"""
+  function getElementByIdBool(targ_id) {
+      return function () {
+        return document.getElementById(targ_id).checked;
+      };
+    }
+""" :: forall eff. String -> (EffWebGL eff Boolean)
 
 -- | Convert from radians to degrees.
 radToDeg :: Number -> Number
@@ -310,16 +397,10 @@ handleKeyD stRef event = do
   trace "handleKeyDown"
   let key = eventGetKeyCode event
   s <- readSTRef stRef
-  let f = if key == 70
-            then if s.filterInd + 1 == 3
-                    then 0
-                    else s.filterInd + 1
-            else s.filterInd
-      cp = if elemIndex key s.currentlyPressedKeys /= -1
+  let cp = if elemIndex key s.currentlyPressedKeys /= -1
               then s.currentlyPressedKeys
               else key : s.currentlyPressedKeys
-  trace ("filterInd: " ++ show f)
-  writeSTRef stRef (s {currentlyPressedKeys = cp, filterInd = f})
+  writeSTRef stRef (s {currentlyPressedKeys = cp})
 --  trace (show s.currentlyPressedKeys)
   return unit
 
@@ -332,7 +413,7 @@ handleKeyU stRef event = do
     then return unit
     else do
       writeSTRef stRef (s {currentlyPressedKeys = delete key s.currentlyPressedKeys})
-      trace (show s.currentlyPressedKeys)
+--      trace (show s.currentlyPressedKeys)
       return unit
 
 foreign import data Event :: *

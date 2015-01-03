@@ -15,11 +15,11 @@
 module Data.Vector4 where
 
 import Data.Vector
+import Data.VecMat
 import Data.Array
 import Prelude.Unsafe
 import Math
 
-data Four
 type Vec4 = Vec Four
 
 vec4 :: forall a. a -> a -> a -> a -> Vec4 a

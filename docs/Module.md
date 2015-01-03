@@ -26,19 +26,81 @@
     runWebGl_ :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
 
 
+## Module Data.Matrix
+
+### Types
+
+    newtype Mat s a where
+      Mat :: [a] -> Mat s a
+
+
+### Type Classes
+
+    class Matrix m a where
+      mSize :: m a -> Number
+      generate :: (Number -> Number -> a) -> m a
+
+
+### Type Class Instances
+
+    instance applyMat :: Apply (Mat s)
+
+    instance eqMat :: (Eq a) => Eq (Mat s a)
+
+    instance functorMat :: Functor (Mat s)
+
+    instance matrix2 :: Matrix (Mat Two) a
+
+    instance matrix3 :: Matrix (Mat Three) a
+
+    instance matrix4 :: Matrix (Mat Four) a
+
+    instance showMat2 :: (Show a) => Show (Mat Two a)
+
+    instance showMat3 :: (Show a) => Show (Mat Three a)
+
+    instance showMat4 :: (Show a) => Show (Mat Four a)
+
+
+### Values
+
+    columns :: forall s a. (Matrix (Mat s) a) => Mat s a -> [[a]]
+
+    fromArray :: forall a s. (Matrix (Mat s) a) => [a] -> Mat s a
+
+    generate_ :: forall a s. Number -> (Number -> Number -> a) -> Mat s a
+
+    getElem :: forall s a. (Matrix (Mat s) a) => Number -> Number -> Mat s a -> a
+
+    identity :: forall s a. (Matrix (Mat s) Number) => Mat s Number
+
+    scaleMatrix :: forall a s. (Matrix (Mat s) a, Num a) => a -> Mat s a -> Mat s a
+
+    transpose :: forall a s. (Matrix (Mat s) a) => Mat s a -> Mat s a
+
+
+## Module Data.Matrix3
+
+### Types
+
+    type Mat3 = Mat Three Number
+
+
+### Values
+
+    mat3 :: [Number] -> Mat3
+
+
 ## Module Data.Matrix4
 
 ### Types
 
-    newtype Mat4 where
-      Mat4 :: [Number] -> Mat4
+    type Mat4 = Mat Four Number
 
     type Vec3N = V3.Vec3 Number
 
 
 ### Values
-
-    identity :: Mat4
 
     inverseOrthonormal :: Mat4 -> Mat4
 
@@ -81,8 +143,6 @@
     translate :: Vec3N -> Mat4 -> Mat4
 
     translate3 :: Number -> Number -> Number -> Mat4 -> Mat4
-
-    transpose :: Mat4 -> Mat4
 
 
 ## Module Data.TypedArray
@@ -161,6 +221,36 @@
     unsafeIndex :: forall a. ArrayBuffer a -> Number -> Number
 
 
+## Module Data.VecMat
+
+### Types
+
+    data Four
+
+    data Three
+
+    data Two
+
+
+### Type Classes
+
+    class TypeLevelNum a where
+
+
+### Type Class Instances
+
+    instance typeLevelNumFour :: TypeLevelNum Four
+
+    instance typeLevelNumThree :: TypeLevelNum Three
+
+    instance typeLevelNumTwo :: TypeLevelNum Two
+
+
+### Values
+
+    slice :: forall a. Number -> Number -> [a] -> [a]
+
+
 ## Module Data.Vector
 
 ### Types
@@ -213,8 +303,6 @@
 
 ### Types
 
-    data Two
-
     type Vec2 = Vec Two
 
 
@@ -240,8 +328,6 @@
 ## Module Data.Vector3
 
 ### Types
-
-    data Three
 
     type Vec3 = Vec Three
 
@@ -276,8 +362,6 @@
 ## Module Data.Vector4
 
 ### Types
-
-    data Four
 
     type Vec4 = Vec Four
 
@@ -324,6 +408,8 @@
 
 ### Types
 
+    type AttrLocation = { aItemType :: Number, aItemSize :: Number, aLocation :: GLint }
+
     type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
 
     data BufferTarget where
@@ -337,17 +423,19 @@
       POLYGON_OFFSET_FILL :: Capacity
       SCISSOR_TEST :: Capacity
 
+    data Descr where
+      Vec2 :: String -> Descr
+      Vec3 :: String -> Descr
+      Vec4 :: String -> Descr
+      Mat2 :: String -> Descr
+      Mat3 :: String -> Descr
+      Mat4 :: String -> Descr
+      Bool :: String -> Descr
+
     data Mask where
       DEPTH_BUFFER_BIT :: Mask
       STENCIL_BUFFER_BIT :: Mask
       COLOR_BUFFER_BIT :: Mask
-
-    type MatBind = { itemType :: Number, itemSize :: Number, location :: WebGLUniformLocation }
-
-    data MatDescr where
-      Mat2 :: String -> MatDescr
-      Mat3 :: String -> MatDescr
-      Mat4 :: String -> MatDescr
 
     data Mode where
       POINTS :: Mode
@@ -358,12 +446,7 @@
       TRIANGLE_STRIP :: Mode
       TRIANGLE_FAN :: Mode
 
-    type VecBind = { itemType :: Number, itemSize :: Number, location :: GLint }
-
-    data VecDescr where
-      Vec2 :: String -> VecDescr
-      Vec3 :: String -> VecDescr
-      Vec4 :: String -> VecDescr
+    type UniLocation = { uItemType :: Number, uItemSize :: Number, uLocation :: WebGLUniformLocation }
 
     type WebGLContext = { canvasName :: String }
 
@@ -375,11 +458,11 @@
 
     bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 
-    bindPointBuf :: forall a eff. Buffer a -> VecBind -> Eff (webgl :: WebGl | eff) Unit
+    bindPointBuf :: forall a eff. Buffer a -> AttrLocation -> Eff (webgl :: WebGl | eff) Unit
 
     clear :: forall eff. [Mask] -> Eff (webgl :: WebGl | eff) Unit
 
-    drawArr :: forall a eff. Mode -> Buffer a -> VecBind -> EffWebGL eff Unit
+    drawArr :: forall a eff. Mode -> Buffer a -> AttrLocation -> EffWebGL eff Unit
 
     drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit
 
@@ -397,11 +480,11 @@
 
     runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 
-    setMatrix :: forall eff. MatBind -> M4.Mat4 -> EffWebGL eff Unit
+    setMatrix :: forall eff. UniLocation -> M4.Mat4 -> EffWebGL eff Unit
 
-    vertexPointer :: forall eff. VecBind -> EffWebGL eff Unit
+    vertexPointer :: forall eff. AttrLocation -> EffWebGL eff Unit
 
-    withShaders :: forall a eff. String -> String -> [VecDescr] -> [MatDescr] -> (String -> EffWebGL eff a) -> (WebGLProg -> [VecBind] -> [MatBind] -> EffWebGL eff a) -> EffWebGL eff a
+    withShaders :: forall a eff. String -> String -> [Descr] -> [Descr] -> (String -> EffWebGL eff a) -> (WebGLProg -> [AttrLocation] -> [UniLocation] -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Graphics.WebGLRaw

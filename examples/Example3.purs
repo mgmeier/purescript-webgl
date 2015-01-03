@@ -2,7 +2,8 @@ module Main where
 
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
-import qualified Data.Matrix4 as M4
+import qualified Data.Matrix4 as M
+import qualified Data.Matrix as M
 import qualified Data.Vector3 as V3
 import Control.Monad.Eff.Alert
 import qualified Data.TypedArray as T
@@ -46,10 +47,10 @@ vshaderSource =
 type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
-                aVertexPosition :: VecBind,
-                aVertexColor  :: VecBind,
-                uPMatrix :: MatBind,
-                uMVMatrix :: MatBind,
+                aVertexPosition :: AttrLocation,
+                aVertexColor  :: AttrLocation,
+                uPMatrix :: UniLocation,
+                uMVMatrix :: UniLocation,
                 buf1 :: Buffer T.Float32,
                 buf1Colors :: Buffer T.Float32,
                 buf2 :: Buffer T.Float32,
@@ -68,8 +69,8 @@ main =
         trace "WebGL started"
         withShaders fshaderSource
                     vshaderSource
-                    [Vec3 "aVertexPosition", Vec3 "aVertexColor"]
-                    [Mat4 "uPMatrix", Mat4 "uMVMatrix"]
+                    [VecAttr Three "aVertexPosition", VecAttr Three "aVertexColor"]
+                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix"]
                     (\s -> alert s)
                       \ shaderProgram [aVertexPosition, aVertexColor] [uPMatrix,uMVMatrix] -> do
           buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
@@ -134,11 +135,11 @@ drawScene s = do
       viewport 0 0 canvasWidth canvasHeight
       clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
-      let pMatrix = M4.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
+      let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
       setMatrix s.uPMatrix pMatrix
       let mvMatrix =
-          M4.rotate (degToRad s.rTri) (V3.vec3' [0, 1, 0])
-            $ M4.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M4.identity
+          M.rotate (degToRad s.rTri) (V3.vec3' [0, 1, 0])
+            $ M.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M.identity
 
       setMatrix s.uMVMatrix mvMatrix
 
@@ -146,8 +147,8 @@ drawScene s = do
       drawArr TRIANGLES s.buf1 s.aVertexPosition
 
       let mvMatrix =
-          M4.rotate (degToRad s.rSquare) (V3.vec3' [1, 0, 0])
-            $ M4.translate  (V3.vec3 (1.5) 0.0 (-7.0)) M4.identity
+          M.rotate (degToRad s.rSquare) (V3.vec3' [1, 0, 0])
+            $ M.translate  (V3.vec3 (1.5) 0.0 (-7.0)) M.identity
       setMatrix s.uMVMatrix mvMatrix
 
       bindPointBuf s.buf2Colors s.aVertexColor
