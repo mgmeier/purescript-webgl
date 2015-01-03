@@ -326,52 +326,48 @@ drawScene stRef = do
   clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
   let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-  setMatrix4 s.uPMatrix pMatrix
+  setUniformFloats s.uPMatrix (M.toArray pMatrix)
 
   let mvMatrix =
       M.rotate (degToRad s.yRot) (V.vec3' [0, 1, 0])
         $ M.rotate (degToRad s.xRot) (V.vec3' [1, 0, 0])
           $ M.translate  (V.vec3 0.0 0.0 s.z)
             $ M.identity
-  setMatrix4 s.uMVMatrix mvMatrix
+  setUniformFloats s.uMVMatrix (M.toArray mvMatrix)
 
-  let nMatrix = M.transpose
-                  $ fromJust
-                    $ M.normalFromMat4 mvMatrix
-  setMatrix3 s.uNMatrix nMatrix
+  let nMatrix = fromJust $ M.normalFromMat4 mvMatrix
+  setUniformFloats s.uNMatrix (M.toArray nMatrix)
+
+  setLightning s
 
   bindPointBuf s.cubeVertices s.aVertexPosition
   bindPointBuf s.cubeVerticesNormal s.aVertexNormal
   bindPointBuf s.textureCoords s.aTextureCoord
-
   withTexture2D s.texture 0 s.uSampler 0
-
-  setLightning s
-
   bindBuf s.cubeVertexIndices
   drawElements TRIANGLES s.cubeVertexIndices.bufferSize
 
 setLightning :: forall eff. State -> EffWebGL eff Unit
 setLightning s = do
   lighting <- getElementByIdBool "lighting"
-  setBool1 s.uUseLighting lighting
+  setUniformBooleans s.uUseLighting [lighting]
   if lighting
     then do
       ar <- getElementByIdFloat "ambientR"
       ag <- getElementByIdFloat "ambientG"
       ab <- getElementByIdFloat "ambientB"
-      setVector3 s.uAmbientColor (V.Vec [ar, ag, ab])
+      setUniformFloats s.uAmbientColor [ar, ag, ab]
       lx <- getElementByIdFloat "lightDirectionX"
       ly <- getElementByIdFloat "lightDirectionY"
       lz <- getElementByIdFloat "lightDirectionZ"
       let v = V.scale (-1)
                   $ V.normalize
                     $ V.vec3 lx ly lz
-      setVector3 s.uLightingDirection v
+      setUniformFloats s.uLightingDirection (V.toArray v)
       dr <- getElementByIdFloat "directionalR"
       dg <- getElementByIdFloat "directionalG"
       db <- getElementByIdFloat "directionalB"
-      setVector3 s.uDirectionalColor (V.Vec [dr, dg, db])
+      setUniformFloats s.uDirectionalColor [dr, dg, db]
     else return unit
 
 

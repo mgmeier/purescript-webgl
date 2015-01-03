@@ -163,7 +163,7 @@ type State = {
                 z :: Number,
                 filterInd :: Number,
                 currentlyPressedKeys :: [Number]
-              }
+            }
 
 main :: Eff (trace :: Trace, alert :: Alert, now :: Now) Unit
 main = do
@@ -179,7 +179,6 @@ main = do
                     (\s -> alert s)
                       \ shaderProgram [aVertexPosition, aTextureCoord] [uPMatrix,uMVMatrix,uSampler] -> do
           cubeVertices <- makeBufferSimple cubeV
-
           textureCoords <- makeBufferSimple texCoo
           cubeVertexIndices <- makeBuffer ELEMENT_ARRAY_BUFFER T.asUint16Array cvi
           clearColor 0.0 0.0 0.0 1.0
@@ -247,14 +246,14 @@ drawScene stRef = do
   clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
   let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-  setMatrix4 s.uPMatrix pMatrix
+  setUniformFloats s.uPMatrix (M.toArray pMatrix)
 
   let mvMatrix =
       M.rotate (degToRad s.xRot) (V3.vec3' [1, 0, 0])
         $ M.rotate (degToRad s.yRot) (V3.vec3' [0, 1, 0])
-          $ M.translate  (V3.vec3 0.0 0.0 s.z)
+          $ M.translate (V3.vec3 0.0 0.0 s.z)
             $ M.identity
-  setMatrix4 s.uMVMatrix mvMatrix
+  setUniformFloats s.uMVMatrix (M.toArray mvMatrix)
 
   bindPointBuf s.cubeVertices s.aVertexPosition
   bindPointBuf s.textureCoords s.aTextureCoord

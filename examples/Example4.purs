@@ -212,13 +212,13 @@ drawScene s = do
 
 -- The pyramid
       let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-      setMatrix4 s.uPMatrix pMatrix
+      setUniformFloats s.uPMatrix (M.toArray pMatrix)
       let mvMatrix =
           M.rotate (degToRad s.rPyramid) (V3.vec3' [0, 1, 0])
             $ M.translate  (V3.vec3 (-1.5) 0.0 (-8.0))
               $ M.identity
 
-      setMatrix4 s.uMVMatrix mvMatrix
+      setUniformFloats s.uMVMatrix (M.toArray mvMatrix)
       bindPointBuf s.pyramidColors s.aVertexColor
       drawArr TRIANGLES s.pyramidVertices s.aVertexPosition
 
@@ -227,7 +227,7 @@ drawScene s = do
           M.rotate (degToRad s.rCube) (V3.vec3' [1, 1, 1])
             $ M.translate  (V3.vec3 (1.5) 0.0 (-8.0))
               $ M.identity
-      setMatrix4 s.uMVMatrix mvMatrix
+      setUniformFloats s.uMVMatrix (M.toArray mvMatrix)
 
       bindPointBuf s.cubeColors s.aVertexColor
       bindPointBuf s.cubeVertices s.aVertexPosition

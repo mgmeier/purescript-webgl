@@ -76,6 +76,8 @@
 
     scaleMatrix :: forall a s. (Matrix (Mat s) a, Num a) => a -> Mat s a -> Mat s a
 
+    toArray :: forall s a. Mat s a -> [a]
+
     transpose :: forall a s. (Matrix (Mat s) a) => Mat s a -> Mat s a
 
 
@@ -261,6 +263,12 @@
       Vec :: [a] -> Vec s a
 
 
+### Type Classes
+
+    class Vector m a where
+      vSize :: m a -> Number
+
+
 ### Type Class Instances
 
     instance applyVec :: Apply (Vec s)
@@ -270,6 +278,12 @@
     instance foldableVector :: Foldable (Vec s)
 
     instance functorVec :: Functor (Vec s)
+
+    instance m2 :: Vector (Vec Two) a
+
+    instance m3 :: Vector (Vec Three) a
+
+    instance m4 :: Vector (Vec Four) a
 
     instance showVec :: (Show a) => Show (Vec s a)
 
@@ -286,6 +300,8 @@
 
     dot :: forall s. Vec s Number -> Vec s Number -> Number
 
+    fromArray :: forall s a. (Vector (Vec s) a) => [a] -> Vec s a
+
     mult :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
 
     normalize :: forall s. Vec s Number -> Vec s Number
@@ -293,6 +309,8 @@
     scale :: forall a s. (Num a) => a -> Vec s a -> Vec s a
 
     sub :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
+
+    toArray :: forall s a. Vec s a -> [a]
 
     vlength :: forall s. Vec s Number -> Number
 
@@ -493,19 +511,9 @@
 
     runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 
-    setBool1 :: forall eff. UniLocation -> Boolean -> EffWebGL eff Unit
+    setUniformBooleans :: forall eff. UniLocation -> [Boolean] -> EffWebGL eff Unit
 
-    setMatrix2 :: forall eff. UniLocation -> M.Mat Two Number -> EffWebGL eff Unit
-
-    setMatrix3 :: forall eff. UniLocation -> M.Mat Three Number -> EffWebGL eff Unit
-
-    setMatrix4 :: forall eff. UniLocation -> M.Mat Four Number -> EffWebGL eff Unit
-
-    setVector2 :: forall eff. UniLocation -> V.Vec Two Number -> EffWebGL eff Unit
-
-    setVector3 :: forall eff. UniLocation -> V.Vec Three Number -> EffWebGL eff Unit
-
-    setVector4 :: forall eff. UniLocation -> V.Vec Four Number -> EffWebGL eff Unit
+    setUniformFloats :: forall eff. UniLocation -> [Number] -> EffWebGL eff Unit
 
     vertexPointer :: forall eff. AttrLocation -> EffWebGL eff Unit
 
