@@ -40,15 +40,8 @@ module Graphics.WebGL
   , makeBuffer
   , makeBufferSimple
 
-  , setMatrix2
-  , setMatrix3
-  , setMatrix4
-
-  , setVector2
-  , setVector3
-  , setVector4
-
-  , setBool1
+  , setUniformFloats
+  , setUniformBooleans
 
   , bindPointBuf
   , bindBuf
@@ -74,6 +67,7 @@ import Data.Foldable
 import Data.Maybe
 import Data.Maybe.Unsafe (fromJust)
 import Data.Array (reverse,length,map,(!!))
+import Data.Array.Unsafe (head)
 
 
 data ShaderType =   FragmentShader
@@ -161,40 +155,26 @@ clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
 viewport = viewport_
 clearColor = clearColor_
 
-setMatrix4 :: forall eff. UniLocation -> M.Mat Four Number -> EffWebGL eff Unit
-setMatrix4  uni value =
-  case uni.uUniform of Matrix Four _     -> uniformMatrix4fv_ uni.uLocation false (asArrayBufferM value)
+setUniformFloats :: forall eff. UniLocation -> [Number] -> EffWebGL eff Unit
+setUniformFloats uni value =
+  case uni.uUniform of
+    Matrix Four _     -> uniformMatrix4fv_ uni.uLocation false (asArrayBuffer value)
+    Matrix Three _    -> uniformMatrix3fv_ uni.uLocation false (asArrayBuffer value)
+    Matrix Two _      -> uniformMatrix2fv_ uni.uLocation false (asArrayBuffer value)
+    Vec Four _        -> uniform4fv_ uni.uLocation (asArrayBuffer value)
+    Vec Three _       -> uniform3fv_ uni.uLocation (asArrayBuffer value)
+    Vec Two _         -> uniform2fv_ uni.uLocation (asArrayBuffer value)
 
-setMatrix3 :: forall eff. UniLocation -> M.Mat Three Number -> EffWebGL eff Unit
-setMatrix3  uni value =
-  case uni.uUniform of Matrix Three _    -> uniformMatrix3fv_ uni.uLocation false (asArrayBufferM value)
+setUniformBooleans :: forall eff. UniLocation -> [Boolean] -> EffWebGL eff Unit
+setUniformBooleans uni value =
+  case uni.uUniform of
+    Bool One _    -> uniform1i_ uni.uLocation (head (toNumber <$> value))
+    where
+      toNumber true = 1
+      toNumber false = 0
 
-setMatrix2 :: forall eff. UniLocation -> M.Mat Two Number -> EffWebGL eff Unit
-setMatrix2  uni value =
-  case uni.uUniform of Matrix Two _    ->  uniformMatrix2fv_ uni.uLocation false (asArrayBufferM value)
-
-setVector4 :: forall eff. UniLocation -> V.Vec Four Number -> EffWebGL eff Unit
-setVector4  uni value =
-  case uni.uUniform of Vec Four _    -> uniform4fv_ uni.uLocation (asArrayBufferV value)
-
-setVector3 :: forall eff. UniLocation -> V.Vec Three Number -> EffWebGL eff Unit
-setVector3  uni value =
-  case uni.uUniform of Vec Three _    -> uniform3fv_ uni.uLocation (asArrayBufferV value)
-
-setVector2 :: forall eff. UniLocation -> V.Vec Two Number -> EffWebGL eff Unit
-setVector2  uni value =
-  case uni.uUniform of Vec Two _    -> uniform2fv_ uni.uLocation (asArrayBufferV value)
-
-setBool1 :: forall eff. UniLocation -> Boolean -> EffWebGL eff Unit
-setBool1 uni value =
-  case uni.uUniform of Bool One _    -> uniform1i_ uni.uLocation (if value then 1 else 0)
-
-
-asArrayBufferM :: forall s. M.Mat s Number -> T.ArrayBuffer T.Float32
-asArrayBufferM (M.Mat v) = T.asFloat32Array v
-
-asArrayBufferV :: forall s. V.Vec s Number -> T.ArrayBuffer T.Float32
-asArrayBufferV (V.Vec v) = T.asFloat32Array v
+asArrayBuffer ::[Number] -> T.ArrayBuffer T.Float32
+asArrayBuffer = T.asFloat32Array
 
 getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
 getCanvasWidth context = getCanvasWidth_ context.canvasName

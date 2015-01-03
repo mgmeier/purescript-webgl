@@ -17,11 +17,33 @@ module Data.Vector where
 import Data.Array
 import Data.Monoid
 import Data.Foldable
+import Data.VecMat
 import Control.Apply
 import Prelude.Unsafe
 import Math
 
 newtype Vec s a = Vec [a]
+
+class Vector m a where
+  vSize :: m a -> Number
+
+instance m2 :: Vector (Vec Two) a where
+  vSize _ = 2
+
+instance m3 :: Vector (Vec Three) a where
+  vSize _ = 3
+
+instance m4 :: Vector (Vec Four) a where
+  vSize _ = 4
+
+fromArray :: forall s a. (Vector (Vec s) a) => [a] -> Vec s a
+fromArray l =
+  let res = Vec l
+  in case vSize res of
+        i | i == length l -> res
+
+toArray :: forall s a. Vec s a -> [a]
+toArray (Vec a) = a
 
 instance eqVec :: (Eq a) => Eq (Vec s a) where
   (==) (Vec l) (Vec r) = l == r
@@ -40,7 +62,6 @@ instance foldableVector :: Foldable (Vec s) where
   foldr f z (Vec xs) = foldr f z xs
   foldl f z (Vec xs) = foldl f z xs
   foldMap f xs = foldr (\x acc -> f x <> acc) mempty xs
-
 
 add :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
 add = lift2 (+)

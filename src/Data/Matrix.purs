@@ -15,7 +15,7 @@
 module Data.Matrix where
 
 import Data.VecMat
-import Data.Vector
+import qualified Data.Vector as V
 import Data.Array
 import Data.Monoid
 import Data.Foldable
@@ -126,6 +126,9 @@ fromArray l =
   let res = Mat l
   in case mSize res * mSize res of
         i | i == length l -> res
+
+toArray :: forall s a. Mat s a -> [a]
+toArray (Mat a) = a
 
 -- | /O(rows*cols)/. The transpose of a matrix.
 --   Example:
