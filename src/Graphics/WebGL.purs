@@ -29,7 +29,6 @@ module Graphics.WebGL
   , Attribute(..)
   , Shaders(..)
   , withShaders
-  , Bindings(..)
   , WebGLProg()
 
   , Buffer(..)
@@ -121,11 +120,9 @@ data Bool
 
 newtype WebGLProg = WebGLProg WebGLProgram
 
-foreign import data Bindings :: # * -> *
-
 data Shaders bindings = Shaders String String
 
-withShaders :: forall bindings eff a. Shaders (Bindings bindings) -> (String -> EffWebGL eff a) ->
+withShaders :: forall bindings eff a. Shaders (Object bindings) -> (String -> EffWebGL eff a) ->
                 ({webGLProgram :: WebGLProg | bindings} -> EffWebGL eff a) -> EffWebGL eff a
 withShaders (Shaders fragmetShaderSource vertexShaderSource) failure success = do
   condFShader <- makeShader FragmentShader fragmetShaderSource
@@ -236,7 +233,7 @@ setUniformFloats (Uniform uni) value
   | uni.uType == _FLOAT_VEC2    = uniform2fv_ uni.uLocation (asArrayBuffer value)
 
 setUniformBooleans :: forall eff typ. Uniform typ -> [Boolean] -> EffWebGL eff Unit
-setUniformBooleans (Uniform uni) value 
+setUniformBooleans (Uniform uni) value
   | uni.uType == _BOOL         = uniform1i_ uni.uLocation (head (toNumber <$> value))
     where
       toNumber true = 1
