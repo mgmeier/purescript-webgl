@@ -16,41 +16,41 @@ import Data.Date
 import Data.Maybe
 import Math
 
-fshaderSource :: String
-fshaderSource =
-"""precision mediump float;
+shaders :: Shaders (Bindings (aVertexPosition :: Attribute Vec3, aVertexColor :: Attribute Vec3,
+                      uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4))
+shaders = Shaders
 
-varying vec4 vColor;
+  """precision mediump float;
 
-void main(void) {
-  gl_FragColor = vColor;
-    }
-"""
+  varying vec4 vColor;
 
-vshaderSource :: String
-vshaderSource =
-"""
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
+  void main(void) {
+    gl_FragColor = vColor;
+      }
+  """
 
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
+  """
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
 
-    varying vec4 vColor;
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
 
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vColor = aVertexColor;
-    }
-"""
+      varying vec4 vColor;
+
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vColor = aVertexColor;
+      }
+  """
 
 type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
-                aVertexPosition :: AttrLocation,
-                aVertexColor  :: AttrLocation,
-                uPMatrix :: UniLocation,
-                uMVMatrix :: UniLocation,
+                aVertexPosition :: Attribute Vec3,
+                aVertexColor  :: Attribute Vec3,
+                uPMatrix :: Uniform Mat4,
+                uMVMatrix :: Uniform Mat4,
                 buf1 :: Buffer T.Float32,
                 buf1Colors :: Buffer T.Float32,
                 buf2 :: Buffer T.Float32,
@@ -67,12 +67,9 @@ main =
     (\s -> alert s)
       \ context -> do
         trace "WebGL started"
-        withShaders fshaderSource
-                    vshaderSource
-                    [VecAttr Three "aVertexPosition", VecAttr Three "aVertexColor"]
-                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix"]
+        withShaders shaders
                     (\s -> alert s)
-                      \ shaderProgram [aVertexPosition, aVertexColor] [uPMatrix,uMVMatrix] -> do
+                      \ bindings -> do
           buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
                               (-1.0), (-1.0),  0.0,
                               1.0, (-1.0),  0.0]
@@ -94,11 +91,11 @@ main =
           enable DEPTH_TEST
           let state = {
                         context : context,
-                        shaderProgram : shaderProgram,
-                        aVertexPosition : aVertexPosition,
-                        aVertexColor : aVertexColor,
-                        uPMatrix : uPMatrix,
-                        uMVMatrix : uMVMatrix,
+                        shaderProgram : bindings.webGLProgram,
+                        aVertexPosition : bindings.aVertexPosition,
+                        aVertexColor : bindings.aVertexColor,
+                        uPMatrix : bindings.uPMatrix,
+                        uMVMatrix : bindings.uMVMatrix,
                         buf1 : buf1,
                         buf1Colors : buf1Colors,
                         buf2 : buf2,

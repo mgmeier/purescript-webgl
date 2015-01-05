@@ -40,7 +40,7 @@ type Uint16Array = ArrayBuffer Uint16
 type Int32Array = ArrayBuffer Int32
 type Uint32Array = ArrayBuffer Uint32
 type Float32Array = ArrayBuffer Float32
-type Float64Array = ArrayBuffer Float64
+type Float64Array = ArrayBuffer Float64 
 
 -- * conversion from and to typed arrays
 foreign import asInt8Array

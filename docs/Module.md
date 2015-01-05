@@ -26,6 +26,13 @@
     runWebGl_ :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
 
 
+## Module Data.Array.Extended
+
+### Values
+
+    slice :: forall a. Number -> Number -> [a] -> [a]
+
+
 ## Module Data.Matrix
 
 ### Types
@@ -36,8 +43,7 @@
 
 ### Type Classes
 
-    class Matrix m a where
-      mSize :: m a -> Number
+    class (Sized (m a)) <= Matrix m a where
       generate :: (Number -> Number -> a) -> m a
 
 
@@ -49,17 +55,23 @@
 
     instance functorMat :: Functor (Mat s)
 
-    instance matrix2 :: Matrix (Mat Two) a
+    instance m2 :: Matrix (Mat Two) a
 
-    instance matrix3 :: Matrix (Mat Three) a
+    instance m3 :: Matrix (Mat Three) a
 
-    instance matrix4 :: Matrix (Mat Four) a
+    instance m4 :: Matrix (Mat Four) a
 
     instance showMat2 :: (Show a) => Show (Mat Two a)
 
     instance showMat3 :: (Show a) => Show (Mat Three a)
 
     instance showMat4 :: (Show a) => Show (Mat Four a)
+
+    instance sm2 :: Sized (Mat Two a)
+
+    instance sm3 :: Sized (Mat Three a)
+
+    instance sm4 :: Sized (Mat Four a)
 
 
 ### Values
@@ -149,6 +161,33 @@
     translate3 :: Number -> Number -> Number -> Mat4 -> Mat4
 
 
+## Module Data.TypeNat
+
+### Types
+
+    newtype Four where
+      Four :: Suc (Suc (Suc (Suc Zero))) -> Four
+
+    newtype One where
+      One :: Suc Zero -> One
+
+    data Suc a
+
+    newtype Three where
+      Three :: Suc (Suc (Suc Zero)) -> Three
+
+    newtype Two where
+      Two :: Suc (Suc Zero) -> Two
+
+    data Zero
+
+
+### Type Classes
+
+    class Sized a where
+      sized :: a -> Number
+
+
 ## Module Data.TypedArray
 
 ### Types
@@ -225,36 +264,6 @@
     unsafeIndex :: forall a. ArrayBuffer a -> Number -> Number
 
 
-## Module Data.VecMat
-
-### Types
-
-    data Four
-
-    data Three
-
-    data Two
-
-
-### Type Classes
-
-    class TypeLevelNum a where
-
-
-### Type Class Instances
-
-    instance typeLevelNumFour :: TypeLevelNum Four
-
-    instance typeLevelNumThree :: TypeLevelNum Three
-
-    instance typeLevelNumTwo :: TypeLevelNum Two
-
-
-### Values
-
-    slice :: forall a. Number -> Number -> [a] -> [a]
-
-
 ## Module Data.Vector
 
 ### Types
@@ -265,8 +274,7 @@
 
 ### Type Classes
 
-    class Vector m a where
-      vSize :: m a -> Number
+    class (Sized v) <= Vector v where
 
 
 ### Type Class Instances
@@ -279,13 +287,15 @@
 
     instance functorVec :: Functor (Vec s)
 
-    instance m2 :: Vector (Vec Two) a
-
-    instance m3 :: Vector (Vec Three) a
-
-    instance m4 :: Vector (Vec Four) a
-
     instance showVec :: (Show a) => Show (Vec s a)
+
+    instance sv1 :: Sized (Vec One a)
+
+    instance sv2 :: Sized (Vec Two a)
+
+    instance sv3 :: Sized (Vec Three a)
+
+    instance sv4 :: Sized (Vec Four a)
 
 
 ### Values
@@ -300,7 +310,7 @@
 
     dot :: forall s. Vec s Number -> Vec s Number -> Number
 
-    fromArray :: forall s a. (Vector (Vec s) a) => [a] -> Vec s a
+    fromArray :: forall s a. (Vector (Vec s a)) => [a] -> Vec s a
 
     mult :: forall a s. (Num a) => Vec s a -> Vec s a -> Vec s a
 
@@ -428,11 +438,12 @@
 
 ### Types
 
-    data Attr where
-      Attr :: Size -> String -> Attr
-      VecAttr :: Size -> String -> Attr
+    newtype Attribute typ where
+      Attribute :: { aItemSize :: Number, aItemType :: Number, aName :: String, aLocation :: GLint } -> Attribute typ
 
-    type AttrLocation = { aItemType :: Number, aItemSize :: Number, aAttr :: Attr, aLocation :: GLint }
+    data Bindings :: # * -> *
+
+    data Bool
 
     type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
 
@@ -452,6 +463,12 @@
       STENCIL_BUFFER_BIT :: Mask
       COLOR_BUFFER_BIT :: Mask
 
+    data Mat2
+
+    data Mat3
+
+    data Mat4
+
     data Mode where
       POINTS :: Mode
       LINES :: Mode
@@ -461,39 +478,34 @@
       TRIANGLE_STRIP :: Mode
       TRIANGLE_FAN :: Mode
 
-    data Size where
-      One :: Size
-      Two :: Size
-      Three :: Size
-      Four :: Size
+    data Sampler2D
 
-    type UniLocation = { uUniform :: Uniform, uLocation :: WebGLUniformLocation }
+    data Shaders bindings where
+      Shaders :: String -> String -> Shaders bindings
 
-    data Uniform where
-      Float :: Size -> String -> Uniform
-      Bool :: Size -> String -> Uniform
-      Int :: Size -> String -> Uniform
-      Vec :: Size -> String -> Uniform
-      VecInt :: Size -> String -> Uniform
-      VecBool :: Size -> String -> Uniform
-      Matrix :: Size -> String -> Uniform
-      Sampler2D :: String -> Uniform
+    newtype Uniform typ where
+      Uniform :: { uType :: Number, uName :: String, uLocation :: WebGLUniformLocation } -> Uniform typ
+
+    data Vec2
+
+    data Vec3
+
+    data Vec4
 
     type WebGLContext = { canvasName :: String }
 
-    newtype WebGLProg where
-      WebGLProg :: WebGLProgram -> WebGLProg
+    newtype WebGLProg
 
 
 ### Values
 
     bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 
-    bindPointBuf :: forall a eff. Buffer a -> AttrLocation -> Eff (webgl :: WebGl | eff) Unit
+    bindPointBuf :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
 
     clear :: forall eff. [Mask] -> Eff (webgl :: WebGl | eff) Unit
 
-    drawArr :: forall a eff. Mode -> Buffer a -> AttrLocation -> EffWebGL eff Unit
+    drawArr :: forall a eff typ. Mode -> Buffer a -> Attribute typ -> EffWebGL eff Unit
 
     drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit
 
@@ -511,13 +523,13 @@
 
     runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 
-    setUniformBooleans :: forall eff. UniLocation -> [Boolean] -> EffWebGL eff Unit
+    setUniformBooleans :: forall eff typ. Uniform typ -> [Boolean] -> EffWebGL eff Unit
 
-    setUniformFloats :: forall eff. UniLocation -> [Number] -> EffWebGL eff Unit
+    setUniformFloats :: forall eff typ. Uniform typ -> [Number] -> EffWebGL eff Unit
 
-    vertexPointer :: forall eff. AttrLocation -> EffWebGL eff Unit
+    vertexPointer :: forall eff typ. Attribute typ -> EffWebGL eff Unit
 
-    withShaders :: forall a eff. String -> String -> [Attr] -> [Uniform] -> (String -> EffWebGL eff a) -> (WebGLProg -> [AttrLocation] -> [UniLocation] -> EffWebGL eff a) -> EffWebGL eff a
+    withShaders :: forall bindings eff a. Shaders (Bindings bindings) -> (String -> EffWebGL eff a) -> ({ webGLProgram :: WebGLProg | bindings } -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Graphics.WebGLRaw
@@ -1513,4 +1525,4 @@
 
     texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
 
-    withTexture2D :: forall eff. WebGLTex -> Number -> UniLocation -> Number -> EffWebGL eff Unit
+    withTexture2D :: forall eff typ. WebGLTex -> Number -> Uniform typ -> Number -> EffWebGL eff Unit

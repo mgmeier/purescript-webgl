@@ -1,6 +1,7 @@
+
 -----------------------------------------------------------------------------
 --
--- Module      :  Data.VecMat
+-- Module      :  Data.Array.Extended
 -- Copyright   :  Jürgen Nicklisch-Franken
 -- License     :  Apache-2.0
 --
@@ -8,22 +9,11 @@
 -- Stability   :
 -- Portability :
 --
--- | Common definitions for Vectors and Matrixes
+-- | Data.Array does not (yet) export slice
 --
 -----------------------------------------------------------------------------
 
-module Data.VecMat where
-
-
--- * Type level numerals for phantom types
-data Two
-data Three
-data Four
-
-class TypeLevelNum a
-instance typeLevelNumTwo :: TypeLevelNum Two
-instance typeLevelNumThree :: TypeLevelNum Three
-instance typeLevelNumFour :: TypeLevelNum Four
+module Data.Array.Extended where
 
 foreign import slice
   "function slice (s) {\

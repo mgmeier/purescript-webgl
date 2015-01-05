@@ -16,42 +16,41 @@ import Data.Maybe
 import Data.Array
 import Math
 
+shaders :: Shaders (Bindings (aVertexPosition :: Attribute Vec3, aVertexColor :: Attribute Vec3,
+                      uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4))
+shaders = Shaders
 
-fshaderSource :: String
-fshaderSource =
-"""precision mediump float;
+  """precision mediump float;
 
-varying vec4 vColor;
+  varying vec4 vColor;
 
-void main(void) {
-  gl_FragColor = vColor;
-    }
-"""
+  void main(void) {
+    gl_FragColor = vColor;
+      }
+  """
 
-vshaderSource :: String
-vshaderSource =
-"""
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
+  """
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
 
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
 
-    varying vec4 vColor;
+      varying vec4 vColor;
 
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vColor = aVertexColor;
-    }
-"""
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vColor = aVertexColor;
+      }
+  """
 
 type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
-                aVertexPosition :: AttrLocation,
-                aVertexColor  :: AttrLocation,
-                uPMatrix :: UniLocation,
-                uMVMatrix :: UniLocation,
+                aVertexPosition :: Attribute Vec3,
+                aVertexColor  :: Attribute Vec3,
+                uPMatrix :: Uniform Mat4,
+                uMVMatrix :: Uniform Mat4,
                 pyramidVertices ::Buffer T.Float32,
                 pyramidColors :: Buffer T.Float32,
                 cubeVertices :: Buffer T.Float32,
@@ -69,12 +68,9 @@ main =
     (\s -> alert s)
       \ context -> do
         trace "WebGL started"
-        withShaders fshaderSource
-                    vshaderSource
-                    [VecAttr Three "aVertexPosition", VecAttr Four "aVertexColor"]
-                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix"]
+        withShaders shaders
                     (\s -> alert s)
-                      \ shaderProgram [aVertexPosition, aVertexColor] [uPMatrix,uMVMatrix] -> do
+                      \ bindings -> do
           pyramidVertices <- makeBufferSimple [
                               -- Front face
                                0.0,  1.0,  0.0,
@@ -169,11 +165,11 @@ main =
           enable DEPTH_TEST
           let state = {
                         context : context,
-                        shaderProgram : shaderProgram,
-                        aVertexPosition : aVertexPosition,
-                        aVertexColor : aVertexColor,
-                        uPMatrix : uPMatrix,
-                        uMVMatrix : uMVMatrix,
+                        shaderProgram : bindings.webGLProgram,
+                        aVertexPosition : bindings.aVertexPosition,
+                        aVertexColor : bindings.aVertexColor,
+                        uPMatrix : bindings.uPMatrix,
+                        uMVMatrix : bindings.uMVMatrix,
                         pyramidVertices : pyramidVertices,
                         pyramidColors : pyramidColors,
                         cubeVertices : cubeVertices,

@@ -11,33 +11,33 @@ import Control.Monad.Eff
 import Debug.Trace
 import Data.Tuple
 
-fshaderSource :: String
-fshaderSource =
-"""precision mediump float;
+shaders :: Shaders (Bindings (aVertexPosition :: Attribute Vec3, aVertexColor :: Attribute Vec3,
+                      uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4))
+shaders = Shaders
 
-varying vec4 vColor;
+  """precision mediump float;
 
-void main(void) {
-  gl_FragColor = vColor;
-    }
-"""
+  varying vec4 vColor;
 
-vshaderSource :: String
-vshaderSource =
-"""
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
+  void main(void) {
+    gl_FragColor = vColor;
+      }
+  """
 
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
+  """
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
 
-    varying vec4 vColor;
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
 
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vColor = aVertexColor;
-    }
-"""
+      varying vec4 vColor;
+
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vColor = aVertexColor;
+      }
+  """
 
 main :: Eff (trace :: Trace, alert :: Alert) Unit
 main =
@@ -46,50 +46,47 @@ main =
     (\s -> alert s)
       \ context -> do
         trace "WebGL started"
-        withShaders fshaderSource
-                    vshaderSource
-                    [VecAttr Three "aVertexPosition", VecAttr Four "aVertexColor"]
-                    [Matrix Four "uPMatrix",Matrix Four "uMVMatrix"]
+        withShaders shaders
                     (\s -> alert s)
-                    \ shaderProgram [aVertexPosition, aVertexColor] [uPMatrix,uMVMatrix]-> do
-          clearColor 0.0 0.0 0.0 1.0
-          enable DEPTH_TEST
+          \ bindings -> do
+            clearColor 0.0 0.0 0.0 1.0
+            enable DEPTH_TEST
 
-          buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
-                              (-1.0), (-1.0),  0.0,
-                              1.0, (-1.0),  0.0]
-          buf1Colors <- makeBufferSimple  [
-                              1.0, 0.0, 0.0, 1.0,
-                              0.0, 1.0, 0.0, 1.0,
-                              0.0, 0.0, 1.0, 1.0
-                              ]
-          buf2 <- makeBufferSimple [1.0,  1.0,  0.0,
-                             (-1.0), 1.0,  0.0,
-                              1.0, (-1.0),  0.0,
-                             (-1.0), (-1.0),  0.0]
-          buf2Colors <- makeBufferSimple
-                             [0.5, 0.5, 1.0, 1.0,
-                             0.5, 0.5, 1.0, 1.0,
-                             0.5, 0.5, 1.0, 1.0,
-                             0.5, 0.5, 1.0, 1.0]
+            buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
+                                (-1.0), (-1.0),  0.0,
+                                1.0, (-1.0),  0.0]
+            buf1Colors <- makeBufferSimple  [
+                                1.0, 0.0, 0.0, 1.0,
+                                0.0, 1.0, 0.0, 1.0,
+                                0.0, 0.0, 1.0, 1.0
+                                ]
+            buf2 <- makeBufferSimple [1.0,  1.0,  0.0,
+                               (-1.0), 1.0,  0.0,
+                                1.0, (-1.0),  0.0,
+                               (-1.0), (-1.0),  0.0]
+            buf2Colors <- makeBufferSimple
+                               [0.5, 0.5, 1.0, 1.0,
+                               0.5, 0.5, 1.0, 1.0,
+                               0.5, 0.5, 1.0, 1.0,
+                               0.5, 0.5, 1.0, 1.0]
 
-          canvasWidth <- getCanvasWidth context
-          canvasHeight <- getCanvasHeight context
-          viewport 0 0 canvasWidth canvasHeight
-          clear [COLOR_BUFFER_BIT , DEPTH_BUFFER_BIT]
+            canvasWidth <- getCanvasWidth context
+            canvasHeight <- getCanvasHeight context
+            viewport 0 0 canvasWidth canvasHeight
+            clear [COLOR_BUFFER_BIT , DEPTH_BUFFER_BIT]
 
-          let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-          setUniformFloats uPMatrix (M.toArray pMatrix)
-          let mvMatrix = M.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M.identity
-          setUniformFloats uMVMatrix (M.toArray mvMatrix)
+            let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
+            setUniformFloats bindings.uPMatrix (M.toArray pMatrix)
+            let mvMatrix = M.translate  (V3.vec3 (-1.5) 0.0 (-7.0)) M.identity
+            setUniformFloats bindings.uMVMatrix (M.toArray mvMatrix)
 
-          bindPointBuf buf1Colors aVertexColor
-          drawArr TRIANGLES buf1 aVertexPosition
+            bindPointBuf buf1Colors bindings.aVertexColor
+            drawArr TRIANGLES buf1 bindings.aVertexPosition
 
-          let mvMatrix' = M.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
-          setUniformFloats uMVMatrix (M.toArray mvMatrix')
+            let mvMatrix' = M.translate (V3.vec3 3.0 0.0 0.0) mvMatrix
+            setUniformFloats bindings.uMVMatrix (M.toArray mvMatrix')
 
-          bindPointBuf buf2Colors aVertexColor
-          drawArr TRIANGLE_STRIP buf2 aVertexPosition
+            bindPointBuf buf2Colors bindings.aVertexColor
+            drawArr TRIANGLE_STRIP buf2 bindings.aVertexPosition
 
-          trace "WebGL completed"
+            trace "WebGL completed"

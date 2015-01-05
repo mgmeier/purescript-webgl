@@ -14,29 +14,26 @@
 
 module Graphics.WebGL
   ( WebGLContext(..)
-  , WebGLProg(..)
-  , AttrLocation()
-  , UniLocation()
-  , Uniform(..)
-  , Attr(..)
-  , Size (..)
-  , Buffer(..)
-  , Capacity(..)
-  , Mask(..)
-  , Mode(..)
-  , BufferTarget(..)
-
-  , getCanvasWidth
-  , getCanvasHeight
-
-  , viewport
-  , enable
-  , clearColor
-  , clear
-
   , runWebGL
-  , withShaders
 
+  , Vec2 ()
+  , Vec3()
+  , Vec4()
+  , Mat2()
+  , Mat3()
+  , Mat4()
+  , Sampler2D()
+  , Bool()
+
+  , Uniform(..)
+  , Attribute(..)
+  , Shaders(..)
+  , withShaders
+  , Bindings(..)
+  , WebGLProg()
+
+  , Buffer(..)
+  , BufferTarget(..)
   , makeBuffer
   , makeBufferSimple
 
@@ -50,6 +47,19 @@ module Graphics.WebGL
   , drawArr
   , drawElements
 
+  , Mask(..)
+  , Mode(..)
+
+  , viewport
+  , getCanvasWidth
+  , getCanvasHeight
+
+  , enable
+  , Capacity(..)
+
+  , clearColor
+  , clear
+
   , requestAnimationFrame
 
   ) where
@@ -59,7 +69,7 @@ import Graphics.WebGLRaw
 import qualified Data.Matrix as M
 import qualified Data.Vector as V
 import qualified Data.TypedArray as T
-import Data.VecMat
+import Data.TypeNat
 
 import Control.Monad.Eff
 import Control.Monad
@@ -69,118 +79,9 @@ import Data.Maybe.Unsafe (fromJust)
 import Data.Array (reverse,length,map,(!!))
 import Data.Array.Unsafe (head)
 
-
-data ShaderType =   FragmentShader
-                  | VertexShader
-
-data Size = One | Two | Three | Four
-
-sizeToNumber :: Size -> Number
-sizeToNumber One = 1
-sizeToNumber Two = 2
-sizeToNumber Three = 3
-sizeToNumber Four = 4
-
-data Uniform      = Float Size String
-                  | Bool Size String
-                  | Int Size String
-                  | Vec Size  String
-                  | VecInt Size String
-                  | VecBool Size String
-                  | Matrix Size String
-                  | Sampler2D String
-
-uniGetName :: Uniform -> String
-uniGetName (Float _ s) = s
-uniGetName (Bool _ s) = s
-uniGetName (Int _ s) = s
-uniGetName (Vec _  s) = s
-uniGetName (VecInt _ s) = s
-uniGetName (VecBool _ s) = s
-uniGetName (Matrix _ s) = s
-uniGetName (Sampler2D s) = s
-
-uniGetSize :: Uniform -> Number
-uniGetSize (Float i _) = sizeToNumber i
-uniGetSize (Bool i _) = sizeToNumber i
-uniGetSize (Int i _) = sizeToNumber i
-uniGetSize (Vec i  _) = sizeToNumber i
-uniGetSize (VecInt i _) = sizeToNumber i
-uniGetSize (VecBool i _) = sizeToNumber i
-uniGetSize (Matrix i _) = sizeToNumber i
-uniGetSize (Sampler2D _) = 1
-
-data Attr         = Attr Size String
-                  | VecAttr Size String
-
-attrGetName :: Attr -> String
-attrGetName (Attr _ s) = s
-attrGetName (VecAttr _ s) = s
-
-attrGetSize :: Attr -> Number
-attrGetSize (Attr i _) = sizeToNumber i
-attrGetSize (VecAttr i _) = sizeToNumber i
-
-attrItemType :: Attr -> Number
-attrItemType _ = _FLOAT
-
-type AttrLocation = {
-    aLocation :: GLint,
-    aAttr     :: Attr,
-    aItemSize :: Number,
-    aItemType :: Number}
-
-type UniLocation = {
-    uLocation :: WebGLUniformLocation,
-    uUniform  :: Uniform}
-
 type WebGLContext = {
     canvasName :: String
   }
-
-newtype WebGLProg = WebGLProg WebGLProgram
-
-type Buffer a = {
-    webGLBuffer :: WebGLBuffer,
-    bufferType  :: Number,
-    bufferSize  :: Number
-  }
-
-enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
-enable c = enable_ (capacityToConst c)
-
-clear :: forall eff. [Mask] -> (Eff (webgl :: WebGl | eff) Unit)
-clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
-
-viewport = viewport_
-clearColor = clearColor_
-
-setUniformFloats :: forall eff. UniLocation -> [Number] -> EffWebGL eff Unit
-setUniformFloats uni value =
-  case uni.uUniform of
-    Matrix Four _     -> uniformMatrix4fv_ uni.uLocation false (asArrayBuffer value)
-    Matrix Three _    -> uniformMatrix3fv_ uni.uLocation false (asArrayBuffer value)
-    Matrix Two _      -> uniformMatrix2fv_ uni.uLocation false (asArrayBuffer value)
-    Vec Four _        -> uniform4fv_ uni.uLocation (asArrayBuffer value)
-    Vec Three _       -> uniform3fv_ uni.uLocation (asArrayBuffer value)
-    Vec Two _         -> uniform2fv_ uni.uLocation (asArrayBuffer value)
-
-setUniformBooleans :: forall eff. UniLocation -> [Boolean] -> EffWebGL eff Unit
-setUniformBooleans uni value =
-  case uni.uUniform of
-    Bool One _    -> uniform1i_ uni.uLocation (head (toNumber <$> value))
-    where
-      toNumber true = 1
-      toNumber false = 0
-
-asArrayBuffer ::[Number] -> T.ArrayBuffer T.Float32
-asArrayBuffer = T.asFloat32Array
-
-getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
-getCanvasWidth context = getCanvasWidth_ context.canvasName
-
-getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
-getCanvasHeight context = getCanvasHeight_ context.canvasName
 
 -- | Returns either a continuation which takes a String in the error case,
 --   which happens when WebGL is not present, or a (Right) continuation with the WebGL
@@ -196,10 +97,38 @@ runWebGL canvasId failure success = do
           canvasName : canvasId
         }
 
-withShaders :: forall a eff. String -> String -> [Attr] -> [Uniform] -> (String -> EffWebGL eff a) ->
-                (WebGLProg -> [AttrLocation] -> [UniLocation] -> EffWebGL eff a) -> EffWebGL eff a
-withShaders fragmetShaderSource vertexShaderSource attributes uniforms failure success = do
-  condFShader <- makeShader FragmentShader fragmetShaderSource -- (unlines fshaderSource)
+newtype Uniform typ = Uniform
+    {
+      uLocation :: WebGLUniformLocation,
+      uName     :: String,
+      uType     :: Number
+    }
+
+newtype Attribute typ = Attribute {
+    aLocation :: GLint,
+    aName     :: String,
+    aItemType :: Number,
+    aItemSize :: Number}
+
+data Vec2
+data Vec3
+data Vec4
+data Mat2
+data Mat3
+data Mat4
+data Sampler2D
+data Bool
+
+newtype WebGLProg = WebGLProg WebGLProgram
+
+foreign import data Bindings :: # * -> *
+
+data Shaders bindings = Shaders String String
+
+withShaders :: forall bindings eff a. Shaders (Bindings bindings) -> (String -> EffWebGL eff a) ->
+                ({webGLProgram :: WebGLProg | bindings} -> EffWebGL eff a) -> EffWebGL eff a
+withShaders (Shaders fragmetShaderSource vertexShaderSource) failure success = do
+  condFShader <- makeShader FragmentShader fragmetShaderSource
   case condFShader of
     Nothing -> failure "Can't compile fragment shader"
     Just fshader -> do
@@ -209,59 +138,64 @@ withShaders fragmetShaderSource vertexShaderSource attributes uniforms failure s
         Just vshader -> do
             condProg <- initShaders fshader vshader
             case condProg of
-                Nothing -> failure "Can't init shaders"
+                Nothing ->
+                  failure "Can't init shaders"
                 Just p -> do
-                  attributes' <- foldM (addAttribute p) [] attributes
-                  uniforms' <- foldM (addUniform p) [] uniforms
-                  success (WebGLProg p) (reverse attributes') (reverse uniforms')
-  where
-    addUniform :: forall eff. WebGLProgram -> [UniLocation] -> Uniform -> EffWebGL eff [UniLocation]
-    addUniform prog list descr = do
-      val <- makeUniform prog descr
-      return (val : list)
+                  withBindings <- shaderBindings p
+                  -- bindings2 <- checkBindings bindings1
+                  success withBindings{webGLProgram = WebGLProg p}
 
-    makeUniform :: forall eff. WebGLProgram -> Uniform -> EffWebGL eff UniLocation
-    makeUniform prog uni = do
-     loc <- getUniformLocation_ prog (uniGetName uni)
-     return {uLocation : loc, uUniform: uni}
 
-    addAttribute :: forall eff. WebGLProgram -> [AttrLocation] -> Attr
-                        -> EffWebGL eff [AttrLocation]
-    addAttribute prog list descr = do
-      bind <- makeAttribute prog descr
-      return (bind : list)
+foreign import shaderBindings
+  """
+        function shaderBindings(program) {
+          return function() {
+            var bindings = {}
+            var numUniforms = window.gl.getProgramParameter(program, window.gl.ACTIVE_UNIFORMS);
+            for (var i = 0; i < numUniforms; i += 1) {
+                var uniform = window.gl.getActiveUniform(program, i);
+                var uniformLocation = window.gl.getUniformLocation(program, uniform.name);
+                var newUniform = {};
+                newUniform["uLocation"]=uniformLocation;
+                newUniform["uName"]=uniform.name;
+                newUniform["uType"]=uniform.type;
+                bindings[uniform.name]=newUniform;
+              }
+            var numAttributes = window.gl.getProgramParameter(program, window.gl.ACTIVE_ATTRIBUTES);
+            for (var i = 0; i < numAttributes; i += 1) {
+                var attribute = window.gl.getActiveAttrib(program, i);
+                var attribLocation = window.gl.getAttribLocation(program, attribute.name);
+                window.gl.enableVertexAttribArray(attribLocation);
+                var newAttr = {};
+                newAttr["aLocation"]=attribLocation;
+                newAttr["aName"]=attribute.name;
+                newAttr["aItemType"]=attribute.type;
+                switch (attribute.type) {
+                  case window.gl.FLOAT_VEC2:
+                    newAttr["aItemSize"]=2;
+                    break;
+                  case window.gl.FLOAT_VEC3:
+                    newAttr["aItemSize"]=3;
+                    break;
+                  case window.gl.FLOAT_VEC4:
+                    newAttr["aItemSize"]=4;
+                    break;
+                  default:
+                    LOG("Unsupported attribute type: " + attribute.type);
+                    newAttr["aItemSize"]=1;
+                    break;
+                }
+                bindings[attribute.name]=newAttr;
+            }
+            return bindings;
+            };}
+  """ :: forall eff bindings. WebGLProgram -> Eff (webgl :: WebGl | eff) bindings
 
-    makeAttribute :: forall eff. WebGLProgram -> Attr -> EffWebGL eff AttrLocation
-    makeAttribute prog attr = do
-     loc <- getAttribLocation_ prog (attrGetName attr)
-     enableVertexAttribArray_ loc
-     return {aLocation : loc, aAttr : attr, aItemSize : attrGetSize attr, aItemType : attrItemType attr}
-
-makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Maybe WebGLShader)
-makeShader shaderType shaderSrc = do
-  let shaderTypeConst = case shaderType of
-                          FragmentShader -> _FRAGMENT_SHADER
-                          VertexShader -> _VERTEX_SHADER
-  shader <- createShader_ shaderTypeConst
-  shaderSource_ shader shaderSrc
-  compileShader_ shader
-  res <- getShaderParameter_ shader _COMPILE_STATUS
-  if res
-      then return (Just shader)
-      else return Nothing
-
-initShaders :: forall eff. WebGLShader -> WebGLShader -> Eff (webgl :: WebGl | eff) (Maybe WebGLProgram)
-initShaders fragmentShader vertexShader = do
-  shaderProgram <- createProgram_
-  attachShader_ shaderProgram vertexShader
-  attachShader_ shaderProgram fragmentShader
-  linkProgram_ shaderProgram
-  res <- getProgramParameter_ shaderProgram _LINK_STATUS
-  if res
-    then do
-        useProgram_ shaderProgram
-        return (Just shaderProgram)
-    else return Nothing
+type Buffer a = {
+    webGLBuffer :: WebGLBuffer,
+    bufferType  :: Number,
+    bufferSize  :: Number
+  }
 
 makeBufferSimple :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 makeBufferSimple vertices = do
@@ -289,7 +223,26 @@ makeBuffer bufferTarget conversion vertices = do
       bufferSize  : length vertices
     }
 
-bindPointBuf :: forall a eff. Buffer a -> AttrLocation -> Eff (webgl :: WebGl | eff) Unit
+c2 = _FLOAT_MAT4
+
+setUniformFloats :: forall eff typ. Uniform typ -> [Number] -> EffWebGL eff Unit
+setUniformFloats (Uniform uni) value
+  | uni.uType == _FLOAT         = uniform1f_ uni.uLocation (head value)
+  | uni.uType == _FLOAT_MAT4    = uniformMatrix4fv_ uni.uLocation false (asArrayBuffer value)
+  | uni.uType == _FLOAT_MAT3    = uniformMatrix3fv_ uni.uLocation false (asArrayBuffer value)
+  | uni.uType == _FLOAT_MAT2    = uniformMatrix2fv_ uni.uLocation false (asArrayBuffer value)
+  | uni.uType == _FLOAT_VEC4    = uniform4fv_ uni.uLocation (asArrayBuffer value)
+  | uni.uType == _FLOAT_VEC3    = uniform3fv_ uni.uLocation (asArrayBuffer value)
+  | uni.uType == _FLOAT_VEC2    = uniform2fv_ uni.uLocation (asArrayBuffer value)
+
+setUniformBooleans :: forall eff typ. Uniform typ -> [Boolean] -> EffWebGL eff Unit
+setUniformBooleans (Uniform uni) value 
+  | uni.uType == _BOOL         = uniform1i_ uni.uLocation (head (toNumber <$> value))
+    where
+      toNumber true = 1
+      toNumber false = 0
+
+bindPointBuf :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
 bindPointBuf buffer bind = do
   bindBuffer_ buffer.bufferType buffer.webGLBuffer
   vertexPointer bind
@@ -297,17 +250,71 @@ bindPointBuf buffer bind = do
 bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 bindBuf buffer = bindBuffer_ buffer.bufferType buffer.webGLBuffer
 
-vertexPointer ::  forall eff. AttrLocation -> EffWebGL eff Unit
-vertexPointer attrLoc =
-  vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize attrLoc.aItemType false 0 0
+vertexPointer ::  forall eff typ. Attribute typ -> EffWebGL eff Unit
+vertexPointer (Attribute attrLoc) =
+  vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
 
-drawArr :: forall a eff. Mode -> Buffer a -> AttrLocation -> EffWebGL eff Unit
-drawArr mode buffer attrLoc = do
-  bindPointBuf buffer attrLoc
+drawArr :: forall a eff typ. Mode -> Buffer a -> Attribute typ -> EffWebGL eff Unit
+drawArr mode buffer a@(Attribute attrLoc) = do
+  bindPointBuf buffer a
   drawArrays_ (modeToConst mode) 0 (buffer.bufferSize / attrLoc.aItemSize)
 
 drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit
 drawElements mode count = drawElements_ (modeToConst mode) count _UNSIGNED_SHORT 0
+
+enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
+enable c = enable_ (capacityToConst c)
+
+clear :: forall eff. [Mask] -> (Eff (webgl :: WebGl | eff) Unit)
+clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
+
+viewport = viewport_
+
+clearColor = clearColor_
+
+-- * Internal stuff
+
+
+
+data ShaderType =   FragmentShader
+                  | VertexShader
+
+asArrayBuffer ::[Number] -> T.ArrayBuffer T.Float32
+asArrayBuffer = T.asFloat32Array
+
+getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+getCanvasWidth context = getCanvasWidth_ context.canvasName
+
+getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+getCanvasHeight context = getCanvasHeight_ context.canvasName
+
+makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Maybe WebGLShader)
+makeShader shaderType shaderSrc = do
+  let shaderTypeConst = case shaderType of
+                          FragmentShader -> _FRAGMENT_SHADER
+                          VertexShader -> _VERTEX_SHADER
+  shader <- createShader_ shaderTypeConst
+  shaderSource_ shader shaderSrc
+  compileShader_ shader
+  res <- getShaderParameter_ shader _COMPILE_STATUS
+  if res
+      then return (Just shader)
+      else return Nothing
+
+initShaders :: forall eff. WebGLShader -> WebGLShader -> Eff (webgl :: WebGl | eff) (Maybe WebGLProgram)
+initShaders fragmentShader vertexShader = do
+  shaderProgram <- createProgram_
+  attachShader_ shaderProgram vertexShader
+  attachShader_ shaderProgram fragmentShader
+  linkProgram_ shaderProgram
+  res <- getProgramParameter_ shaderProgram _LINK_STATUS
+  if res
+    then do
+        useProgram_ shaderProgram
+        return (Just shaderProgram)
+    else return Nothing
+
+
 
 -- * Constants
 

@@ -10,7 +10,6 @@ import Graphics.WebGLTexture
 import qualified Data.Matrix as M
 import qualified Data.Matrix4 as M
 import qualified Data.Matrix3 as M
-import qualified Data.VecMat as M
 import qualified Data.Vector as V
 import qualified Data.Vector3 as V
 import qualified Data.TypedArray as T
@@ -27,56 +26,59 @@ import Data.Maybe.Unsafe (fromJust)
 import Data.Array
 import Math
 
-fshaderSource :: String
-fshaderSource =
-"""
-    precision mediump float;
+shaders :: Shaders (Bindings
+              (aVertexPosition :: Attribute Vec3, aVertexNormal :: Attribute Vec3,aTextureCoord :: Attribute Vec2,
+              uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4, uNMatrix:: Uniform Mat4, uSampler :: Uniform Sampler2D,
+              uUseLighting :: Uniform Bool, uAmbientColor :: Uniform Vec3, uLightingDirection :: Uniform Vec3,
+              uDirectionalColor :: Uniform Vec3))
+shaders = Shaders
 
-    varying vec2 vTextureCoord;
-    varying vec3 vLightWeighting;
+  """
+      precision mediump float;
 
-    uniform sampler2D uSampler;
+      varying vec2 vTextureCoord;
+      varying vec3 vLightWeighting;
 
-    void main(void) {
-        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-        gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
-    }
-"""
+      uniform sampler2D uSampler;
 
-vshaderSource :: String
-vshaderSource =
-"""
-    attribute vec3 aVertexPosition;
-    attribute vec3 aVertexNormal;
-    attribute vec2 aTextureCoord;
+      void main(void) {
+          vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+          gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
+      }
+  """
 
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
+  """
+      attribute vec3 aVertexPosition;
+      attribute vec3 aVertexNormal;
+      attribute vec2 aTextureCoord;
 
-    uniform vec3 uAmbientColor;
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      uniform mat3 uNMatrix;
 
-    uniform vec3 uLightingDirection;
-    uniform vec3 uDirectionalColor;
+      uniform vec3 uAmbientColor;
 
-    uniform bool uUseLighting;
+      uniform vec3 uLightingDirection;
+      uniform vec3 uDirectionalColor;
 
-    varying vec2 vTextureCoord;
-    varying vec3 vLightWeighting;
+      uniform bool uUseLighting;
 
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord;
+      varying vec2 vTextureCoord;
+      varying vec3 vLightWeighting;
 
-        if (!uUseLighting) {
-            vLightWeighting = vec3(1.0, 1.0, 1.0);
-        } else {
-            vec3 transformedNormal = uNMatrix * aVertexNormal;
-            float directionalLightWeighting = max(dot(transformedNormal, uLightingDirection), 0.0);
-            vLightWeighting = uAmbientColor + uDirectionalColor * directionalLightWeighting;
-        }
-    }
-"""
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vTextureCoord = aTextureCoord;
+
+          if (!uUseLighting) {
+              vLightWeighting = vec3(1.0, 1.0, 1.0);
+          } else {
+              vec3 transformedNormal = uNMatrix * aVertexNormal;
+              float directionalLightWeighting = max(dot(transformedNormal, uLightingDirection), 0.0);
+              vLightWeighting = uAmbientColor + uDirectionalColor * directionalLightWeighting;
+          }
+      }
+  """
 
 cubeV = [
         -- Front face
@@ -205,17 +207,17 @@ type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
 
-                aVertexPosition :: AttrLocation,
-                aVertexNormal :: AttrLocation,
-                aTextureCoord :: AttrLocation,
-                uPMatrix :: UniLocation,
-                uMVMatrix :: UniLocation,
-                uNMatrix :: UniLocation,
-                uSampler :: UniLocation,
-                uUseLighting :: UniLocation,
-                uAmbientColor :: UniLocation,
-                uLightingDirection :: UniLocation,
-                uDirectionalColor :: UniLocation,
+                aVertexPosition :: Attribute Vec3,
+                aVertexNormal :: Attribute Vec3,
+                aTextureCoord :: Attribute Vec2,
+                uPMatrix :: Uniform Mat4,
+                uMVMatrix :: Uniform Mat4,
+                uNMatrix :: Uniform Mat4,
+                uSampler :: Uniform Sampler2D,
+                uUseLighting :: Uniform Bool,
+                uAmbientColor :: Uniform Vec3,
+                uLightingDirection :: Uniform Vec3,
+                uDirectionalColor :: Uniform Vec3,
 
                 cubeVertices :: Buffer T.Float32,
                 cubeVerticesNormal :: Buffer T.Float32,
@@ -239,20 +241,10 @@ main = do
     (\s -> alert s)
       \ context -> do
         trace "WebGL started"
-        withShaders fshaderSource
-                    vshaderSource
-                    [VecAttr Three "aVertexPosition", VecAttr Three "aVertexNormal", VecAttr Two "aTextureCoord"]
-                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix", Matrix Three "uNMatrix", Sampler2D "uSampler",
-                     Bool One "uUseLighting", Vec Three "uAmbientColor", Vec Three "uLightingDirection",
-                     Vec Three "uDirectionalColor"]
-                    (\s -> alert s)
-                      \ shaderProgram [aVertexPosition, aVertexNormal,
-                                      aTextureCoord]
-                          [uPMatrix,uMVMatrix,
-                          uNMatrix,uSampler,
-                          uUseLighting,uAmbientColor,
-                          uLightingDirection,uDirectionalColor]
-                            -> do
+        withShaders
+            shaders
+            (\s -> alert s)
+            \ bindings -> do
           cubeVertices <- makeBufferSimple cubeV
           cubeVerticesNormal <- makeBufferSimple vertexNormals
 
@@ -263,19 +255,20 @@ main = do
           texture2DFor "crate.gif" MIPMAP \texture -> do
             let state = {
                           context : context,
-                          shaderProgram : shaderProgram,
+                          shaderProgram : bindings.webGLProgram,
 
-                          aVertexPosition : aVertexPosition,
-                          aVertexNormal : aVertexNormal,
-                          aTextureCoord : aTextureCoord,
-                          uPMatrix : uPMatrix,
-                          uMVMatrix : uMVMatrix,
-                          uNMatrix : uNMatrix,
-                          uSampler : uSampler,
-                          uUseLighting : uUseLighting,
-                          uAmbientColor : uAmbientColor,
-                          uLightingDirection : uLightingDirection,
-                          uDirectionalColor : uDirectionalColor,
+                          aVertexPosition : bindings.aVertexPosition,
+                          aVertexNormal : bindings.aVertexNormal,
+                          aTextureCoord : bindings.aTextureCoord,
+                          uPMatrix : bindings.uPMatrix,
+                          uMVMatrix : bindings.uMVMatrix,
+                          uNMatrix : bindings.uNMatrix,
+                          uSampler : bindings.uSampler,
+                          uUseLighting : bindings.uUseLighting,
+                          uAmbientColor : bindings.uAmbientColor,
+                          uLightingDirection : bindings.uLightingDirection,
+                          uDirectionalColor : bindings.uDirectionalColor,
+
                           cubeVertices : cubeVertices,
                           cubeVerticesNormal : cubeVerticesNormal,
                           textureCoords : textureCoords,
@@ -326,52 +319,48 @@ drawScene stRef = do
   clear [COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT]
 
   let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
-  setMatrix4 s.uPMatrix pMatrix
+  setUniformFloats s.uPMatrix (M.toArray pMatrix)
 
   let mvMatrix =
       M.rotate (degToRad s.yRot) (V.vec3' [0, 1, 0])
         $ M.rotate (degToRad s.xRot) (V.vec3' [1, 0, 0])
           $ M.translate  (V.vec3 0.0 0.0 s.z)
             $ M.identity
-  setMatrix4 s.uMVMatrix mvMatrix
+  setUniformFloats s.uMVMatrix (M.toArray mvMatrix)
 
-  let nMatrix = M.transpose
-                  $ fromJust
-                    $ M.normalFromMat4 mvMatrix
-  setMatrix3 s.uNMatrix nMatrix
+  let nMatrix = fromJust $ M.normalFromMat4 mvMatrix
+  setUniformFloats s.uNMatrix (M.toArray nMatrix)
+
+  setLightning s
 
   bindPointBuf s.cubeVertices s.aVertexPosition
   bindPointBuf s.cubeVerticesNormal s.aVertexNormal
   bindPointBuf s.textureCoords s.aTextureCoord
-
   withTexture2D s.texture 0 s.uSampler 0
-
-  setLightning s
-
   bindBuf s.cubeVertexIndices
   drawElements TRIANGLES s.cubeVertexIndices.bufferSize
 
 setLightning :: forall eff. State -> EffWebGL eff Unit
 setLightning s = do
   lighting <- getElementByIdBool "lighting"
-  setBool1 s.uUseLighting lighting
+  setUniformBooleans s.uUseLighting [lighting]
   if lighting
     then do
       ar <- getElementByIdFloat "ambientR"
       ag <- getElementByIdFloat "ambientG"
       ab <- getElementByIdFloat "ambientB"
-      setVector3 s.uAmbientColor (V.Vec [ar, ag, ab])
+      setUniformFloats s.uAmbientColor [ar, ag, ab]
       lx <- getElementByIdFloat "lightDirectionX"
       ly <- getElementByIdFloat "lightDirectionY"
       lz <- getElementByIdFloat "lightDirectionZ"
       let v = V.scale (-1)
                   $ V.normalize
                     $ V.vec3 lx ly lz
-      setVector3 s.uLightingDirection v
+      setUniformFloats s.uLightingDirection (V.toArray v)
       dr <- getElementByIdFloat "directionalR"
       dg <- getElementByIdFloat "directionalG"
       db <- getElementByIdFloat "directionalB"
-      setVector3 s.uDirectionalColor (V.Vec [dr, dg, db])
+      setUniformFloats s.uDirectionalColor [dr, dg, db]
     else return unit
 
 

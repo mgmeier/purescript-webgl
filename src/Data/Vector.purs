@@ -17,29 +17,28 @@ module Data.Vector where
 import Data.Array
 import Data.Monoid
 import Data.Foldable
-import Data.VecMat
+import Data.TypeNat
 import Control.Apply
 import Prelude.Unsafe
 import Math
 
 newtype Vec s a = Vec [a]
 
-class Vector m a where
-  vSize :: m a -> Number
+class (Sized v) <= Vector v where
 
-instance m2 :: Vector (Vec Two) a where
-  vSize _ = 2
+instance sv1 :: Sized (Vec One a) where
+  sized v = 1
+instance sv2 :: Sized (Vec Two a) where
+  sized v = 2
+instance sv3 :: Sized (Vec Three a) where
+  sized v = 3
+instance sv4 :: Sized (Vec Four a) where
+  sized v = 4
 
-instance m3 :: Vector (Vec Three) a where
-  vSize _ = 3
-
-instance m4 :: Vector (Vec Four) a where
-  vSize _ = 4
-
-fromArray :: forall s a. (Vector (Vec s) a) => [a] -> Vec s a
+fromArray :: forall s a. (Vector (Vec s a)) => [a] -> Vec s a
 fromArray l =
   let res = Vec l
-  in case vSize res of
+  in case sized res of
         i | i == length l -> res
 
 toArray :: forall s a. Vec s a -> [a]

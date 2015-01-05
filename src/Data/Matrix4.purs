@@ -8,13 +8,13 @@
 -- Stability   :
 -- Portability :
 --
--- | Inclusion of Mjs library for javascript
+-- | Inspired by Mjs library for javascript
 --
 -----------------------------------------------------------------------------
 
 module Data.Matrix4 where
 
-import Data.VecMat
+import Data.TypeNat
 import Data.Matrix
 import qualified Data.Vector3 as V3
 import qualified Data.Vector as V

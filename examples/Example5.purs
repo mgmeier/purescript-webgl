@@ -22,48 +22,47 @@ import Data.Maybe
 import Data.Array
 import Math
 
+shaders :: Shaders (Bindings (aVertexPosition :: Attribute Vec3, aTextureCoord :: Attribute Vec2,
+                      uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4, uSampler :: Uniform Sampler2D))
+shaders = Shaders
 
-fshaderSource :: String
-fshaderSource =
-""" precision mediump float;
+  """ precision mediump float;
 
-    varying vec2 vTextureCoord;
+      varying vec2 vTextureCoord;
 
-    uniform sampler2D uSampler;
+      uniform sampler2D uSampler;
 
-    void main(void) {
-        gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-    }
-"""
+      void main(void) {
+          gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+      }
+  """
 
-vshaderSource :: String
-vshaderSource =
-"""
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
+  """
+      attribute vec3 aVertexPosition;
+      attribute vec2 aTextureCoord;
 
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
 
-    varying vec2 vTextureCoord;
+      varying vec2 vTextureCoord;
 
 
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord;
-    }
-"""
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vTextureCoord = aTextureCoord;
+      }
+  """
 
 type State =
     {
         context :: WebGLContext,
         shaderProgram :: WebGLProg,
 
-        aVertexPosition :: AttrLocation,
-        aTextureCoord :: AttrLocation,
-        uPMatrix :: UniLocation,
-        uMVMatrix :: UniLocation,
-        uSampler :: UniLocation,
+        aVertexPosition :: Attribute Vec3,
+        aTextureCoord :: Attribute Vec2,
+        uPMatrix :: Uniform Mat4,
+        uMVMatrix :: Uniform Mat4,
+        uSampler :: Uniform Sampler2D,
 
         cubeVertices :: Buffer T.Float32,
         textureCoords :: Buffer T.Float32,
@@ -82,12 +81,9 @@ main = do
     (\s -> alert s)
       \ context -> do
         trace "WebGL started"
-        withShaders fshaderSource
-                    vshaderSource
-                    [VecAttr Three "aVertexPosition", VecAttr Two "aTextureCoord"]
-                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix", Sampler2D "uSampler"]
+        withShaders shaders
                     (\s -> alert s)
-                      \ shaderProgram [aVertexPosition, aTextureCoord] [uPMatrix,uMVMatrix,uSampler] -> do
+                      \ binding -> do
           cubeVertices <- makeBufferSimple [
                             -- Front face
                             -1.0, -1.0,  1.0,
@@ -176,13 +172,13 @@ main = do
           texture2DFor "test.png" MIPMAP \texture ->
             tick {
                   context : context,
-                  shaderProgram : shaderProgram,
+                  shaderProgram : binding.webGLProgram,
 
-                  aVertexPosition : aVertexPosition,
-                  aTextureCoord : aTextureCoord,
-                  uPMatrix : uPMatrix,
-                  uMVMatrix : uMVMatrix,
-                  uSampler : uSampler,
+                  aVertexPosition : binding.aVertexPosition,
+                  aTextureCoord : binding.aTextureCoord,
+                  uPMatrix : binding.uPMatrix,
+                  uMVMatrix : binding.uMVMatrix,
+                  uSampler : binding.uSampler,
 
                   cubeVertices : cubeVertices,
                   textureCoords : textureCoords,

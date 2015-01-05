@@ -23,37 +23,36 @@ import Data.Maybe.Unsafe (fromJust)
 import Data.Array
 import Math
 
-fshaderSource :: String
-fshaderSource =
-"""
-    precision mediump float;
+shaders :: Shaders (Bindings (aVertexPosition :: Attribute Vec3, aTextureCoord :: Attribute Vec2,
+                      uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4, uSampler :: Uniform Sampler2D))
+shaders = Shaders
+  """
+      precision mediump float;
 
-    varying vec2 vTextureCoord;
+      varying vec2 vTextureCoord;
 
-    uniform sampler2D uSampler;
+      uniform sampler2D uSampler;
 
-    void main(void) {
-        gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-    }
-"""
+      void main(void) {
+          gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+      }
+  """
 
-vshaderSource :: String
-vshaderSource =
-"""
-    attribute vec3 aVertexPosition;
-    attribute vec2 aTextureCoord;
+  """
+      attribute vec3 aVertexPosition;
+      attribute vec2 aTextureCoord;
 
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
 
-    varying vec2 vTextureCoord;
+      varying vec2 vTextureCoord;
 
 
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord;
-    }
-"""
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          vTextureCoord = aTextureCoord;
+      }
+  """
 
 cubeV = [
         -- Front face
@@ -144,11 +143,11 @@ type State = {
                 context :: WebGLContext,
                 shaderProgram :: WebGLProg,
 
-                aVertexPosition :: AttrLocation,
-                aTextureCoord :: AttrLocation,
-                uPMatrix :: UniLocation,
-                uMVMatrix :: UniLocation,
-                uSampler :: UniLocation,
+                aVertexPosition :: Attribute Vec3,
+                aTextureCoord :: Attribute Vec2,
+                uPMatrix :: Uniform Mat4,
+                uMVMatrix :: Uniform Mat4,
+                uSampler :: Uniform Sampler2D,
 
                 cubeVertices :: Buffer T.Float32,
                 textureCoords :: Buffer T.Float32,
@@ -172,12 +171,9 @@ main = do
     (\s -> alert s)
       \ context -> do
         trace "WebGL started"
-        withShaders fshaderSource
-                    vshaderSource
-                    [VecAttr Three "aVertexPosition", VecAttr Two "aTextureCoord"]
-                    [Matrix Four "uPMatrix", Matrix Four "uMVMatrix", Sampler2D "uSampler"]
+        withShaders shaders
                     (\s -> alert s)
-                      \ shaderProgram [aVertexPosition, aTextureCoord] [uPMatrix,uMVMatrix,uSampler] -> do
+                      \ bindings -> do
           cubeVertices <- makeBufferSimple cubeV
           textureCoords <- makeBufferSimple texCoo
           cubeVertexIndices <- makeBuffer ELEMENT_ARRAY_BUFFER T.asUint16Array cvi
@@ -188,13 +184,13 @@ main = do
               texture2DFor "crate.gif" MIPMAP \texture3 -> do
                 let state = {
                               context : context,
-                              shaderProgram : shaderProgram,
+                              shaderProgram : bindings.webGLProgram,
 
-                              aVertexPosition : aVertexPosition,
-                              aTextureCoord : aTextureCoord,
-                              uPMatrix : uPMatrix,
-                              uMVMatrix : uMVMatrix,
-                              uSampler : uSampler,
+                              aVertexPosition : bindings.aVertexPosition,
+                              aTextureCoord : bindings.aTextureCoord,
+                              uPMatrix : bindings.uPMatrix,
+                              uMVMatrix : bindings.uMVMatrix,
+                              uSampler : bindings.uSampler,
 
                               cubeVertices : cubeVertices,
                               textureCoords : textureCoords,

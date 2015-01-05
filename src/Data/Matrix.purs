@@ -14,7 +14,8 @@
 
 module Data.Matrix where
 
-import Data.VecMat
+import Data.TypeNat
+import Data.Array.Extended
 import qualified Data.Vector as V
 import Data.Array
 import Data.Monoid
@@ -26,20 +27,21 @@ import Math
 
 newtype Mat s a = Mat [a]
 
-class Matrix m a where
-  mSize :: m a -> Number
+instance sm2 :: Sized (Mat Two a) where
+  sized v = 2
+instance sm3 :: Sized (Mat Three a) where
+  sized v = 3
+instance sm4 :: Sized (Mat Four a) where
+  sized v = 4
+
+class (Sized (m a)) <= Matrix m a where
   generate :: (Number -> Number -> a) -> m a
 
-instance matrix2 :: Matrix (Mat Two) a where
-  mSize _ = 2
-  generate = generate_ 2
-
-instance matrix3 :: Matrix (Mat Three) a where
-  mSize _ = 3
-  generate = generate_ 3
-
-instance matrix4 :: Matrix (Mat Four) a where
-  mSize _ = 4
+instance m2 :: Matrix (Mat  Two) a where
+    generate = generate_ 2
+instance m3 :: Matrix (Mat  Three) a where
+    generate = generate_ 3
+instance m4 :: Matrix (Mat Four) a  where
   generate = generate_ 4
 
 -- | /O(rows*cols)/. Generate a matrix from a generator function.
@@ -65,14 +67,14 @@ instance showMat4 :: (Show a) => Show (Mat Four a) where
   show m = "Mat4x4 " ++ show (columns m)
 
 columns :: forall s a . (Matrix (Mat s) a) => Mat s a -> [[a]]
-columns mat@(Mat m) | mSize mat == 2 =
+columns mat@(Mat m) | sized mat == 2 =
     [slice 0 2 m,
      slice 2 4 m]
-                    | mSize mat == 3 =
+                    | sized mat == 3 =
     [slice 0 3 m,
      slice 3 6 m,
      slice 6 9 m]
-                    | mSize mat == 4 =
+                    | sized mat == 4 =
   [slice 0 4 m,
    slice 4 8 m,
    slice 8 12 m,
@@ -108,7 +110,7 @@ getElem :: forall s a. (Matrix (Mat s) a) =>
         -> Number      -- ^ Column
         -> Mat s a     -- ^ Matrix
         -> a
-getElem i j m@(Mat l) = fromJust (l !! (i * mSize m + j))
+getElem i j m@(Mat l) = fromJust (l !! (i * sized m + j))
 
 
 -- | Scale a matrix by a given factor.
@@ -124,7 +126,7 @@ scaleMatrix = (<$>) <<< (*)
 fromArray :: forall a s. (Matrix (Mat s) a) => [a] -> Mat s a
 fromArray l =
   let res = Mat l
-  in case mSize res * mSize res of
+  in case sized res * sized res of
         i | i == length l -> res
 
 toArray :: forall s a. Mat s a -> [a]

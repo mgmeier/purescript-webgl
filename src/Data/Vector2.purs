@@ -15,7 +15,7 @@
 module Data.Vector2 where
 
 import Data.Vector
-import Data.VecMat
+import Data.TypeNat
 import Data.Array
 import Prelude.Unsafe
 import Math
