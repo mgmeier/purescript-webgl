@@ -261,7 +261,7 @@ main = do
                           ySpeed : 1.0,
                           z : (-5.0),
                           currentlyPressedKeys : []
-                        } :: State MyBindings
+                        } 
             runST do
               stRef <- newSTRef state
               onKeyDown (handleKeyD stRef)

@@ -186,7 +186,7 @@ foreign import shaderBindings
             }
             return bindings;
             };}
-  """ :: forall eff bindings. WebGLProgram -> Eff (webgl :: WebGl | eff) bindings
+  """ :: forall eff bindings. WebGLProgram -> Eff eff bindings
 
 type Buffer a = {
     webGLBuffer :: WebGLBuffer,
@@ -219,8 +219,6 @@ makeBuffer bufferTarget conversion vertices = do
       bufferType  : targetConst,
       bufferSize  : length vertices
     }
-
-c2 = _FLOAT_MAT4
 
 setUniformFloats :: forall eff typ. Uniform typ -> [Number] -> EffWebGL eff Unit
 setUniformFloats (Uniform uni) value
