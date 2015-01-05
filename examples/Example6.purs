@@ -23,8 +23,8 @@ import Data.Maybe.Unsafe (fromJust)
 import Data.Array
 import Math
 
-shaders :: Shaders (Bindings (aVertexPosition :: Attribute Vec3, aTextureCoord :: Attribute Vec2,
-                      uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4, uSampler :: Uniform Sampler2D))
+shaders :: Shaders {aVertexPosition :: Attribute Vec3, aTextureCoord :: Attribute Vec2,
+                      uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4, uSampler :: Uniform Sampler2D}
 shaders = Shaders
   """
       precision mediump float;

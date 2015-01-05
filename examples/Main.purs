@@ -32,7 +32,7 @@ type MyBindings =
               uUseLighting :: Uniform Bool, uAmbientColor :: Uniform Vec3, uLightingDirection :: Uniform Vec3,
               uDirectionalColor :: Uniform Vec3)
 
-shaders :: Shaders (Bindings MyBindings)
+shaders :: Shaders (Object MyBindings)
 shaders = Shaders
 
   """
@@ -207,7 +207,8 @@ cvi = [
 
 type State = {
                 context :: WebGLContext,
-                bindings ::{webGLProgram :: WebGLProg | Bindings},
+
+                bindings :: {webGLProgram :: WebGLProg | MyBindings},
 
                 cubeVertices :: Buffer T.Float32,
                 cubeVerticesNormal :: Buffer T.Float32,
@@ -245,13 +246,14 @@ main = do
           texture2DFor "crate.gif" MIPMAP \texture -> do
             let state = {
                           context : context,
-                          bindings : bindings
+                          bindings : bindings,
+
                           cubeVertices : cubeVertices,
                           cubeVerticesNormal : cubeVerticesNormal,
                           textureCoords : textureCoords,
                           cubeVertexIndices : cubeVertexIndices,
                           texture : texture,
-                          lastTime : (Nothing :: Maybe Number),
+                          lastTime : Nothing,
 
                           xRot : 0,
                           xSpeed : 1.0,

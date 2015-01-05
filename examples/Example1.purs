@@ -16,7 +16,7 @@ import Debug.Trace
 import Data.Tuple
 
 
-shaders :: Shaders (Bindings (aVertexPosition :: Attribute Vec3, uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4))
+shaders :: Shaders {aVertexPosition :: Attribute Vec3, uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4}
 shaders = Shaders
 
   """precision mediump float;

@@ -441,8 +441,6 @@
     newtype Attribute typ where
       Attribute :: { aItemSize :: Number, aItemType :: Number, aName :: String, aLocation :: GLint } -> Attribute typ
 
-    data Bindings :: # * -> *
-
     data Bool
 
     type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: WebGLBuffer }
@@ -529,7 +527,7 @@
 
     vertexPointer :: forall eff typ. Attribute typ -> EffWebGL eff Unit
 
-    withShaders :: forall bindings eff a. Shaders (Bindings bindings) -> (String -> EffWebGL eff a) -> ({ webGLProgram :: WebGLProg | bindings } -> EffWebGL eff a) -> EffWebGL eff a
+    withShaders :: forall bindings eff a. Shaders (Object bindings) -> (String -> EffWebGL eff a) -> ({ webGLProgram :: WebGLProg | bindings } -> EffWebGL eff a) -> EffWebGL eff a
 
 
 ## Module Graphics.WebGLRaw

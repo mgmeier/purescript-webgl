@@ -26,11 +26,10 @@ import Data.Maybe.Unsafe (fromJust)
 import Data.Array
 import Math
 
-shaders :: Shaders (Bindings
-              (aVertexPosition :: Attribute Vec3, aVertexNormal :: Attribute Vec3,aTextureCoord :: Attribute Vec2,
+shaders :: Shaders {aVertexPosition :: Attribute Vec3, aVertexNormal :: Attribute Vec3,aTextureCoord :: Attribute Vec2,
               uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4, uNMatrix:: Uniform Mat4, uSampler :: Uniform Sampler2D,
               uUseLighting :: Uniform Bool, uAmbientColor :: Uniform Vec3, uLightingDirection :: Uniform Vec3,
-              uDirectionalColor :: Uniform Vec3))
+              uDirectionalColor :: Uniform Vec3}
 shaders = Shaders
 
   """
