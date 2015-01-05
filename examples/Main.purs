@@ -205,10 +205,10 @@ cvi = [
         20, 21, 22,   20, 22, 23  -- Left face
       ]
 
-type State = {
+type State bindings = {
                 context :: WebGLContext,
 
-                bindings :: {webGLProgram :: WebGLProg | MyBindings},
+                bindings :: {webGLProgram :: WebGLProg | bindings},
 
                 cubeVertices :: Buffer T.Float32,
                 cubeVerticesNormal :: Buffer T.Float32,
@@ -261,21 +261,21 @@ main = do
                           ySpeed : 1.0,
                           z : (-5.0),
                           currentlyPressedKeys : []
-                        }
+                        } :: State MyBindings
             runST do
               stRef <- newSTRef state
               onKeyDown (handleKeyD stRef)
               onKeyUp (handleKeyU stRef)
               tick stRef
 
-tick :: forall h eff. STRef h State ->  EffWebGL (st :: ST h, trace :: Trace, now :: Now |eff) Unit
+tick :: forall h eff. STRef h (State MyBindings) ->  EffWebGL (st :: ST h, trace :: Trace, now :: Now |eff) Unit
 tick stRef = do
   drawScene stRef
   handleKeys stRef
   animate stRef
   requestAnimationFrame (tick stRef)
 
-animate ::  forall h eff . STRef h State -> EffWebGL (st :: ST h, now :: Now |eff) Unit
+animate ::  forall h eff . STRef h (State MyBindings) -> EffWebGL (st :: ST h, now :: Now |eff) Unit
 animate stRef = do
   s <- readSTRef stRef
   timeNow <- liftM1 toEpochMilliseconds now
@@ -289,7 +289,7 @@ animate stRef = do
                               })
   return unit
 
-drawScene :: forall h eff . STRef h State -> EffWebGL (st :: ST h |eff) Unit
+drawScene :: forall h eff . STRef h (State MyBindings) -> EffWebGL (st :: ST h |eff) Unit
 drawScene stRef = do
   s <- readSTRef stRef
   canvasWidth <- getCanvasWidth s.context
@@ -319,7 +319,7 @@ drawScene stRef = do
   bindBuf s.cubeVertexIndices
   drawElements TRIANGLES s.cubeVertexIndices.bufferSize
 
-setLightning :: forall eff. State -> EffWebGL eff Unit
+setLightning :: forall eff. (State MyBindings) -> EffWebGL eff Unit
 setLightning s = do
   lighting <- getElementByIdBool "lighting"
   setUniformBooleans s.bindings.uUseLighting [lighting]
@@ -371,7 +371,7 @@ degToRad x = x/180*pi
 
 -- * Key handling
 
-handleKeys ::  forall h eff . STRef h State -> EffWebGL (trace :: Trace, st :: ST h |eff) Unit
+handleKeys ::  forall h eff . STRef h (State MyBindings) -> EffWebGL (trace :: Trace, st :: ST h |eff) Unit
 handleKeys stRef = do
   s <- readSTRef stRef
   if null s.currentlyPressedKeys
@@ -400,7 +400,7 @@ handleKeys stRef = do
         trace (show s.currentlyPressedKeys)
         return unit
 
-handleKeyD :: forall h eff. STRef h State -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
+handleKeyD :: forall h eff. STRef h (State MyBindings) -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
 handleKeyD stRef event = do
   trace "handleKeyDown"
   let key = eventGetKeyCode event
@@ -412,7 +412,7 @@ handleKeyD stRef event = do
 --  trace (show s.currentlyPressedKeys)
   return unit
 
-handleKeyU :: forall h eff. STRef h State -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
+handleKeyU :: forall h eff. STRef h (State MyBindings) -> Event -> Eff (st :: ST h, trace :: Trace | eff) Unit
 handleKeyU stRef event = do
   trace "handleKeyUp"
   let key = eventGetKeyCode event
