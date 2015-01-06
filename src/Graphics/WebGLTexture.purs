@@ -32,7 +32,7 @@ module Graphics.WebGLTexture
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLRaw
-import Graphics.CanvasM
+import Graphics.Canvas.Extended
 
 import Control.Monad.Eff
 

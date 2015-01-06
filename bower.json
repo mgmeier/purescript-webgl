@@ -1,15 +1,29 @@
 {
   "name": "purescript-webgl",
-  "version": "0.0.1",
+  "homepage": "https://github.com/jutaro/purescript-webgl",
+  "version": "0.1.0",
+  "authors": [
+    "Jürgen Nicklisch-Franken <jnf@arcor.de>"
+  ],
+  "description": "WebGL binding for purescript",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
   "dependencies": {
-    "purescript-canvas" : "*",
-    "purescript-datetime" : "*",
-    "purescript-maybe" : "*",
-    "purescript-either": "*",
-    "purescript-arrays": "*",
-    "purescript-math": "*",
-    "purescript-monoid": "*",
-    "purescript-foldable-traversable": "*"
-  },
-  "license": "Apache-2.0"
+    "purescript-typedarray" : "*",
+    "purescript-vector": "*",
+    "purescript-matrix": "*"
+  }
 }

@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Graphics.CanvasM
+-- Module      :  Graphics.Canvas.Extended
 -- Copyright   :  Jürgen Nicklisch-Franken
 -- License     :  Apache-2.0
 --
@@ -12,6 +12,6 @@
 --
 -----------------------------------------------------------------------------
 
-module Graphics.CanvasM where
+module Graphics.Canvas.Extended where
 
 foreign import data Image :: *
