@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jutaro/purescript-webgl.svg?branch=master)](https://travis-ci.org/jutaro/purescript-webgl)
+
 Binding to webGL for purescript.
  
 - [Module documentation](docs/Module.md)
