@@ -1,7 +1,7 @@
 {
   "name": "purescript-webgl",
   "homepage": "https://github.com/jutaro/purescript-webgl",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "authors": [
     "Jürgen Nicklisch-Franken <jnf@arcor.de>"
   ],
