@@ -140,7 +140,7 @@ withShaders (Shaders fragmetShaderSource vertexShaderSource) failure success = d
                 Just p -> do
                   withBindings <- shaderBindings p
                   -- bindings2 <- checkBindings bindings1
-                  success withBindings{webGLProgram = WebGLProg p}
+                  success (withBindings{webGLProgram = WebGLProg p})
 
 
 foreign import shaderBindings
