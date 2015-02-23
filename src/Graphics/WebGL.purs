@@ -121,8 +121,8 @@ runWebGLAttr canvasId attr failure success = do
         }
 
 -- | Same as runWebGLAttr but uses default attributes (defContextAttributes)
-runWebGL :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
-runWebGL canvasId attr failure success = do
+runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
+runWebGL canvasId failure success = do
   res <- initGL canvasId defContextAttributes
   if res
     then runWebGl_ (success makeContext)
