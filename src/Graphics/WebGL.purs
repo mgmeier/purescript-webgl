@@ -14,6 +14,8 @@
 
 module Graphics.WebGL
   ( WebGLContext(..)
+  , ContextAttributes()
+  , defContextAttributes
   , runWebGL
 
   , Vec2 ()
@@ -82,12 +84,33 @@ type WebGLContext = {
     canvasName :: String
   }
 
+type ContextAttributes = { alpha :: Boolean
+                         , depth :: Boolean
+                         , stencil :: Boolean
+                         , antialias :: Boolean
+                         , premultipliedAlpha :: Boolean
+                         , preserveDrawingBuffer :: Boolean
+                         , preferLowPowerToHighPerformance :: Boolean
+                         , failIfMajorPerformanceCaveat :: Boolean
+                         }
+
+defContextAttributes :: ContextAttributes
+defContextAttributes = { alpha : true
+                       , depth : true
+                       , stencil : false
+                       , antialias : true
+                       , premultipliedAlpha : true
+                       , preserveDrawingBuffer : false
+                       , preferLowPowerToHighPerformance : false
+                       , failIfMajorPerformanceCaveat : false
+                       }
+
 -- | Returns either a continuation which takes a String in the error case,
 --   which happens when WebGL is not present, or a (Right) continuation with the WebGL
 --   effect.
-runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
-runWebGL canvasId failure success = do
-  res <- initGL canvasId
+runWebGL :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
+runWebGL canvasId attr failure success = do
+  res <- initGL canvasId attr
   if res
     then runWebGl_ (success makeContext)
     else failure "Unable to initialize WebGL. Your browser may not support it."
@@ -377,20 +400,22 @@ bufferTargetToConst ELEMENT_ARRAY_BUFFER = _ELEMENT_ARRAY_BUFFER
 
 foreign import initGL """
         function initGL(canvasId) {
-          return function() {
-            var canvas = document.getElementById(canvasId);
-            try {
-            window.gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+          return function(attr) {
+            return function() {
+              var canvas = document.getElementById(canvasId);
+              try {
+              window.gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
+              }
+              catch(e) {return false}
+              if (!window.gl)
+              {
+                gl = null;
+                return false;
+              }
+              return true;
+              }
             }
-            catch(e) {return false}
-            if (!window.gl)
-            {
-              gl = null;
-              return false;
-            }
-            return true;
-            }
-        }""" :: forall eff.String -> (Eff (eff) Boolean)
+        }""" :: forall eff. String -> ContextAttributes -> (Eff (eff) Boolean)
 
 foreign import getCanvasWidth_ """
         function getCanvasWidth_(canvasId) {
