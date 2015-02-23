@@ -17,6 +17,7 @@ module Graphics.WebGL
   , ContextAttributes()
   , defContextAttributes
   , runWebGL
+  , runWebGLAttr
 
   , Vec2 ()
   , Vec3()
@@ -108,9 +109,21 @@ defContextAttributes = { alpha : true
 -- | Returns either a continuation which takes a String in the error case,
 --   which happens when WebGL is not present, or a (Right) continuation with the WebGL
 --   effect.
+runWebGLAttr :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
+runWebGLAttr canvasId attr failure success = do
+  res <- initGL canvasId attr
+  if res
+    then runWebGl_ (success makeContext)
+    else failure "Unable to initialize WebGL. Your browser may not support it."
+    where
+      makeContext = {
+          canvasName : canvasId
+        }
+
+-- | Same as runWebGLAttr but uses default attributes (defContextAttributes)
 runWebGL :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 runWebGL canvasId attr failure success = do
-  res <- initGL canvasId attr
+  res <- initGL canvasId defContextAttributes
   if res
     then runWebGl_ (success makeContext)
     else failure "Unable to initialize WebGL. Your browser may not support it."
