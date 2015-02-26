@@ -153,6 +153,7 @@ data Mat3
 data Mat4
 data Sampler2D
 data Bool
+data Float
 
 newtype WebGLProg = WebGLProg WebGLProgram
 

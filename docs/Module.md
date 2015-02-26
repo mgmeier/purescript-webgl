@@ -66,7 +66,7 @@ runWebGLAttr :: forall a eff. String -> ContextAttributes -> (String -> Eff eff 
 #### `runWebGL`
 
 ``` purescript
-runWebGL :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
+runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 ```
 
 Same as runWebGLAttr but uses default attributes (defContextAttributes)
