@@ -27,6 +27,7 @@ module Graphics.WebGL
   , Mat4()
   , Sampler2D()
   , Bool()
+  , Float()
 
   , Uniform(..)
   , Attribute(..)

@@ -143,6 +143,13 @@ data Bool
 ```
 
 
+#### `Float`
+
+``` purescript
+data Float
+```
+
+
 #### `WebGLProg`
 
 ``` purescript
