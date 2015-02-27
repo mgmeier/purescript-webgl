@@ -221,10 +221,31 @@ bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
-#### `vertexPointer`
+#### `blendFunc`
 
 ``` purescript
-vertexPointer :: forall eff typ. Attribute typ -> EffWebGL eff Unit
+blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
+#### `blendFuncSeparate`
+
+``` purescript
+blendFuncSeparate :: forall eff. BlendingFactor -> BlendingFactor -> BlendingFactor -> BlendingFactor -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
+#### `clear`
+
+``` purescript
+clear :: forall eff. [Mask] -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
+#### `disable`
+
+``` purescript
+disable :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
@@ -249,10 +270,10 @@ enable :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
-#### `clear`
+#### `vertexPointer`
 
 ``` purescript
-clear :: forall eff. [Mask] -> Eff (webgl :: WebGl | eff) Unit
+vertexPointer :: forall eff typ. Attribute typ -> EffWebGL eff Unit
 ```
 
 
@@ -311,6 +332,28 @@ data Mode
 data BufferTarget
   = ARRAY_BUFFER 
   | ELEMENT_ARRAY_BUFFER 
+```
+
+
+#### `BlendingFactor`
+
+``` purescript
+data BlendingFactor
+  = ZERO 
+  | ONE 
+  | SRC_COLOR 
+  | ONE_MINUS_SRC_COLOR 
+  | DST_COLOR 
+  | ONE_MINUS_DST_COLOR 
+  | SRC_ALPHA 
+  | ONE_MINUS_SRC_ALPHA 
+  | DST_ALPHA 
+  | ONE_MINUS_DST_ALPHA 
+  | CONSTANT_COLOR 
+  | ONE_MINUS_CONSTANT_COLOR 
+  | CONSTANT_ALPHA 
+  | ONE_MINUS_CONSTANT_ALPHA 
+  | SRC_ALPHA_SATURATE 
 ```
 
 
