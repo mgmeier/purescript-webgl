@@ -19,7 +19,7 @@ module Graphics.WebGL
   , runWebGL
   , runWebGLAttr
 
-  , Vec2 ()
+  , Vec2()
   , Vec3()
   , Vec4()
   , Mat2()
@@ -27,6 +27,7 @@ module Graphics.WebGL
   , Mat4()
   , Sampler2D()
   , Bool()
+  , Float()
 
   , Uniform(..)
   , Attribute(..)
@@ -51,11 +52,16 @@ module Graphics.WebGL
 
   , Mask(..)
   , Mode(..)
+  
+  , blendFunc
+  , blendFuncSeparate
+  , BlendingFactor(..)
 
   , viewport
   , getCanvasWidth
   , getCanvasHeight
 
+  , disable
   , enable
   , Capacity(..)
 
@@ -153,6 +159,7 @@ data Mat3
 data Mat4
 data Sampler2D
 data Bool
+data Float
 
 newtype WebGLProg = WebGLProg WebGLProgram
 
@@ -273,6 +280,7 @@ setUniformBooleans (Uniform uni) value
       toNumber true = 1
       toNumber false = 0
 
+
 bindPointBuf :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
 bindPointBuf buffer bind = do
   bindBuffer_ buffer.bufferType buffer.webGLBuffer
@@ -281,9 +289,29 @@ bindPointBuf buffer bind = do
 bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 bindBuf buffer = bindBuffer_ buffer.bufferType buffer.webGLBuffer
 
-vertexPointer ::  forall eff typ. Attribute typ -> EffWebGL eff Unit
-vertexPointer (Attribute attrLoc) =
-  vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
+blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
+blendFunc a b = blendFunc_ (blendingFactorToConst a) (blendingFactorToConst b)
+
+blendFuncSeparate :: forall eff. BlendingFactor 
+    -> BlendingFactor 
+    -> BlendingFactor 
+    -> BlendingFactor 
+    -> (Eff (webgl :: WebGl | eff) Unit)
+blendFuncSeparate a b c d =
+    let
+        a' = blendingFactorToConst a
+        b' = blendingFactorToConst b
+        c' = blendingFactorToConst c
+        d' = blendingFactorToConst d   
+    in blendFuncSeparate_ a' b' c' d'
+
+clear :: forall eff. [Mask] -> (Eff (webgl :: WebGl | eff) Unit)
+clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
+
+clearColor = clearColor_
+
+disable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
+disable = disable_ <<< capacityToConst
 
 drawArr :: forall a eff typ. Mode -> Buffer a -> Attribute typ -> EffWebGL eff Unit
 drawArr mode buffer a@(Attribute attrLoc) = do
@@ -296,12 +324,11 @@ drawElements mode count = drawElements_ (modeToConst mode) count _UNSIGNED_SHORT
 enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
 enable c = enable_ (capacityToConst c)
 
-clear :: forall eff. [Mask] -> (Eff (webgl :: WebGl | eff) Unit)
-clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
+vertexPointer ::  forall eff typ. Attribute typ -> EffWebGL eff Unit
+vertexPointer (Attribute attrLoc) =
+  vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
 
 viewport = viewport_
-
-clearColor = clearColor_
 
 -- * Internal stuff
 
@@ -367,6 +394,7 @@ capacityToConst CULL_FACE = _CULL_FACE
 capacityToConst POLYGON_OFFSET_FILL = _POLYGON_OFFSET_FILL
 capacityToConst SCISSOR_TEST = _SCISSOR_TEST
 
+
 data Mask = DEPTH_BUFFER_BIT
                 -- ^Clears the depth buffer	0x00000100
             | STENCIL_BUFFER_BIT
@@ -378,6 +406,7 @@ maskToConst :: Mask -> Number
 maskToConst DEPTH_BUFFER_BIT   = _DEPTH_BUFFER_BIT
 maskToConst STENCIL_BUFFER_BIT = _STENCIL_BUFFER_BIT
 maskToConst COLOR_BUFFER_BIT   = _COLOR_BUFFER_BIT
+
 
 data Mode = POINTS
               -- ^ Draws a single dot per vertex. For example, 10 vertices produce 10 dots.
@@ -403,13 +432,50 @@ modeToConst TRIANGLES = _TRIANGLES
 modeToConst TRIANGLE_STRIP = _TRIANGLE_STRIP
 modeToConst TRIANGLE_FAN = _TRIANGLE_FAN
 
+
 data BufferTarget = ARRAY_BUFFER
                     | ELEMENT_ARRAY_BUFFER
 
 bufferTargetToConst ARRAY_BUFFER = _ARRAY_BUFFER
 bufferTargetToConst ELEMENT_ARRAY_BUFFER = _ELEMENT_ARRAY_BUFFER
 
--- * Some hand writte foreign functions
+
+data BlendingFactor =
+              ZERO
+            | ONE
+            | SRC_COLOR
+            | ONE_MINUS_SRC_COLOR
+            | DST_COLOR
+            | ONE_MINUS_DST_COLOR
+            | SRC_ALPHA
+            | ONE_MINUS_SRC_ALPHA
+            | DST_ALPHA
+            | ONE_MINUS_DST_ALPHA
+            | CONSTANT_COLOR
+            | ONE_MINUS_CONSTANT_COLOR
+            | CONSTANT_ALPHA
+            | ONE_MINUS_CONSTANT_ALPHA
+            | SRC_ALPHA_SATURATE
+
+blendingFactorToConst :: BlendingFactor -> Number
+blendingFactorToConst ZERO = _ZERO
+blendingFactorToConst ONE = _ONE
+blendingFactorToConst SRC_COLOR = _SRC_COLOR
+blendingFactorToConst ONE_MINUS_SRC_COLOR = _ONE_MINUS_SRC_COLOR
+blendingFactorToConst DST_COLOR = _DST_COLOR
+blendingFactorToConst ONE_MINUS_DST_COLOR = _ONE_MINUS_DST_COLOR
+blendingFactorToConst SRC_ALPHA = _SRC_ALPHA
+blendingFactorToConst ONE_MINUS_SRC_ALPHA = _ONE_MINUS_SRC_ALPHA
+blendingFactorToConst DST_ALPHA = _DST_ALPHA
+blendingFactorToConst ONE_MINUS_DST_ALPHA = _ONE_MINUS_DST_ALPHA
+blendingFactorToConst CONSTANT_COLOR = _CONSTANT_COLOR
+blendingFactorToConst ONE_MINUS_CONSTANT_COLOR = _ONE_MINUS_CONSTANT_COLOR
+blendingFactorToConst CONSTANT_ALPHA = _CONSTANT_ALPHA
+blendingFactorToConst ONE_MINUS_CONSTANT_ALPHA = _ONE_MINUS_CONSTANT_ALPHA
+blendingFactorToConst SRC_ALPHA_SATURATE = _SRC_ALPHA_SATURATE
+
+
+-- * Some hand written foreign functions
 
 foreign import initGL """
         function initGL(canvasId) {
