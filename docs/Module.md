@@ -235,6 +235,20 @@ blendFuncSeparate :: forall eff. BlendingFactor -> BlendingFactor -> BlendingFac
 ```
 
 
+#### `blendEquation`
+
+``` purescript
+blendEquation :: forall eff. BlendEquation -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
+#### `blendEquationSeparate`
+
+``` purescript
+blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
 #### `clear`
 
 ``` purescript
@@ -267,6 +281,13 @@ drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit
 
 ``` purescript
 enable :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
+#### `isEnabled`
+
+``` purescript
+isEnabled :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Boolean
 ```
 
 
@@ -349,11 +370,29 @@ data BlendingFactor
   | ONE_MINUS_SRC_ALPHA 
   | DST_ALPHA 
   | ONE_MINUS_DST_ALPHA 
+  | SRC_ALPHA_SATURATE 
+  | BLEND_DST_RGB 
+  | BLEND_SRC_RGB 
+  | BLEND_DST_ALPHA 
+  | BLEND_SRC_ALPHA 
   | CONSTANT_COLOR 
   | ONE_MINUS_CONSTANT_COLOR 
   | CONSTANT_ALPHA 
   | ONE_MINUS_CONSTANT_ALPHA 
-  | SRC_ALPHA_SATURATE 
+  | BLEND_COLOR 
+```
+
+
+#### `BlendEquation`
+
+``` purescript
+data BlendEquation
+  = FUNC_ADD 
+  | BLEND_EQUATION 
+  | BLEND_EQUATION_RGB 
+  | BLEND_EQUATION_ALPHA 
+  | FUNC_SUBTRACT 
+  | FUNC_REVERSE_SUBTRACT 
 ```
 
 

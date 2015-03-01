@@ -53,8 +53,12 @@ module Graphics.WebGL
   , Mask(..)
   , Mode(..)
   
+  , blendColor
   , blendFunc
   , blendFuncSeparate
+  , blendEquation
+  , blendEquationSeparate
+  , BlendEquation(..)
   , BlendingFactor(..)
 
   , viewport
@@ -63,10 +67,15 @@ module Graphics.WebGL
 
   , disable
   , enable
+  , isEnabled
   , Capacity(..)
 
-  , clearColor
   , clear
+  , clearColor
+  , clearDepth
+  , clearStencil
+  , colorMask
+  , isContextLost
 
   , requestAnimationFrame
 
@@ -289,6 +298,8 @@ bindPointBuf buffer bind = do
 bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 bindBuf buffer = bindBuffer_ buffer.bufferType buffer.webGLBuffer
 
+blendColor = blendColor_
+
 blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
 blendFunc a b = blendFunc_ (blendingFactorToConst a) (blendingFactorToConst b)
 
@@ -305,10 +316,22 @@ blendFuncSeparate a b c d =
         d' = blendingFactorToConst d   
     in blendFuncSeparate_ a' b' c' d'
 
+blendEquation :: forall eff. BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
+blendEquation = blendEquation_ <<< blendEquationToConst
+
+blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
+blendEquationSeparate a b = blendEquationSeparate_ (blendEquationToConst a) (blendEquationToConst b)
+
 clear :: forall eff. [Mask] -> (Eff (webgl :: WebGl | eff) Unit)
 clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
 
 clearColor = clearColor_
+
+clearDepth = clearDepth_
+
+clearStencil = clearStencil_
+
+colorMask = colorMask_
 
 disable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
 disable = disable_ <<< capacityToConst
@@ -322,7 +345,12 @@ drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit
 drawElements mode count = drawElements_ (modeToConst mode) count _UNSIGNED_SHORT 0
 
 enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
-enable c = enable_ (capacityToConst c)
+enable = enable_ <<< capacityToConst
+
+isContextLost = isContextLost_
+
+isEnabled :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Boolean)
+isEnabled = isEnabled_ <<< capacityToConst
 
 vertexPointer ::  forall eff typ. Attribute typ -> EffWebGL eff Unit
 vertexPointer (Attribute attrLoc) =
@@ -330,9 +358,9 @@ vertexPointer (Attribute attrLoc) =
 
 viewport = viewport_
 
+
+
 -- * Internal stuff
-
-
 
 data ShaderType =   FragmentShader
                   | VertexShader
@@ -451,11 +479,17 @@ data BlendingFactor =
             | ONE_MINUS_SRC_ALPHA
             | DST_ALPHA
             | ONE_MINUS_DST_ALPHA
+            | SRC_ALPHA_SATURATE
+            | BLEND_DST_RGB
+            | BLEND_SRC_RGB
+            | BLEND_DST_ALPHA 
+            | BLEND_SRC_ALPHA 
             | CONSTANT_COLOR
             | ONE_MINUS_CONSTANT_COLOR
             | CONSTANT_ALPHA
             | ONE_MINUS_CONSTANT_ALPHA
-            | SRC_ALPHA_SATURATE
+            | BLEND_COLOR
+
 
 blendingFactorToConst :: BlendingFactor -> Number
 blendingFactorToConst ZERO = _ZERO
@@ -473,6 +507,28 @@ blendingFactorToConst ONE_MINUS_CONSTANT_COLOR = _ONE_MINUS_CONSTANT_COLOR
 blendingFactorToConst CONSTANT_ALPHA = _CONSTANT_ALPHA
 blendingFactorToConst ONE_MINUS_CONSTANT_ALPHA = _ONE_MINUS_CONSTANT_ALPHA
 blendingFactorToConst SRC_ALPHA_SATURATE = _SRC_ALPHA_SATURATE
+blendingFactorToConst BLEND_COLOR = _BLEND_COLOR
+blendingFactorToConst BLEND_DST_RGB = _BLEND_DST_RGB
+blendingFactorToConst BLEND_SRC_RGB = _BLEND_SRC_RGB
+blendingFactorToConst BLEND_DST_ALPHA = _BLEND_DST_ALPHA 
+blendingFactorToConst BLEND_SRC_ALPHA = _BLEND_SRC_ALPHA 
+
+
+data BlendEquation =
+              FUNC_ADD
+            | BLEND_EQUATION
+            | BLEND_EQUATION_RGB
+            | BLEND_EQUATION_ALPHA
+            | FUNC_SUBTRACT	 
+            | FUNC_REVERSE_SUBTRACT	 
+	 
+blendEquationToConst :: BlendEquation -> Number
+blendEquationToConst FUNC_ADD = _FUNC_ADD
+blendEquationToConst BLEND_EQUATION = _BLEND_EQUATION
+blendEquationToConst BLEND_EQUATION_RGB = _BLEND_EQUATION_RGB
+blendEquationToConst BLEND_EQUATION_ALPHA = _BLEND_EQUATION_ALPHA
+blendEquationToConst FUNC_SUBTRACT = _FUNC_SUBTRACT	 
+blendEquationToConst FUNC_REVERSE_SUBTRACT = _FUNC_REVERSE_SUBTRACT	
 
 
 -- * Some hand written foreign functions
