@@ -85,6 +85,7 @@ import Control.Monad.Eff.WebGL
 import Graphics.WebGLRaw
 import qualified Data.Matrix as M
 import qualified Data.Vector as V
+import qualified Data.TypedArray.Types as T
 import qualified Data.TypedArray as T
 import Data.TypeNat
 
