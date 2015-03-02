@@ -22,7 +22,7 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-typedarray" : "*",
+    "purescript-typedarray" : ">=0.2.0",
     "purescript-vector": "*",
     "purescript-matrix": "*"
   }
