@@ -6,6 +6,7 @@ import Control.Monad.Eff.WebGL
 import Data.TypedArray.Types
 import Data.TypedArray
 
+foreign import gl "var gl;" :: Unit
 
 type GLenum = Number
 type GLboolean = Boolean

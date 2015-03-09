@@ -97,6 +97,7 @@ import Data.Maybe.Unsafe (fromJust)
 import Data.Array (reverse,length,map,(!!))
 import Data.Array.Unsafe (head)
 
+
 type WebGLContext = {
     canvasName :: String
   }
@@ -540,7 +541,7 @@ foreign import initGL """
             return function() {
               var canvas = document.getElementById(canvasId);
               try {
-              var gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
+                gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
               }
               catch(e) {return false}
               if (!gl)
