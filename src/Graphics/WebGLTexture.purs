@@ -201,7 +201,7 @@ foreign import texImage2D__
          {return function(type)
           {return function(pixels)
            {return function()
-            {window.gl.texImage2D(target,level,internalformat,format,type,pixels);};};};};};};};"""
+            {gl.texImage2D(target,level,internalformat,format,type,pixels);};};};};};};};"""
     :: forall a eff. GLenum->
                    GLint->
                    GLenum->
