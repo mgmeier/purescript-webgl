@@ -3,7 +3,6 @@ module Graphics.WebGLRaw where
 
 import Control.Monad.Eff
 import Control.Monad.Eff.WebGL
-import Data.TypedArray.Types
 import Data.TypedArray
 
 
@@ -943,7 +942,7 @@ _BROWSER_DEFAULT_WEBGL = 37444
 -- *Methods
 foreign import getContextAttributes_
   """function getContextAttributes_()
-   {var res = window.gl.getContextAttributes();
+   {var res = gl.getContextAttributes();
     if (res === undefined){
       throw "Undefined in  getContextAttributes"};
     return res;};"""
@@ -951,7 +950,7 @@ foreign import getContextAttributes_
 
 foreign import isContextLost_
   """function isContextLost_()
-   {var res = window.gl.isContextLost();
+   {var res = gl.isContextLost();
     if (res === undefined){
       throw "Undefined in  isContextLost"};
     return res;};"""
@@ -959,7 +958,7 @@ foreign import isContextLost_
 
 foreign import getSupportedExtensions_
   """function getSupportedExtensions_()
-   {var res = window.gl.getSupportedExtensions();
+   {var res = gl.getSupportedExtensions();
     if (res === undefined){
       throw "Undefined in  getSupportedExtensions"};
     return res;};"""
@@ -968,7 +967,7 @@ foreign import getSupportedExtensions_
 foreign import getExtension_
   """function getExtension_(name)
    {return function()
-    {var res = window.gl.getExtension(name);
+    {var res = gl.getExtension(name);
      if (res === undefined){
        throw "Undefined in  getExtension"};
      return res;};};"""
@@ -977,14 +976,14 @@ foreign import getExtension_
 foreign import activeTexture_
   """function activeTexture_(texture)
    {return function()
-    {window.gl.activeTexture(texture);};};"""
+    {gl.activeTexture(texture);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import attachShader_
   """function attachShader_(program)
    {return function(shader)
     {return function()
-     {window.gl.attachShader(program,shader);};};};"""
+     {gl.attachShader(program,shader);};};};"""
     :: forall eff. WebGLProgram->
                    WebGLShader
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -994,7 +993,7 @@ foreign import bindAttribLocation_
    {return function(index)
     {return function(name)
      {return function()
-      {window.gl.bindAttribLocation(program,index,name);};};};};"""
+      {gl.bindAttribLocation(program,index,name);};};};};"""
     :: forall eff. WebGLProgram->
                    GLuint->
                    String
@@ -1004,7 +1003,7 @@ foreign import bindBuffer_
   """function bindBuffer_(target)
    {return function(buffer)
     {return function()
-     {window.gl.bindBuffer(target,buffer);};};};"""
+     {gl.bindBuffer(target,buffer);};};};"""
     :: forall eff. GLenum->
                    WebGLBuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1013,7 +1012,7 @@ foreign import bindFramebuffer_
   """function bindFramebuffer_(target)
    {return function(framebuffer)
     {return function()
-     {window.gl.bindFramebuffer(target,framebuffer);};};};"""
+     {gl.bindFramebuffer(target,framebuffer);};};};"""
     :: forall eff. GLenum->
                    WebGLFramebuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1022,7 +1021,7 @@ foreign import bindRenderbuffer_
   """function bindRenderbuffer_(target)
    {return function(renderbuffer)
     {return function()
-     {window.gl.bindRenderbuffer(target,renderbuffer);};};};"""
+     {gl.bindRenderbuffer(target,renderbuffer);};};};"""
     :: forall eff. GLenum->
                    WebGLRenderbuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1031,7 +1030,7 @@ foreign import bindTexture_
   """function bindTexture_(target)
    {return function(texture)
     {return function()
-     {window.gl.bindTexture(target,texture);};};};"""
+     {gl.bindTexture(target,texture);};};};"""
     :: forall eff. GLenum->
                    WebGLTexture
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1042,7 +1041,7 @@ foreign import blendColor_
     {return function(blue)
      {return function(alpha)
       {return function()
-       {window.gl.blendColor(red,green,blue,alpha);};};};};};"""
+       {gl.blendColor(red,green,blue,alpha);};};};};};"""
     :: forall eff. GLclampf->
                    GLclampf->
                    GLclampf->
@@ -1052,21 +1051,21 @@ foreign import blendColor_
 foreign import blendEquation_
   """function blendEquation_(mode)
    {return function()
-    {window.gl.blendEquation(mode);};};"""
+    {gl.blendEquation(mode);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import blendEquationSeparate_
   """function blendEquationSeparate_(modeRGB)
    {return function(modeAlpha)
     {return function()
-     {window.gl.blendEquationSeparate(modeRGB,modeAlpha);};};};"""
+     {gl.blendEquationSeparate(modeRGB,modeAlpha);};};};"""
     :: forall eff. GLenum-> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import blendFunc_
   """function blendFunc_(sfactor)
    {return function(dfactor)
     {return function()
-     {window.gl.blendFunc(sfactor,dfactor);};};};"""
+     {gl.blendFunc(sfactor,dfactor);};};};"""
     :: forall eff. GLenum-> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import blendFuncSeparate_
@@ -1075,7 +1074,7 @@ foreign import blendFuncSeparate_
     {return function(srcAlpha)
      {return function(dstAlpha)
       {return function()
-       {window.gl.blendFuncSeparate(srcRGB,dstRGB,srcAlpha,dstAlpha);};};};};};"""
+       {gl.blendFuncSeparate(srcRGB,dstRGB,srcAlpha,dstAlpha);};};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLenum->
@@ -1087,7 +1086,7 @@ foreign import bufferData_
    {return function(data)
     {return function(usage)
      {return function()
-      {window.gl.bufferData(target,data,usage);};};};};"""
+      {gl.bufferData(target,data,usage);};};};};"""
     :: forall eff. GLenum->
                    ArrayBuffer Float32->
                    GLenum
@@ -1098,7 +1097,7 @@ foreign import bufferSubData_
    {return function(offset)
     {return function(data)
      {return function()
-      {window.gl.bufferSubData(target,offset,data);};};};};"""
+      {gl.bufferSubData(target,offset,data);};};};};"""
     :: forall eff. GLenum->
                    GLintptr->
                    ArrayBuffer Float32
@@ -1107,7 +1106,7 @@ foreign import bufferSubData_
 foreign import checkFramebufferStatus_
   """function checkFramebufferStatus_(target)
    {return function()
-    {var res = window.gl.checkFramebufferStatus(target);
+    {var res = gl.checkFramebufferStatus(target);
      if (res === undefined){
        throw "Undefined in  checkFramebufferStatus"};
      return res;};};"""
@@ -1116,7 +1115,7 @@ foreign import checkFramebufferStatus_
 foreign import clear_
   """function clear_(mask)
    {return function()
-    {window.gl.clear(mask);};};"""
+    {gl.clear(mask);};};"""
     :: forall eff. GLbitfield -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import clearColor_
@@ -1125,7 +1124,7 @@ foreign import clearColor_
     {return function(blue)
      {return function(alpha)
       {return function()
-       {window.gl.clearColor(red,green,blue,alpha);};};};};};"""
+       {gl.clearColor(red,green,blue,alpha);};};};};};"""
     :: forall eff. GLclampf->
                    GLclampf->
                    GLclampf->
@@ -1135,13 +1134,13 @@ foreign import clearColor_
 foreign import clearDepth_
   """function clearDepth_(depth)
    {return function()
-    {window.gl.clearDepth(depth);};};"""
+    {gl.clearDepth(depth);};};"""
     :: forall eff. GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import clearStencil_
   """function clearStencil_(s)
    {return function()
-    {window.gl.clearStencil(s);};};"""
+    {gl.clearStencil(s);};};"""
     :: forall eff. GLint -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import colorMask_
@@ -1150,7 +1149,7 @@ foreign import colorMask_
     {return function(blue)
      {return function(alpha)
       {return function()
-       {window.gl.colorMask(red,green,blue,alpha);};};};};};"""
+       {gl.colorMask(red,green,blue,alpha);};};};};};"""
     :: forall eff. GLboolean->
                    GLboolean->
                    GLboolean->
@@ -1160,7 +1159,7 @@ foreign import colorMask_
 foreign import compileShader_
   """function compileShader_(shader)
    {return function()
-    {window.gl.compileShader(shader);};};"""
+    {gl.compileShader(shader);};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import copyTexImage2D_
@@ -1173,7 +1172,7 @@ foreign import copyTexImage2D_
         {return function(height)
          {return function(border)
           {return function()
-           {window.gl.copyTexImage2D(target,level,internalformat,x,y,width,height,border);};};};};};};};};};"""
+           {gl.copyTexImage2D(target,level,internalformat,x,y,width,height,border);};};};};};};};};};"""
     :: forall eff. GLenum->
                    GLint->
                    GLenum->
@@ -1194,7 +1193,7 @@ foreign import copyTexSubImage2D_
         {return function(width)
          {return function(height)
           {return function()
-           {window.gl.copyTexSubImage2D(target,level,xoffset,yoffset,x,y,width,height);};};};};};};};};};"""
+           {gl.copyTexSubImage2D(target,level,xoffset,yoffset,x,y,width,height);};};};};};};};};};"""
     :: forall eff. GLenum->
                    GLint->
                    GLint->
@@ -1207,7 +1206,7 @@ foreign import copyTexSubImage2D_
 
 foreign import createBuffer_
   """function createBuffer_()
-   {var res = window.gl.createBuffer();
+   {var res = gl.createBuffer();
     if (res === undefined){
       throw "Undefined in  createBuffer"};
     return res;};"""
@@ -1215,7 +1214,7 @@ foreign import createBuffer_
 
 foreign import createFramebuffer_
   """function createFramebuffer_()
-   {var res = window.gl.createFramebuffer();
+   {var res = gl.createFramebuffer();
     if (res === undefined){
       throw "Undefined in  createFramebuffer"};
     return res;};"""
@@ -1223,7 +1222,7 @@ foreign import createFramebuffer_
 
 foreign import createProgram_
   """function createProgram_()
-   {var res = window.gl.createProgram();
+   {var res = gl.createProgram();
     if (res === undefined){
       throw "Undefined in  createProgram"};
     return res;};"""
@@ -1231,7 +1230,7 @@ foreign import createProgram_
 
 foreign import createRenderbuffer_
   """function createRenderbuffer_()
-   {var res = window.gl.createRenderbuffer();
+   {var res = gl.createRenderbuffer();
     if (res === undefined){
       throw "Undefined in  createRenderbuffer"};
     return res;};"""
@@ -1240,7 +1239,7 @@ foreign import createRenderbuffer_
 foreign import createShader_
   """function createShader_(type)
    {return function()
-    {var res = window.gl.createShader(type);
+    {var res = gl.createShader(type);
      if (res === undefined){
        throw "Undefined in  createShader"};
      return res;};};"""
@@ -1248,7 +1247,7 @@ foreign import createShader_
 
 foreign import createTexture_
   """function createTexture_()
-   {var res = window.gl.createTexture();
+   {var res = gl.createTexture();
     if (res === undefined){
       throw "Undefined in  createTexture"};
     return res;};"""
@@ -1257,64 +1256,64 @@ foreign import createTexture_
 foreign import cullFace_
   """function cullFace_(mode)
    {return function()
-    {window.gl.cullFace(mode);};};"""
+    {gl.cullFace(mode);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import deleteBuffer_
   """function deleteBuffer_(buffer)
    {return function()
-    {window.gl.deleteBuffer(buffer);};};"""
+    {gl.deleteBuffer(buffer);};};"""
     :: forall eff. WebGLBuffer -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import deleteFramebuffer_
   """function deleteFramebuffer_(framebuffer)
    {return function()
-    {window.gl.deleteFramebuffer(framebuffer);};};"""
+    {gl.deleteFramebuffer(framebuffer);};};"""
     :: forall eff. WebGLFramebuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import deleteProgram_
   """function deleteProgram_(program)
    {return function()
-    {window.gl.deleteProgram(program);};};"""
+    {gl.deleteProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import deleteRenderbuffer_
   """function deleteRenderbuffer_(renderbuffer)
    {return function()
-    {window.gl.deleteRenderbuffer(renderbuffer);};};"""
+    {gl.deleteRenderbuffer(renderbuffer);};};"""
     :: forall eff. WebGLRenderbuffer
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import deleteShader_
   """function deleteShader_(shader)
    {return function()
-    {window.gl.deleteShader(shader);};};"""
+    {gl.deleteShader(shader);};};"""
     :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import deleteTexture_
   """function deleteTexture_(texture)
    {return function()
-    {window.gl.deleteTexture(texture);};};"""
+    {gl.deleteTexture(texture);};};"""
     :: forall eff. WebGLTexture -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import depthFunc_
   """function depthFunc_(func)
    {return function()
-    {window.gl.depthFunc(func);};};"""
+    {gl.depthFunc(func);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import depthMask_
   """function depthMask_(flag)
    {return function()
-    {window.gl.depthMask(flag);};};"""
+    {gl.depthMask(flag);};};"""
     :: forall eff. GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import depthRange_
   """function depthRange_(zNear)
    {return function(zFar)
     {return function()
-     {window.gl.depthRange(zNear,zFar);};};};"""
+     {gl.depthRange(zNear,zFar);};};};"""
     :: forall eff. GLclampf->
                    GLclampf
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1323,7 +1322,7 @@ foreign import detachShader_
   """function detachShader_(program)
    {return function(shader)
     {return function()
-     {window.gl.detachShader(program,shader);};};};"""
+     {gl.detachShader(program,shader);};};};"""
     :: forall eff. WebGLProgram->
                    WebGLShader
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1331,13 +1330,13 @@ foreign import detachShader_
 foreign import disable_
   """function disable_(cap)
    {return function()
-    {window.gl.disable(cap);};};"""
+    {gl.disable(cap);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import disableVertexAttribArray_
   """function disableVertexAttribArray_(index)
    {return function()
-    {window.gl.disableVertexAttribArray(index);};};"""
+    {gl.disableVertexAttribArray(index);};};"""
     :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import drawArrays_
@@ -1345,7 +1344,7 @@ foreign import drawArrays_
    {return function(first)
     {return function(count)
      {return function()
-      {window.gl.drawArrays(mode,first,count);};};};};"""
+      {gl.drawArrays(mode,first,count);};};};};"""
     :: forall eff. GLenum->
                    GLint->
                    GLsizei
@@ -1357,7 +1356,7 @@ foreign import drawElements_
     {return function(type)
      {return function(offset)
       {return function()
-       {window.gl.drawElements(mode,count,type,offset);};};};};};"""
+       {gl.drawElements(mode,count,type,offset);};};};};};"""
     :: forall eff. GLenum->
                    GLsizei->
                    GLenum->
@@ -1367,23 +1366,23 @@ foreign import drawElements_
 foreign import enable_
   """function enable_(cap)
    {return function()
-    {window.gl.enable(cap);};};"""
+    {gl.enable(cap);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import enableVertexAttribArray_
   """function enableVertexAttribArray_(index)
    {return function()
-    {window.gl.enableVertexAttribArray(index);};};"""
+    {gl.enableVertexAttribArray(index);};};"""
     :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import finish_
   """function finish_()
-   {window.gl.finish();};"""
+   {gl.finish();};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import flush_
   """function flush_()
-   {window.gl.flush();};"""
+   {gl.flush();};"""
     :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import framebufferRenderbuffer_
@@ -1392,7 +1391,7 @@ foreign import framebufferRenderbuffer_
     {return function(renderbuffertarget)
      {return function(renderbuffer)
       {return function()
-       {window.gl.framebufferRenderbuffer(target,attachment,renderbuffertarget,renderbuffer);};};};};};"""
+       {gl.framebufferRenderbuffer(target,attachment,renderbuffertarget,renderbuffer);};};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLenum->
@@ -1406,7 +1405,7 @@ foreign import framebufferTexture2D_
      {return function(texture)
       {return function(level)
        {return function()
-        {window.gl.framebufferTexture2D(target,attachment,textarget,texture,level);};};};};};};"""
+        {gl.framebufferTexture2D(target,attachment,textarget,texture,level);};};};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLenum->
@@ -1417,20 +1416,20 @@ foreign import framebufferTexture2D_
 foreign import frontFace_
   """function frontFace_(mode)
    {return function()
-    {window.gl.frontFace(mode);};};"""
+    {gl.frontFace(mode);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import generateMipmap_
   """function generateMipmap_(target)
    {return function()
-    {window.gl.generateMipmap(target);};};"""
+    {gl.generateMipmap(target);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import getActiveAttrib_
   """function getActiveAttrib_(program)
    {return function(index)
     {return function()
-     {var res = window.gl.getActiveAttrib(program,index);
+     {var res = gl.getActiveAttrib(program,index);
       if (res === undefined){
         throw "Undefined in  getActiveAttrib"};
       return res;};};};"""
@@ -1442,7 +1441,7 @@ foreign import getActiveUniform_
   """function getActiveUniform_(program)
    {return function(index)
     {return function()
-     {var res = window.gl.getActiveUniform(program,index);
+     {var res = gl.getActiveUniform(program,index);
       if (res === undefined){
         throw "Undefined in  getActiveUniform"};
       return res;};};};"""
@@ -1453,7 +1452,7 @@ foreign import getActiveUniform_
 foreign import getAttachedShaders_
   """function getAttachedShaders_(program)
    {return function()
-    {var res = window.gl.getAttachedShaders(program);
+    {var res = gl.getAttachedShaders(program);
      if (res === undefined){
        throw "Undefined in  getAttachedShaders"};
      return res;};};"""
@@ -1464,7 +1463,7 @@ foreign import getAttribLocation_
   """function getAttribLocation_(program)
    {return function(name)
     {return function()
-     {var res = window.gl.getAttribLocation(program,name);
+     {var res = gl.getAttribLocation(program,name);
       if (res === undefined){
         throw "Undefined in  getAttribLocation"};
       return res;};};};"""
@@ -1475,7 +1474,7 @@ foreign import getAttribLocation_
 foreign import getParameter_
   """function getParameter_(pname)
    {return function()
-    {var res = window.gl.getParameter(pname);
+    {var res = gl.getParameter(pname);
      if (res === undefined){
        throw "Undefined in  getParameter"};
      return res;};};"""
@@ -1485,7 +1484,7 @@ foreign import getBufferParameter_
   """function getBufferParameter_(target)
    {return function(pname)
     {return function()
-     {var res = window.gl.getBufferParameter(target,pname);
+     {var res = gl.getBufferParameter(target,pname);
       if (res === undefined){
         throw "Undefined in  getBufferParameter"};
       return res;};};};"""
@@ -1495,7 +1494,7 @@ foreign import getBufferParameter_
 
 foreign import getError_
   """function getError_()
-   {var res = window.gl.getError();
+   {var res = gl.getError();
     if (res === undefined){
       throw "Undefined in  getError"};
     return res;};"""
@@ -1506,7 +1505,7 @@ foreign import getFramebufferAttachmentParameter_
    {return function(attachment)
     {return function(pname)
      {return function()
-      {var res = window.gl.getFramebufferAttachmentParameter(target,attachment,pname);
+      {var res = gl.getFramebufferAttachmentParameter(target,attachment,pname);
        if (res === undefined){
          throw "Undefined in  getFramebufferAttachmentParameter"};
        return res;};};};};"""
@@ -1519,7 +1518,7 @@ foreign import getProgramParameter_
   """function getProgramParameter_(program)
    {return function(pname)
     {return function()
-     {var res = window.gl.getProgramParameter(program,pname);
+     {var res = gl.getProgramParameter(program,pname);
       if (res === undefined){
         throw "Undefined in  getProgramParameter"};
       return res;};};};"""
@@ -1530,7 +1529,7 @@ foreign import getProgramParameter_
 foreign import getProgramInfoLog_
   """function getProgramInfoLog_(program)
    {return function()
-    {var res = window.gl.getProgramInfoLog(program);
+    {var res = gl.getProgramInfoLog(program);
      if (res === undefined){
        throw "Undefined in  getProgramInfoLog"};
      return res;};};"""
@@ -1540,7 +1539,7 @@ foreign import getRenderbufferParameter_
   """function getRenderbufferParameter_(target)
    {return function(pname)
     {return function()
-     {var res = window.gl.getRenderbufferParameter(target,pname);
+     {var res = gl.getRenderbufferParameter(target,pname);
       if (res === undefined){
         throw "Undefined in  getRenderbufferParameter"};
       return res;};};};"""
@@ -1552,7 +1551,7 @@ foreign import getShaderParameter_
   """function getShaderParameter_(shader)
    {return function(pname)
     {return function()
-     {var res = window.gl.getShaderParameter(shader,pname);
+     {var res = gl.getShaderParameter(shader,pname);
       if (res === undefined){
         throw "Undefined in  getShaderParameter"};
       return res;};};};"""
@@ -1563,7 +1562,7 @@ foreign import getShaderParameter_
 foreign import getShaderInfoLog_
   """function getShaderInfoLog_(shader)
    {return function()
-    {var res = window.gl.getShaderInfoLog(shader);
+    {var res = gl.getShaderInfoLog(shader);
      if (res === undefined){
        throw "Undefined in  getShaderInfoLog"};
      return res;};};"""
@@ -1572,7 +1571,7 @@ foreign import getShaderInfoLog_
 foreign import getShaderSource_
   """function getShaderSource_(shader)
    {return function()
-    {var res = window.gl.getShaderSource(shader);
+    {var res = gl.getShaderSource(shader);
      if (res === undefined){
        throw "Undefined in  getShaderSource"};
      return res;};};"""
@@ -1582,7 +1581,7 @@ foreign import getTexParameter_
   """function getTexParameter_(target)
    {return function(pname)
     {return function()
-     {var res = window.gl.getTexParameter(target,pname);
+     {var res = gl.getTexParameter(target,pname);
       if (res === undefined){
         throw "Undefined in  getTexParameter"};
       return res;};};};"""
@@ -1594,7 +1593,7 @@ foreign import getUniform_
   """function getUniform_(program)
    {return function(location)
     {return function()
-     {var res = window.gl.getUniform(program,location);
+     {var res = gl.getUniform(program,location);
       if (res === undefined){
         throw "Undefined in  getUniform"};
       return res;};};};"""
@@ -1606,7 +1605,7 @@ foreign import getUniformLocation_
   """function getUniformLocation_(program)
    {return function(name)
     {return function()
-     {var res = window.gl.getUniformLocation(program,name);
+     {var res = gl.getUniformLocation(program,name);
       if (res === undefined){
         throw "Undefined in  getUniformLocation"};
       return res;};};};"""
@@ -1618,7 +1617,7 @@ foreign import getVertexAttrib_
   """function getVertexAttrib_(index)
    {return function(pname)
     {return function()
-     {var res = window.gl.getVertexAttrib(index,pname);
+     {var res = gl.getVertexAttrib(index,pname);
       if (res === undefined){
         throw "Undefined in  getVertexAttrib"};
       return res;};};};"""
@@ -1630,7 +1629,7 @@ foreign import getVertexAttribOffset_
   """function getVertexAttribOffset_(index)
    {return function(pname)
     {return function()
-     {var res = window.gl.getVertexAttribOffset(index,pname);
+     {var res = gl.getVertexAttribOffset(index,pname);
       if (res === undefined){
         throw "Undefined in  getVertexAttribOffset"};
       return res;};};};"""
@@ -1642,13 +1641,13 @@ foreign import hint_
   """function hint_(target)
    {return function(mode)
     {return function()
-     {window.gl.hint(target,mode);};};};"""
+     {gl.hint(target,mode);};};};"""
     :: forall eff. GLenum-> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import isBuffer_
   """function isBuffer_(buffer)
    {return function()
-    {var res = window.gl.isBuffer(buffer);
+    {var res = gl.isBuffer(buffer);
      if (res === undefined){
        throw "Undefined in  isBuffer"};
      return res;};};"""
@@ -1658,7 +1657,7 @@ foreign import isBuffer_
 foreign import isEnabled_
   """function isEnabled_(cap)
    {return function()
-    {var res = window.gl.isEnabled(cap);
+    {var res = gl.isEnabled(cap);
      if (res === undefined){
        throw "Undefined in  isEnabled"};
      return res;};};"""
@@ -1667,7 +1666,7 @@ foreign import isEnabled_
 foreign import isFramebuffer_
   """function isFramebuffer_(framebuffer)
    {return function()
-    {var res = window.gl.isFramebuffer(framebuffer);
+    {var res = gl.isFramebuffer(framebuffer);
      if (res === undefined){
        throw "Undefined in  isFramebuffer"};
      return res;};};"""
@@ -1677,7 +1676,7 @@ foreign import isFramebuffer_
 foreign import isProgram_
   """function isProgram_(program)
    {return function()
-    {var res = window.gl.isProgram(program);
+    {var res = gl.isProgram(program);
      if (res === undefined){
        throw "Undefined in  isProgram"};
      return res;};};"""
@@ -1687,7 +1686,7 @@ foreign import isProgram_
 foreign import isRenderbuffer_
   """function isRenderbuffer_(renderbuffer)
    {return function()
-    {var res = window.gl.isRenderbuffer(renderbuffer);
+    {var res = gl.isRenderbuffer(renderbuffer);
      if (res === undefined){
        throw "Undefined in  isRenderbuffer"};
      return res;};};"""
@@ -1697,7 +1696,7 @@ foreign import isRenderbuffer_
 foreign import isShader_
   """function isShader_(shader)
    {return function()
-    {var res = window.gl.isShader(shader);
+    {var res = gl.isShader(shader);
      if (res === undefined){
        throw "Undefined in  isShader"};
      return res;};};"""
@@ -1707,7 +1706,7 @@ foreign import isShader_
 foreign import isTexture_
   """function isTexture_(texture)
    {return function()
-    {var res = window.gl.isTexture(texture);
+    {var res = gl.isTexture(texture);
      if (res === undefined){
        throw "Undefined in  isTexture"};
      return res;};};"""
@@ -1717,27 +1716,27 @@ foreign import isTexture_
 foreign import lineWidth_
   """function lineWidth_(width)
    {return function()
-    {window.gl.lineWidth(width);};};"""
+    {gl.lineWidth(width);};};"""
     :: forall eff. GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import linkProgram_
   """function linkProgram_(program)
    {return function()
-    {window.gl.linkProgram(program);};};"""
+    {gl.linkProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import pixelStorei_
   """function pixelStorei_(pname)
    {return function(param)
     {return function()
-     {window.gl.pixelStorei(pname,param);};};};"""
+     {gl.pixelStorei(pname,param);};};};"""
     :: forall eff. GLenum-> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import polygonOffset_
   """function polygonOffset_(factor)
    {return function(units)
     {return function()
-     {window.gl.polygonOffset(factor,units);};};};"""
+     {gl.polygonOffset(factor,units);};};};"""
     :: forall eff. GLfloat->
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1751,7 +1750,7 @@ foreign import readPixels_
        {return function(type)
         {return function(pixels)
          {return function()
-          {window.gl.readPixels(x,y,width,height,format,type,pixels);};};};};};};};};"""
+          {gl.readPixels(x,y,width,height,format,type,pixels);};};};};};};};};"""
     :: forall eff. GLint->
                    GLint->
                    GLsizei->
@@ -1767,7 +1766,7 @@ foreign import renderbufferStorage_
     {return function(width)
      {return function(height)
       {return function()
-       {window.gl.renderbufferStorage(target,internalformat,width,height);};};};};};"""
+       {gl.renderbufferStorage(target,internalformat,width,height);};};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLsizei->
@@ -1778,7 +1777,7 @@ foreign import sampleCoverage_
   """function sampleCoverage_(value)
    {return function(invert)
     {return function()
-     {window.gl.sampleCoverage(value,invert);};};};"""
+     {gl.sampleCoverage(value,invert);};};};"""
     :: forall eff. GLclampf->
                    GLboolean
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1789,7 +1788,7 @@ foreign import scissor_
     {return function(width)
      {return function(height)
       {return function()
-       {window.gl.scissor(x,y,width,height);};};};};};"""
+       {gl.scissor(x,y,width,height);};};};};};"""
     :: forall eff. GLint->
                    GLint->
                    GLsizei->
@@ -1800,7 +1799,7 @@ foreign import shaderSource_
   """function shaderSource_(shader)
    {return function(source)
     {return function()
-     {window.gl.shaderSource(shader,source);};};};"""
+     {gl.shaderSource(shader,source);};};};"""
     :: forall eff. WebGLShader->
                    String
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1810,7 +1809,7 @@ foreign import stencilFunc_
    {return function(ref)
     {return function(mask)
      {return function()
-      {window.gl.stencilFunc(func,ref,mask);};};};};"""
+      {gl.stencilFunc(func,ref,mask);};};};};"""
     :: forall eff. GLenum->
                    GLint->
                    GLuint
@@ -1822,7 +1821,7 @@ foreign import stencilFuncSeparate_
     {return function(ref)
      {return function(mask)
       {return function()
-       {window.gl.stencilFuncSeparate(face,func,ref,mask);};};};};};"""
+       {gl.stencilFuncSeparate(face,func,ref,mask);};};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLint->
@@ -1832,14 +1831,14 @@ foreign import stencilFuncSeparate_
 foreign import stencilMask_
   """function stencilMask_(mask)
    {return function()
-    {window.gl.stencilMask(mask);};};"""
+    {gl.stencilMask(mask);};};"""
     :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import stencilMaskSeparate_
   """function stencilMaskSeparate_(face)
    {return function(mask)
     {return function()
-     {window.gl.stencilMaskSeparate(face,mask);};};};"""
+     {gl.stencilMaskSeparate(face,mask);};};};"""
     :: forall eff. GLenum-> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import stencilOp_
@@ -1847,7 +1846,7 @@ foreign import stencilOp_
    {return function(zfail)
     {return function(zpass)
      {return function()
-      {window.gl.stencilOp(fail,zfail,zpass);};};};};"""
+      {gl.stencilOp(fail,zfail,zpass);};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLenum
@@ -1859,7 +1858,7 @@ foreign import stencilOpSeparate_
     {return function(zfail)
      {return function(zpass)
       {return function()
-       {window.gl.stencilOpSeparate(face,fail,zfail,zpass);};};};};};"""
+       {gl.stencilOpSeparate(face,fail,zfail,zpass);};};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLenum->
@@ -1877,7 +1876,7 @@ foreign import texImage2D_
          {return function(type)
           {return function(pixels)
            {return function()
-            {window.gl.texImage2D(target,level,internalformat,width,height,border,format,type,pixels);};};};};};};};};};};"""
+            {gl.texImage2D(target,level,internalformat,width,height,border,format,type,pixels);};};};};};};};};};};"""
     :: forall eff. GLenum->
                    GLint->
                    GLenum->
@@ -1894,7 +1893,7 @@ foreign import texParameterf_
    {return function(pname)
     {return function(param)
      {return function()
-      {window.gl.texParameterf(target,pname,param);};};};};"""
+      {gl.texParameterf(target,pname,param);};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLfloat
@@ -1905,7 +1904,7 @@ foreign import texParameteri_
    {return function(pname)
     {return function(param)
      {return function()
-      {window.gl.texParameteri(target,pname,param);};};};};"""
+      {gl.texParameteri(target,pname,param);};};};};"""
     :: forall eff. GLenum->
                    GLenum->
                    GLint
@@ -1922,7 +1921,7 @@ foreign import texSubImage2D_
          {return function(type)
           {return function(pixels)
            {return function()
-            {window.gl.texSubImage2D(target,level,xoffset,yoffset,width,height,format,type,pixels);};};};};};};};};};};"""
+            {gl.texSubImage2D(target,level,xoffset,yoffset,width,height,format,type,pixels);};};};};};};};};};};"""
     :: forall eff. GLenum->
                    GLint->
                    GLint->
@@ -1938,7 +1937,7 @@ foreign import uniform1f_
   """function uniform1f_(location)
    {return function(x)
     {return function()
-     {window.gl.uniform1f(location,x);};};};"""
+     {gl.uniform1f(location,x);};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1947,7 +1946,7 @@ foreign import uniform1fv_
   """function uniform1fv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform1fv(location,v);};};};"""
+     {gl.uniform1fv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1956,7 +1955,7 @@ foreign import uniform1i_
   """function uniform1i_(location)
    {return function(x)
     {return function()
-     {window.gl.uniform1i(location,x);};};};"""
+     {gl.uniform1i(location,x);};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLint
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1965,7 +1964,7 @@ foreign import uniform1iv_
   """function uniform1iv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform1iv(location,v);};};};"""
+     {gl.uniform1iv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1975,7 +1974,7 @@ foreign import uniform2f_
    {return function(x)
     {return function(y)
      {return function()
-      {window.gl.uniform2f(location,x,y);};};};};"""
+      {gl.uniform2f(location,x,y);};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLfloat->
                    GLfloat
@@ -1985,7 +1984,7 @@ foreign import uniform2fv_
   """function uniform2fv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform2fv(location,v);};};};"""
+     {gl.uniform2fv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -1995,7 +1994,7 @@ foreign import uniform2i_
    {return function(x)
     {return function(y)
      {return function()
-      {window.gl.uniform2i(location,x,y);};};};};"""
+      {gl.uniform2i(location,x,y);};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLint->
                    GLint
@@ -2005,7 +2004,7 @@ foreign import uniform2iv_
   """function uniform2iv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform2iv(location,v);};};};"""
+     {gl.uniform2iv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2016,7 +2015,7 @@ foreign import uniform3f_
     {return function(y)
      {return function(z)
       {return function()
-       {window.gl.uniform3f(location,x,y,z);};};};};};"""
+       {gl.uniform3f(location,x,y,z);};};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLfloat->
                    GLfloat->
@@ -2027,7 +2026,7 @@ foreign import uniform3fv_
   """function uniform3fv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform3fv(location,v);};};};"""
+     {gl.uniform3fv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2038,7 +2037,7 @@ foreign import uniform3i_
     {return function(y)
      {return function(z)
       {return function()
-       {window.gl.uniform3i(location,x,y,z);};};};};};"""
+       {gl.uniform3i(location,x,y,z);};};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLint->
                    GLint->
@@ -2049,7 +2048,7 @@ foreign import uniform3iv_
   """function uniform3iv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform3iv(location,v);};};};"""
+     {gl.uniform3iv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2061,7 +2060,7 @@ foreign import uniform4f_
      {return function(z)
       {return function(w)
        {return function()
-        {window.gl.uniform4f(location,x,y,z,w);};};};};};};"""
+        {gl.uniform4f(location,x,y,z,w);};};};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLfloat->
                    GLfloat->
@@ -2073,7 +2072,7 @@ foreign import uniform4fv_
   """function uniform4fv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform4fv(location,v);};};};"""
+     {gl.uniform4fv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2085,7 +2084,7 @@ foreign import uniform4i_
      {return function(z)
       {return function(w)
        {return function()
-        {window.gl.uniform4i(location,x,y,z,w);};};};};};};"""
+        {gl.uniform4i(location,x,y,z,w);};};};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLint->
                    GLint->
@@ -2097,7 +2096,7 @@ foreign import uniform4iv_
   """function uniform4iv_(location)
    {return function(v)
     {return function()
-     {window.gl.uniform4iv(location,v);};};};"""
+     {gl.uniform4iv(location,v);};};};"""
     :: forall eff. WebGLUniformLocation->
                    Int32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2107,7 +2106,7 @@ foreign import uniformMatrix2fv_
    {return function(transpose)
     {return function(value)
      {return function()
-      {window.gl.uniformMatrix2fv(location,transpose,value);};};};};"""
+      {gl.uniformMatrix2fv(location,transpose,value);};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLboolean->
                    FloatArray
@@ -2118,7 +2117,7 @@ foreign import uniformMatrix3fv_
    {return function(transpose)
     {return function(value)
      {return function()
-      {window.gl.uniformMatrix3fv(location,transpose,value);};};};};"""
+      {gl.uniformMatrix3fv(location,transpose,value);};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLboolean->
                    FloatArray
@@ -2129,7 +2128,7 @@ foreign import uniformMatrix4fv_
    {return function(transpose)
     {return function(value)
      {return function()
-      {window.gl.uniformMatrix4fv(location,transpose,value);};};};};"""
+      {gl.uniformMatrix4fv(location,transpose,value);};};};};"""
     :: forall eff. WebGLUniformLocation->
                    GLboolean->
                    FloatArray
@@ -2138,20 +2137,20 @@ foreign import uniformMatrix4fv_
 foreign import useProgram_
   """function useProgram_(program)
    {return function()
-    {window.gl.useProgram(program);};};"""
+    {gl.useProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import validateProgram_
   """function validateProgram_(program)
    {return function()
-    {window.gl.validateProgram(program);};};"""
+    {gl.validateProgram(program);};};"""
     :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import vertexAttrib1f_
   """function vertexAttrib1f_(indx)
    {return function(x)
     {return function()
-     {window.gl.vertexAttrib1f(indx,x);};};};"""
+     {gl.vertexAttrib1f(indx,x);};};};"""
     :: forall eff. GLuint->
                    GLfloat
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2160,7 +2159,7 @@ foreign import vertexAttrib1fv_
   """function vertexAttrib1fv_(indx)
    {return function(values)
     {return function()
-     {window.gl.vertexAttrib1fv(indx,values);};};};"""
+     {gl.vertexAttrib1fv(indx,values);};};};"""
     :: forall eff. GLuint->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2170,7 +2169,7 @@ foreign import vertexAttrib2f_
    {return function(x)
     {return function(y)
      {return function()
-      {window.gl.vertexAttrib2f(indx,x,y);};};};};"""
+      {gl.vertexAttrib2f(indx,x,y);};};};};"""
     :: forall eff. GLuint->
                    GLfloat->
                    GLfloat
@@ -2180,7 +2179,7 @@ foreign import vertexAttrib2fv_
   """function vertexAttrib2fv_(indx)
    {return function(values)
     {return function()
-     {window.gl.vertexAttrib2fv(indx,values);};};};"""
+     {gl.vertexAttrib2fv(indx,values);};};};"""
     :: forall eff. GLuint->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2191,7 +2190,7 @@ foreign import vertexAttrib3f_
     {return function(y)
      {return function(z)
       {return function()
-       {window.gl.vertexAttrib3f(indx,x,y,z);};};};};};"""
+       {gl.vertexAttrib3f(indx,x,y,z);};};};};};"""
     :: forall eff. GLuint->
                    GLfloat->
                    GLfloat->
@@ -2202,7 +2201,7 @@ foreign import vertexAttrib3fv_
   """function vertexAttrib3fv_(indx)
    {return function(values)
     {return function()
-     {window.gl.vertexAttrib3fv(indx,values);};};};"""
+     {gl.vertexAttrib3fv(indx,values);};};};"""
     :: forall eff. GLuint->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2214,7 +2213,7 @@ foreign import vertexAttrib4f_
      {return function(z)
       {return function(w)
        {return function()
-        {window.gl.vertexAttrib4f(indx,x,y,z,w);};};};};};};"""
+        {gl.vertexAttrib4f(indx,x,y,z,w);};};};};};};"""
     :: forall eff. GLuint->
                    GLfloat->
                    GLfloat->
@@ -2226,7 +2225,7 @@ foreign import vertexAttrib4fv_
   """function vertexAttrib4fv_(indx)
    {return function(values)
     {return function()
-     {window.gl.vertexAttrib4fv(indx,values);};};};"""
+     {gl.vertexAttrib4fv(indx,values);};};};"""
     :: forall eff. GLuint->
                    FloatArray
                    -> (Eff (webgl :: WebGl | eff) Unit)
@@ -2239,7 +2238,7 @@ foreign import vertexAttribPointer_
       {return function(stride)
        {return function(offset)
         {return function()
-         {window.gl.vertexAttribPointer(indx,size,type,normalized,stride,offset);};};};};};};};"""
+         {gl.vertexAttribPointer(indx,size,type,normalized,stride,offset);};};};};};};};"""
     :: forall eff. GLuint->
                    GLint->
                    GLenum->
@@ -2254,7 +2253,7 @@ foreign import viewport_
     {return function(width)
      {return function(height)
       {return function()
-       {window.gl.viewport(x,y,width,height);};};};};};"""
+       {gl.viewport(x,y,width,height);};};};};};"""
     :: forall eff. GLint->
                    GLint->
                    GLsizei->

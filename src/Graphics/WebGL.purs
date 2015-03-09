@@ -52,7 +52,7 @@ module Graphics.WebGL
 
   , Mask(..)
   , Mode(..)
-  
+
   , blendColor
   , blendFunc
   , blendFuncSeparate
@@ -201,33 +201,33 @@ foreign import shaderBindings
         function shaderBindings(program) {
           return function() {
             var bindings = {}
-            var numUniforms = window.gl.getProgramParameter(program, window.gl.ACTIVE_UNIFORMS);
+            var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
             for (var i = 0; i < numUniforms; i += 1) {
-                var uniform = window.gl.getActiveUniform(program, i);
-                var uniformLocation = window.gl.getUniformLocation(program, uniform.name);
+                var uniform = gl.getActiveUniform(program, i);
+                var uniformLocation = gl.getUniformLocation(program, uniform.name);
                 var newUniform = {};
                 newUniform["uLocation"]=uniformLocation;
                 newUniform["uName"]=uniform.name;
                 newUniform["uType"]=uniform.type;
                 bindings[uniform.name]=newUniform;
               }
-            var numAttributes = window.gl.getProgramParameter(program, window.gl.ACTIVE_ATTRIBUTES);
+            var numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
             for (var i = 0; i < numAttributes; i += 1) {
-                var attribute = window.gl.getActiveAttrib(program, i);
-                var attribLocation = window.gl.getAttribLocation(program, attribute.name);
-                window.gl.enableVertexAttribArray(attribLocation);
+                var attribute = gl.getActiveAttrib(program, i);
+                var attribLocation = gl.getAttribLocation(program, attribute.name);
+                gl.enableVertexAttribArray(attribLocation);
                 var newAttr = {};
                 newAttr["aLocation"]=attribLocation;
                 newAttr["aName"]=attribute.name;
                 newAttr["aItemType"]=attribute.type;
                 switch (attribute.type) {
-                  case window.gl.FLOAT_VEC2:
+                  case gl.FLOAT_VEC2:
                     newAttr["aItemSize"]=2;
                     break;
-                  case window.gl.FLOAT_VEC3:
+                  case gl.FLOAT_VEC3:
                     newAttr["aItemSize"]=3;
                     break;
-                  case window.gl.FLOAT_VEC4:
+                  case gl.FLOAT_VEC4:
                     newAttr["aItemSize"]=4;
                     break;
                   default:
@@ -304,17 +304,17 @@ blendColor = blendColor_
 blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
 blendFunc a b = blendFunc_ (blendingFactorToConst a) (blendingFactorToConst b)
 
-blendFuncSeparate :: forall eff. BlendingFactor 
-    -> BlendingFactor 
-    -> BlendingFactor 
-    -> BlendingFactor 
+blendFuncSeparate :: forall eff. BlendingFactor
+    -> BlendingFactor
+    -> BlendingFactor
+    -> BlendingFactor
     -> (Eff (webgl :: WebGl | eff) Unit)
 blendFuncSeparate a b c d =
     let
         a' = blendingFactorToConst a
         b' = blendingFactorToConst b
         c' = blendingFactorToConst c
-        d' = blendingFactorToConst d   
+        d' = blendingFactorToConst d
     in blendFuncSeparate_ a' b' c' d'
 
 blendEquation :: forall eff. BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
@@ -483,8 +483,8 @@ data BlendingFactor =
             | SRC_ALPHA_SATURATE
             | BLEND_DST_RGB
             | BLEND_SRC_RGB
-            | BLEND_DST_ALPHA 
-            | BLEND_SRC_ALPHA 
+            | BLEND_DST_ALPHA
+            | BLEND_SRC_ALPHA
             | CONSTANT_COLOR
             | ONE_MINUS_CONSTANT_COLOR
             | CONSTANT_ALPHA
@@ -511,8 +511,8 @@ blendingFactorToConst SRC_ALPHA_SATURATE = _SRC_ALPHA_SATURATE
 blendingFactorToConst BLEND_COLOR = _BLEND_COLOR
 blendingFactorToConst BLEND_DST_RGB = _BLEND_DST_RGB
 blendingFactorToConst BLEND_SRC_RGB = _BLEND_SRC_RGB
-blendingFactorToConst BLEND_DST_ALPHA = _BLEND_DST_ALPHA 
-blendingFactorToConst BLEND_SRC_ALPHA = _BLEND_SRC_ALPHA 
+blendingFactorToConst BLEND_DST_ALPHA = _BLEND_DST_ALPHA
+blendingFactorToConst BLEND_SRC_ALPHA = _BLEND_SRC_ALPHA
 
 
 data BlendEquation =
@@ -520,16 +520,16 @@ data BlendEquation =
             | BLEND_EQUATION
             | BLEND_EQUATION_RGB
             | BLEND_EQUATION_ALPHA
-            | FUNC_SUBTRACT	 
-            | FUNC_REVERSE_SUBTRACT	 
-	 
+            | FUNC_SUBTRACT
+            | FUNC_REVERSE_SUBTRACT
+
 blendEquationToConst :: BlendEquation -> Number
 blendEquationToConst FUNC_ADD = _FUNC_ADD
 blendEquationToConst BLEND_EQUATION = _BLEND_EQUATION
 blendEquationToConst BLEND_EQUATION_RGB = _BLEND_EQUATION_RGB
 blendEquationToConst BLEND_EQUATION_ALPHA = _BLEND_EQUATION_ALPHA
-blendEquationToConst FUNC_SUBTRACT = _FUNC_SUBTRACT	 
-blendEquationToConst FUNC_REVERSE_SUBTRACT = _FUNC_REVERSE_SUBTRACT	
+blendEquationToConst FUNC_SUBTRACT = _FUNC_SUBTRACT
+blendEquationToConst FUNC_REVERSE_SUBTRACT = _FUNC_REVERSE_SUBTRACT
 
 
 -- * Some hand written foreign functions
@@ -540,10 +540,10 @@ foreign import initGL """
             return function() {
               var canvas = document.getElementById(canvasId);
               try {
-              window.gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
+              var gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
               }
               catch(e) {return false}
-              if (!window.gl)
+              if (!gl)
               {
                 gl = null;
                 return false;
@@ -591,7 +591,7 @@ foreign import bufferData """
      {return function(data)
       {return function(usage)
        {return function()
-        {window.gl.bufferData(target,data,usage);};};};};"""
+        {gl.bufferData(target,data,usage);};};};};"""
       :: forall a eff. GLenum->
                      T.ArrayBuffer a ->
                      GLenum

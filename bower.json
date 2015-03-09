@@ -1,9 +1,9 @@
 {
   "name": "purescript-webgl",
   "homepage": "https://github.com/jutaro/purescript-webgl",
-  "version": "0.3.0",
   "authors": [
-    "Jürgen Nicklisch-Franken <jnf@arcor.de>"
+    "Jürgen Nicklisch-Franken <juergen.nicklisch@symbolian.net>",
+    "Michael Karg <michael.karg@symbolian.net>"
   ],
   "description": "WebGL binding for purescript",
   "keywords": [
