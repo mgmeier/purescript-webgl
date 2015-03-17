@@ -406,13 +406,6 @@ requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webg
 
 ## Module Graphics.WebGLRaw
 
-#### `gl`
-
-``` purescript
-gl :: Unit
-```
-
-
 #### `GLenum`
 
 ``` purescript

@@ -96,7 +96,7 @@ import Data.Maybe
 import Data.Maybe.Unsafe (fromJust)
 import Data.Array (reverse,length,map,(!!))
 import Data.Array.Unsafe (head)
-
+import Data.Either
 
 type WebGLContext = {
     canvasName :: String
@@ -181,12 +181,12 @@ withShaders :: forall bindings eff a. Shaders (Object bindings) -> (String -> Ef
 withShaders (Shaders fragmetShaderSource vertexShaderSource) failure success = do
   condFShader <- makeShader FragmentShader fragmetShaderSource
   case condFShader of
-    Nothing -> failure "Can't compile fragment shader"
-    Just fshader -> do
+    Right str -> failure ("Can't compile fragment shader: " ++ str)
+    Left fshader -> do
       condVShader <- makeShader VertexShader vertexShaderSource
       case condVShader of
-        Nothing -> failure "Can't compile vertex shader"
-        Just vshader -> do
+        Right str -> failure ("Can't compile vertex shader: " ++ str)
+        Left vshader -> do
             condProg <- initShaders fshader vshader
             case condProg of
                 Nothing ->
@@ -376,7 +376,7 @@ getCanvasWidth context = getCanvasWidth_ context.canvasName
 getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
 getCanvasHeight context = getCanvasHeight_ context.canvasName
 
-makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Maybe WebGLShader)
+makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Either WebGLShader String)
 makeShader shaderType shaderSrc = do
   let shaderTypeConst = case shaderType of
                           FragmentShader -> _FRAGMENT_SHADER
@@ -386,8 +386,10 @@ makeShader shaderType shaderSrc = do
   compileShader_ shader
   res <- getShaderParameter_ shader _COMPILE_STATUS
   if res
-      then return (Just shader)
-      else return Nothing
+      then return (Left shader)
+      else do
+        str <- getShaderInfoLog_ shader
+        return (Right str)
 
 initShaders :: forall eff. WebGLShader -> WebGLShader -> Eff (webgl :: WebGl | eff) (Maybe WebGLProgram)
 initShaders fragmentShader vertexShader = do
