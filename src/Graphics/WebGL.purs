@@ -85,7 +85,7 @@ import Control.Monad.Eff.WebGL
 import Graphics.WebGLRaw
 import qualified Data.Matrix as M
 import qualified Data.Vector as V
-import qualified Data.TypedArray.Types as T
+import qualified Data.ArrayBuffer.Types as T
 import qualified Data.TypedArray as T
 import Data.TypeNat
 
@@ -260,7 +260,7 @@ makeBufferSimple vertices = do
       bufferSize  : length vertices
     }
 
-makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayBuffer a) -> [Number]
+makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number]
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBuffer bufferTarget conversion vertices = do
   let targetConst = bufferTargetToConst bufferTarget
@@ -367,7 +367,7 @@ viewport = viewport_
 data ShaderType =   FragmentShader
                   | VertexShader
 
-asArrayBuffer ::[Number] -> T.ArrayBuffer T.Float32
+asArrayBuffer ::[Number] -> T.Float32Array
 asArrayBuffer = T.asFloat32Array
 
 getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
@@ -596,6 +596,6 @@ foreign import bufferData """
        {return function()
         {gl.bufferData(target,data,usage);};};};};"""
       :: forall a eff. GLenum->
-                     T.ArrayBuffer a ->
+                     T.ArrayView a ->
                      GLenum
                      -> (Eff (webgl :: WebGl | eff) Unit)

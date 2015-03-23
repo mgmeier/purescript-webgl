@@ -3,8 +3,9 @@ module Graphics.WebGLRaw where
 
 import Control.Monad.Eff
 import Control.Monad.Eff.WebGL
-import Data.TypedArray.Types
+import Data.ArrayBuffer.Types
 import Data.TypedArray
+
 
 type GLenum = Number
 type GLboolean = Boolean
@@ -1088,7 +1089,7 @@ foreign import bufferData_
      {return function()
       {gl.bufferData(target,data,usage);};};};};"""
     :: forall eff. GLenum->
-                   ArrayBuffer Float32->
+                   Float32Array->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1100,7 +1101,7 @@ foreign import bufferSubData_
       {gl.bufferSubData(target,offset,data);};};};};"""
     :: forall eff. GLenum->
                    GLintptr->
-                   ArrayBuffer Float32
+                   Float32Array
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import checkFramebufferStatus_
