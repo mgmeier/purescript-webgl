@@ -570,24 +570,40 @@ foreign import getCanvasHeight_ """
             return canvas.height;
             };}""" :: forall eff. String -> Eff (webgl :: WebGl | eff) Number
 
+foreign import requestAnimationFrame_ """
+  var rAF = null;
 
-foreign import requestAnimationFrame """
-  if (typeof rAF === 'undefined') {
-    var rAF = (function(){
-      return  window.requestAnimationFrame       ||
-              window.webkitRequestAnimationFrame ||
-              window.mozRequestAnimationFrame    ||
-              function( callback ){
-                window.setTimeout(callback, 1000 / 60);
-              };
-    })();
-  }
-  function requestAnimationFrame(x){
-    return function(){
-      return rAF(x);
-    };
+  function requestAnimationFrame_(getContext){
+    return function(x){
+      if(!rAF){
+        rAF = (function(){
+          var c = getContext();
+          return  c.requestAnimationFrame       ||
+                  c.webkitRequestAnimationFrame ||
+                  c.mozRequestAnimationFrame    ||
+                  c.oRequestAnimationFrame ||
+                  c.msRequestAnimationFrame ||
+                  function( callback ){
+                    c.setTimeout(callback, 1000 / 60);
+                  };
+        })();
+      }
+      return function(){ return rAF(x); };
+    }
   };
-""" :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
+""" :: forall a eff. Eff eff Context -> Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
+
+requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
+requestAnimationFrame =  requestAnimationFrame_ getContext
+
+foreign import data Context :: *
+
+foreign import getContext """
+  var context;
+  try      { context = Function('return this')() || (42, eval)('this'); }
+  catch(e) { context = window; }
+  function getContext(){ return context; }
+""" :: forall e. Eff e Context
 
 foreign import bufferData """
     function bufferData(target)

@@ -2,6 +2,7 @@
 
 ## Module Control.Monad.Eff.WebGL
 
+
 #### `WebGl`
 
 ``` purescript
@@ -26,6 +27,7 @@ runWebGl_ :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
 
 ## Module Graphics.Canvas.Extended
 
+
 #### `Image`
 
 ``` purescript
@@ -35,6 +37,7 @@ data Image :: *
 
 
 ## Module Graphics.WebGL
+
 
 #### `WebGLContext`
 
@@ -189,7 +192,7 @@ makeBufferSimple :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer T
 #### `makeBuffer`
 
 ``` purescript
-makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayBuffer a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
+makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
 ```
 
 
@@ -405,6 +408,7 @@ requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webg
 
 
 ## Module Graphics.WebGLRaw
+
 
 #### `GLenum`
 
@@ -2814,14 +2818,14 @@ blendFuncSeparate_ :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> Eff (w
 #### `bufferData_`
 
 ``` purescript
-bufferData_ :: forall eff. GLenum -> ArrayBuffer Float32 -> GLenum -> Eff (webgl :: WebGl | eff) Unit
+bufferData_ :: forall eff. GLenum -> Float32Array -> GLenum -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
 #### `bufferSubData_`
 
 ``` purescript
-bufferSubData_ :: forall eff. GLenum -> GLintptr -> ArrayBuffer Float32 -> Eff (webgl :: WebGl | eff) Unit
+bufferSubData_ :: forall eff. GLenum -> GLintptr -> Float32Array -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
@@ -3632,6 +3636,7 @@ viewport_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: W
 
 
 ## Module Graphics.WebGLTexture
+
 
 #### `WebGLTex`
 
