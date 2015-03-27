@@ -38,12 +38,12 @@ module Graphics.WebGL
   , Buffer(..)
   , BufferTarget(..)
   , makeBuffer
-  , makeBufferSimple
+  , makeBufferFloat
 
   , setUniformFloats
-  , setUniformBooleans
+  , setUniformBoolean
 
-  , bindPointBuf
+  , bindBufAndSetVertexAttr
   , bindBuf
   , vertexPointer
 
@@ -248,8 +248,8 @@ type Buffer a = {
     bufferSize  :: Number
   }
 
-makeBufferSimple :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
-makeBufferSimple vertices = do
+makeBufferFloat :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
+makeBufferFloat vertices = do
   buffer <- createBuffer_
   bindBuffer_ _ARRAY_BUFFER buffer
   let typedArray = T.asFloat32Array vertices
@@ -284,16 +284,15 @@ setUniformFloats (Uniform uni) value
   | uni.uType == _FLOAT_VEC3    = uniform3fv_ uni.uLocation (asArrayBuffer value)
   | uni.uType == _FLOAT_VEC2    = uniform2fv_ uni.uLocation (asArrayBuffer value)
 
-setUniformBooleans :: forall eff typ. Uniform typ -> [Boolean] -> EffWebGL eff Unit
-setUniformBooleans (Uniform uni) value
-  | uni.uType == _BOOL         = uniform1i_ uni.uLocation (head (toNumber <$> value))
+setUniformBoolean :: forall eff typ. Uniform typ -> Boolean -> EffWebGL eff Unit
+setUniformBoolean (Uniform uni) value
+  | uni.uType == _BOOL         = uniform1i_ uni.uLocation (toNumber value)
     where
       toNumber true = 1
       toNumber false = 0
 
-
-bindPointBuf :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
-bindPointBuf buffer bind = do
+bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
+bindBufAndSetVertexAttr buffer bind = do
   bindBuffer_ buffer.bufferType buffer.webGLBuffer
   vertexPointer bind
 
@@ -340,7 +339,7 @@ disable = disable_ <<< capacityToConst
 
 drawArr :: forall a eff typ. Mode -> Buffer a -> Attribute typ -> EffWebGL eff Unit
 drawArr mode buffer a@(Attribute attrLoc) = do
-  bindPointBuf buffer a
+  bindBufAndSetVertexAttr buffer a
   drawArrays_ (modeToConst mode) 0 (buffer.bufferSize / attrLoc.aItemSize)
 
 drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit

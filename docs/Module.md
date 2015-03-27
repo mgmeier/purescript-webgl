@@ -182,10 +182,10 @@ type Buffer a = { bufferSize :: Number, bufferType :: Number, webGLBuffer :: Web
 ```
 
 
-#### `makeBufferSimple`
+#### `makeBufferFloat`
 
 ``` purescript
-makeBufferSimple :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer T.Float32)
+makeBufferFloat :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 ```
 
 
@@ -203,17 +203,17 @@ setUniformFloats :: forall eff typ. Uniform typ -> [Number] -> EffWebGL eff Unit
 ```
 
 
-#### `setUniformBooleans`
+#### `setUniformBoolean`
 
 ``` purescript
-setUniformBooleans :: forall eff typ. Uniform typ -> [Boolean] -> EffWebGL eff Unit
+setUniformBoolean :: forall eff typ. Uniform typ -> Boolean -> EffWebGL eff Unit
 ```
 
 
-#### `bindPointBuf`
+#### `bindBufAndSetVertexAttr`
 
 ``` purescript
-bindPointBuf :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
+bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
