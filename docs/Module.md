@@ -301,6 +301,20 @@ vertexPointer :: forall eff typ. Attribute typ -> EffWebGL eff Unit
 ```
 
 
+#### `enableVertexAttribArray`
+
+``` purescript
+enableVertexAttribArray :: forall eff a. Attribute a -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
+#### `disableVertexAttribArray`
+
+``` purescript
+disableVertexAttribArray :: forall eff a. Attribute a -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
 #### `getCanvasWidth`
 
 ``` purescript

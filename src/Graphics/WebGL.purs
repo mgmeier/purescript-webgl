@@ -47,6 +47,8 @@ module Graphics.WebGL
   , bindBuf
   , vertexPointer
 
+  , enableVertexAttribArray
+  , disableVertexAttribArray
   , drawArr
   , drawElements
 
@@ -358,6 +360,12 @@ vertexPointer (Attribute attrLoc) =
   vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
 
 viewport = viewport_
+
+enableVertexAttribArray :: forall eff a . Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
+enableVertexAttribArray (Attribute att)  = enableVertexAttribArray_ att.aLocation
+
+disableVertexAttribArray :: forall eff a . Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
+disableVertexAttribArray (Attribute att) = disableVertexAttribArray_ att.aLocation
 
 
 
