@@ -259,6 +259,28 @@ clear :: forall eff. [Mask] -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
+#### `Func`
+
+``` purescript
+data Func
+  = NEVER 
+  | ALWAYS 
+  | LESS 
+  | EQUAL 
+  | LEQUAL 
+  | GREATER 
+  | GEQUAL 
+  | NOTEQUAL 
+```
+
+
+#### `depthFunc`
+
+``` purescript
+depthFunc :: forall eff. Func -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
 #### `disable`
 
 ``` purescript

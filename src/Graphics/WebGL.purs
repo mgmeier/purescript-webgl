@@ -52,6 +52,9 @@ module Graphics.WebGL
   , drawArr
   , drawElements
 
+  , depthFunc
+  , Func(..)
+
   , Mask(..)
   , Mode(..)
 
@@ -335,6 +338,21 @@ clearDepth = clearDepth_
 clearStencil = clearStencil_
 
 colorMask = colorMask_
+
+data Func = NEVER | ALWAYS | LESS | EQUAL | LEQUAL | GREATER | GEQUAL | NOTEQUAL
+
+funcToConst :: Func -> Number
+funcToConst NEVER   = _NEVER
+funcToConst ALWAYS  = _ALWAYS
+funcToConst LESS    = _LESS
+funcToConst EQUAL   = _EQUAL
+funcToConst LEQUAL  = _LEQUAL
+funcToConst GREATER = _GREATER
+funcToConst GEQUAL  = _GEQUAL
+funcToConst NOTEQUAL = _NOTEQUAL
+
+depthFunc :: forall eff. Func -> Eff (webgl :: WebGl | eff) Unit
+depthFunc = depthFunc_ <<< funcToConst
 
 disable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
 disable = disable_ <<< capacityToConst
