@@ -3770,6 +3770,13 @@ texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL e
 ```
 
 
+#### `handleLoad2D`
+
+``` purescript
+handleLoad2D :: forall eff a. WebGLTexture -> TexFilterSpec -> a -> EffWebGL eff Unit
+```
+
+
 #### `withTexture2D`
 
 ``` purescript

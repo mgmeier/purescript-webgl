@@ -27,6 +27,8 @@ module Graphics.WebGLTexture
   , withTexture2D
   , activeTexture
   , bindTexture
+  , handleLoad2D
+
 )where
 
 import Control.Monad.Eff.WebGL
@@ -143,11 +145,11 @@ texture2DFor name filterSpec continuation = do
     handleLoad2D texture filterSpec image
     continuation (WebGLTex texture)
 
-handleLoad2D :: forall eff. WebGLTexture -> TexFilterSpec -> Image -> EffWebGL eff Unit
-handleLoad2D texture filterSpec image = do
+handleLoad2D :: forall eff a. WebGLTexture -> TexFilterSpec -> a -> EffWebGL eff Unit
+handleLoad2D texture filterSpec whatever = do
   bindTexture TEXTURE_2D (WebGLTex texture)
   pixelStorei UNPACK_FLIP_Y_WEBGL 1
-  texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE image
+  texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE whatever
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
   case filterSpec of
@@ -169,7 +171,7 @@ withTexture2D texture index (Uniform sampler) pos = do
 bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 bindTexture tt (WebGLTex texture) = bindTexture_ (targetTypeToConst tt) texture
 
-texImage2D :: forall eff. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> Image
+texImage2D :: forall eff a. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> a
                     -> EffWebGL eff Unit
 texImage2D target level internalFormat format typ pixels =
   texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
@@ -207,5 +209,5 @@ foreign import texImage2D__
                    GLenum->
                    GLenum->
                    GLenum->
-                   Image
+                   a
                    -> EffWebGL eff Unit
