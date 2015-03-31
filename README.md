@@ -4,8 +4,6 @@ Binding to webGL for purescript.
  
 - [Module documentation](docs/Module.md)
 
-A recent purescript compiler from git repo is needed, as we need patch 
-"Lift restriction on underscores in unames" from Dec 25, 2014.
 
 This modules should be imported like: 
 ~~~
@@ -13,13 +11,21 @@ import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLTexture
 ~~~
+ 
+or 
+~~~
+import qualified Control.Monad.Eff.WebGL as GL
+import qualified Graphics.WebGL as GL
+import qualified Graphics.WebGLTexture as GL
+~~~
+
 
 I started with generating the raw interface by parsing the Kronos IDL and generating
 a low level binding to Graphics.WebGLRaw. This can be found in the package 
 [purescript-webgl-generator](https://github.com/jutaro/purescript-webgl-generator). 
 For some procedures the generation is not appropriate (e.g. ad-hoc polymorphism 
 in Javascript or calling the same procedure 
-with different number of arguments). I decided to copy this cases by hand and modify them,
+with different number of arguments). I decided to copy these cases by hand and modify them,
 instead of making a super smart generator. All the constants are generated with a leading
 underscore, while all the procedures have a trailing underscore in this module. I 
 insist on that this module should not be changed by hand. I suggest you don't call 
@@ -73,7 +79,8 @@ shaders = Shaders
 ~~~
 
 Although type safety is guaranteed in the purescript world, currently the correctness of your
-types is not checked against the shading language definitions. 
+types is not checked against the shading language definitions. Be careful as unused variables
+in the sahder code will be optimized away and the binding will not be correct then.
 
 By calling 
 ~~~
@@ -100,7 +107,7 @@ higher leven then calling the original webgl procedures. Eg:
                       M.identity
     setUniformFloats bindings.uMVMatrix (M.toArray mvMatrix)
 
-    buf1 <- makeBufferSimple [0.0,  1.0,  0.0,
+    buf1 <- makeBufferFloat [0.0,  1.0,  0.0,
                        (-1.0), (-1.0),  0.0,
                         1.0, (-1.0),  0.0]
     drawArr TRIANGLES buf1 bindings.aVertexPosition
