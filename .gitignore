@@ -6,3 +6,4 @@ output/
 tmp/
 *~
 dist/*.js
+.bowerrc
