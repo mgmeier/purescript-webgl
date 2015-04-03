@@ -24,6 +24,7 @@
   "dependencies": {
     "purescript-typedarray" : ">=0.2.0",
     "purescript-vector": "*",
-    "purescript-matrix": "*"
+    "purescript-matrix": "*",
+    "purescript-extensions": "*"
   }
 }

@@ -25,17 +25,6 @@ runWebGl_ :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
 
 
 
-## Module Graphics.Canvas.Extended
-
-
-#### `Image`
-
-``` purescript
-data Image :: *
-```
-
-
-
 ## Module Graphics.WebGL
 
 
