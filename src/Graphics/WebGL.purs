@@ -83,6 +83,7 @@ module Graphics.WebGL
   , isContextLost
 
   , requestAnimationFrame
+  
 
   ) where
 

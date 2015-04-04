@@ -17,6 +17,7 @@ module Graphics.WebGLFramebuffer
     WebGLBuf(..)
     , bindFramebuffer
     , bindCanvasbuffer
+    , createFramebuffer
 
 )where
 
@@ -26,6 +27,11 @@ import Graphics.WebGLRaw
 import Control.Monad.Eff
 
 newtype WebGLBuf = WebGLBuf WebGLFramebuffer
+
+createFramebuffer :: forall eff. EffWebGL eff WebGLBuf
+createFramebuffer = do
+  b <- createFramebuffer_
+  return (WebGLBuf b)
 
 bindFramebuffer :: forall eff. WebGLBuf -> EffWebGL eff Unit
 bindFramebuffer (WebGLBuf buf) = bindFramebuffer_ _FRAMEBUFFER buf
