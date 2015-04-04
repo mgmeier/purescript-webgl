@@ -16,6 +16,7 @@ module Graphics.WebGLFramebuffer
 (
     WebGLBuf(..)
     , bindFramebuffer
+    , bindCanvasbuffer
 
 )where
 

@@ -450,6 +450,13 @@ bindFramebuffer :: forall eff. WebGLBuf -> EffWebGL eff Unit
 ```
 
 
+#### `bindCanvasbuffer`
+
+``` purescript
+bindCanvasbuffer :: forall eff. EffWebGL eff Unit
+```
+
+
 
 ## Module Graphics.WebGLRaw
 
@@ -3781,7 +3788,7 @@ texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL e
 #### `handleLoad2D`
 
 ``` purescript
-handleLoad2D :: forall eff a. WebGLTexture -> TexFilterSpec -> a -> EffWebGL eff Unit
+handleLoad2D :: forall eff a. WebGLTex -> TexFilterSpec -> a -> EffWebGL eff Unit
 ```
 
 
@@ -3803,4 +3810,11 @@ bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 
 ``` purescript
 activeTexture :: forall eff. Number -> Eff (webgl :: WebGl | eff) Unit
+```
+
+
+#### `createTexture`
+
+``` purescript
+createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
 ```

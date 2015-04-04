@@ -28,6 +28,7 @@ module Graphics.WebGLTexture
   , activeTexture
   , bindTexture
   , handleLoad2D
+  , createTexture
 
 )where
 
@@ -140,14 +141,14 @@ texFilterSpecToMinConst MIPMAP = _LINEAR_MIPMAP_NEAREST
 
 texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
 texture2DFor name filterSpec continuation = do
-  texture <- createTexture_
+  texture <- createTexture
   loadImage name \image -> do
     handleLoad2D texture filterSpec image
-    continuation (WebGLTex texture)
+    continuation texture
 
-handleLoad2D :: forall eff a. WebGLTexture -> TexFilterSpec -> a -> EffWebGL eff Unit
+handleLoad2D :: forall eff a. WebGLTex -> TexFilterSpec -> a -> EffWebGL eff Unit
 handleLoad2D texture filterSpec whatever = do
-  bindTexture TEXTURE_2D (WebGLTex texture)
+  bindTexture TEXTURE_2D texture
   pixelStorei UNPACK_FLIP_Y_WEBGL 1
   texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE whatever
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
@@ -179,6 +180,11 @@ texImage2D target level internalFormat format typ pixels =
 
 activeTexture :: forall eff. Number -> Eff (webgl :: WebGl | eff) Unit
 activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
+
+createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
+createTexture = do
+          texture <- createTexture_
+          return (WebGLTex texture)
 
 uniform1i = uniform1i_
 
