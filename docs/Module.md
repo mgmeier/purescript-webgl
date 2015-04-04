@@ -432,6 +432,25 @@ requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webg
 
 
 
+## Module Graphics.WebGLFramebuffer
+
+
+#### `WebGLBuf`
+
+``` purescript
+newtype WebGLBuf
+  = WebGLBuf WebGLFramebuffer
+```
+
+
+#### `bindFramebuffer`
+
+``` purescript
+bindFramebuffer :: forall eff. WebGLBuf -> EffWebGL eff Unit
+```
+
+
+
 ## Module Graphics.WebGLRaw
 
 
