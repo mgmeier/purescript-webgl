@@ -443,6 +443,13 @@ newtype WebGLBuf
 ```
 
 
+#### `createFramebuffer`
+
+``` purescript
+createFramebuffer :: forall eff. EffWebGL eff WebGLBuf
+```
+
+
 #### `bindFramebuffer`
 
 ``` purescript

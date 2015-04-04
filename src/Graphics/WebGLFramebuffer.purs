@@ -37,10 +37,10 @@ bindFramebuffer :: forall eff. WebGLBuf -> EffWebGL eff Unit
 bindFramebuffer (WebGLBuf buf) = bindFramebuffer_ _FRAMEBUFFER buf
 
 bindCanvasbuffer :: forall eff. EffWebGL eff Unit
-bindCanvasbuffer = bindCanvasbuffer_
+bindCanvasbuffer = bindCanvasbuffer_ _FRAMEBUFFER
 
 foreign import bindCanvasbuffer_
-  """function bindCanvasbuffer_
+  """function bindCanvasbuffer_(target)
     {return function()
-     {gl.bindFramebuffer(_FRAMEBUFFER,0);};};};"""
-    :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
+     {gl.bindFramebuffer(target,null);};};"""
+    :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
