@@ -107,7 +107,9 @@ readPixels :: forall eff. GLint ->
                Uint8Array -> Eff (webgl :: WebGl | eff) Uint8Array
 readPixels x y width height uint8Array =
   let copiedArray = asUint8Array (asArray uint8Array)
-  in readPixels__ x y width height _RGBA _UNSIGNED_BYTE copiedArray
+  in do
+    readPixels__ x y width height _RGBA _UNSIGNED_BYTE copiedArray
+    return copiedArray
 
 foreign import readPixels__
   """function readPixels__(x)
@@ -118,8 +120,7 @@ foreign import readPixels__
        {return function(type)
         {return function(pixels)
          {return function()
-          { gl.readPixels(x,y,width,height,format,type,pixels);
-            return newPixels;};};};};};};};};
+          { gl.readPixels(x,y,width,height,format,type,pixels);};};};};};};};};
 """
     :: forall a eff. GLint->
                    GLint->
@@ -128,4 +129,4 @@ foreign import readPixels__
                    GLenum->
                    GLenum->
                    ArrayView a
-                   -> (Eff (webgl :: WebGl | eff) (ArrayView a))
+                   -> Eff (webgl :: WebGl | eff) Unit
