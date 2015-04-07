@@ -532,7 +532,7 @@ framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf -> EffWe
 #### `readPixels`
 
 ``` purescript
-readPixels :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> Eff (webgl :: WebGl | eff) ArrayBufferView
+readPixels :: forall a eff. GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayView a -> Eff (webgl :: WebGl | eff) (ArrayView a)
 ```
 
 

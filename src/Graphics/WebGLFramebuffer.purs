@@ -35,6 +35,7 @@ import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLRaw
 import Control.Monad.Eff
+import Data.ArrayBuffer.Types
 
 newtype WebGLBuf = WebGLBuf WebGLFramebuffer
 
@@ -111,11 +112,11 @@ foreign import readPixels
             gl.readPixels(x,y,width,height,format,type,newPixels);
             return newPixels);};};};};};};};};
 """
-    :: forall eff. GLint->
+    :: forall a eff. GLint->
                    GLint->
                    GLsizei->
                    GLsizei->
                    GLenum->
                    GLenum->
-                   ArrayBufferView
-                   -> (Eff (webgl :: WebGl | eff) ArrayBufferView)
+                   ArrayView a
+                   -> (Eff (webgl :: WebGl | eff) (ArrayView a))
