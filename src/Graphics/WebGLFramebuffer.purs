@@ -27,6 +27,8 @@ module Graphics.WebGLFramebuffer
     , AttachementPoint(..)
     , framebufferRenderbuffer
 
+    , readPixels
+
 )where
 
 import Control.Monad.Eff.WebGL
@@ -95,3 +97,25 @@ foreign import unbindRenderbuffer_
     {return function()
      {gl.bindRenderbuffer(target,null);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+
+foreign import readPixels
+  """function readPixels(x)
+   {return function(y)
+    {return function(width)
+     {return function(height)
+      {return function(format)
+       {return function(type)
+        {return function(pixels)
+         {return function()
+          { var newPixels = pixels.slice();
+            gl.readPixels(x,y,width,height,format,type,newPixels);
+            return newPixels);};};};};};};};};
+"""
+    :: forall eff. GLint->
+                   GLint->
+                   GLsizei->
+                   GLsizei->
+                   GLenum->
+                   GLenum->
+                   ArrayBufferView
+                   -> (Eff (webgl :: WebGl | eff) ArrayBufferView)
