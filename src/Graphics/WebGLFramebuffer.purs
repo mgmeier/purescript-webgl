@@ -107,7 +107,7 @@ readPixels :: forall eff. GLint ->
                Uint8Array -> Eff (webgl :: WebGl | eff) Uint8Array
 readPixels x y width height uint8Array =
   let copiedArray = asUint8Array (asArray uint8Array)
-  in readPixels__ x y width height _UNSIGNED_BYTE _FLOAT copiedArray
+  in readPixels__ x y width height _RGBA _UNSIGNED_BYTE copiedArray
 
 foreign import readPixels__
   """function readPixels__(x)
