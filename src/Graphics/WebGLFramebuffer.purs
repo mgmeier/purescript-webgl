@@ -110,7 +110,7 @@ foreign import readPixels
          {return function()
           { var newPixels = pixels.slice();
             gl.readPixels(x,y,width,height,format,type,newPixels);
-            return newPixels);};};};};};};};};
+            return newPixels;};};};};};};};};
 """
     :: forall a eff. GLint->
                    GLint->
