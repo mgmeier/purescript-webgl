@@ -36,6 +36,7 @@ import Graphics.WebGL
 import Graphics.WebGLRaw
 import Control.Monad.Eff
 import Data.ArrayBuffer.Types
+import Data.TypedArray
 
 newtype WebGLBuf = WebGLBuf WebGLFramebuffer
 
@@ -99,8 +100,17 @@ foreign import unbindRenderbuffer_
      {gl.bindRenderbuffer(target,null);};};"""
     :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import readPixels
-  """function readPixels(x)
+readPixels :: forall eff. GLint ->
+               GLint ->
+               GLsizei ->
+               GLsizei ->
+               Uint8Array -> Eff (webgl :: WebGl | eff) Uint8Array
+readPixels x y width height uint8Array =
+  let copiedArray = asUint8Array (asArray uint8Array)
+  in readPixels__ x y width height _UNSIGNED_BYTE _FLOAT copiedArray
+
+foreign import readPixels__
+  """function readPixels__(x)
    {return function(y)
     {return function(width)
      {return function(height)
@@ -108,8 +118,7 @@ foreign import readPixels
        {return function(type)
         {return function(pixels)
          {return function()
-          { var newPixels = pixels.prototype.slice();
-            gl.readPixels(x,y,width,height,format,type,newPixels);
+          { gl.readPixels(x,y,width,height,format,type,pixels);
             return newPixels;};};};};};};};};
 """
     :: forall a eff. GLint->
