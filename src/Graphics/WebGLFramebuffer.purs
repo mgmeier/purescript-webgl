@@ -108,7 +108,7 @@ foreign import readPixels
        {return function(type)
         {return function(pixels)
          {return function()
-          { var newPixels = pixels.slice();
+          { var newPixels = pixels.prototype.slice();
             gl.readPixels(x,y,width,height,format,type,newPixels);
             return newPixels;};};};};};};};};
 """
