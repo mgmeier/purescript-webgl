@@ -27,6 +27,7 @@ module Graphics.WebGLTexture
   , withTexture2D
   , activeTexture
   , bindTexture
+  , unbindTexture
   , handleLoad2D
   , createTexture
   , newTexture
@@ -164,13 +165,13 @@ newTexture :: forall eff. Number -> Number -> TexFilterSpec -> EffWebGL eff WebG
 newTexture width height filterSpec = do
   texture <- createTexture
   bindTexture TEXTURE_2D texture
-  pixelStorei UNPACK_FLIP_Y_WEBGL 1
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
   texImage2DNull TEXTURE_2D 0 IF_RGBA width height IF_RGBA UNSIGNED_BYTE
   case filterSpec of
     MIPMAP -> generateMipmap_ _TEXTURE_2D
     _ -> return unit
+  unbindTexture TEXTURE_2D
   return texture
 
 texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
@@ -187,6 +188,9 @@ withTexture2D texture index (Uniform sampler) pos = do
 
 bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 bindTexture tt (WebGLTex texture) = bindTexture_ (targetTypeToConst tt) texture
+
+unbindTexture :: forall eff. TargetType -> EffWebGL eff Unit
+unbindTexture tt = bindTexture__ (targetTypeToConst tt)
 
 texImage2D :: forall eff a. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> a
                     -> EffWebGL eff Unit
@@ -260,3 +264,10 @@ foreign import texImage2DNull_
                    GLenum->
                    GLenum->
                    (Eff (webgl :: WebGl | eff) Unit)
+
+foreign import bindTexture__
+  """function bindTexture__(target)
+    {return function()
+     {gl.bindTexture(target,null);};};"""
+    :: forall eff. GLenum
+                   -> (Eff (webgl :: WebGl | eff) Unit)

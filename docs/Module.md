@@ -3906,6 +3906,13 @@ bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 ```
 
 
+#### `unbindTexture`
+
+``` purescript
+unbindTexture :: forall eff. TargetType -> EffWebGL eff Unit
+```
+
+
 #### `activeTexture`
 
 ``` purescript
