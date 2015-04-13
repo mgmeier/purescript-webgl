@@ -96,8 +96,8 @@ framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf ->  EffW
 framebufferRenderbuffer attachementPoint (WebGLRendBuf buf) =
   framebufferRenderbuffer_ _FRAMEBUFFER (attachementPointToConst attachementPoint) _RENDERBUFFER buf
 
-framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTexture -> EffWebGL eff Unit
-framebufferTexture2D attachementPoint targetType texture =
+framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTex -> EffWebGL eff Unit
+framebufferTexture2D attachementPoint targetType (WebGLTex texture) =
   framebufferTexture2D_ _FRAMEBUFFER (attachementPointToConst attachementPoint) (targetTypeToConst targetType) texture 0
 
 foreign import unbindRenderbuffer_

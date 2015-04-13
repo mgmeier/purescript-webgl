@@ -532,7 +532,7 @@ framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf -> EffWe
 #### `framebufferTexture2D`
 
 ``` purescript
-framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTexture -> EffWebGL eff Unit
+framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTex -> EffWebGL eff Unit
 ```
 
 
