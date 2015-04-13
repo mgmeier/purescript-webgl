@@ -3888,7 +3888,7 @@ handleLoad2D :: forall eff a. WebGLTex -> TexFilterSpec -> a -> EffWebGL eff Uni
 #### `newTexture`
 
 ``` purescript
-newTexture :: forall eff. TexFilterSpec -> EffWebGL eff WebGLTex
+newTexture :: forall eff. Number -> Number -> TexFilterSpec -> EffWebGL eff WebGLTex
 ```
 
 
