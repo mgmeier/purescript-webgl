@@ -29,6 +29,7 @@ module Graphics.WebGLTexture
   , bindTexture
   , handleLoad2D
   , createTexture
+  , newTexture
 
   , targetTypeToConst
 
