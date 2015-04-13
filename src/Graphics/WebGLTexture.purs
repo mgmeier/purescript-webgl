@@ -30,6 +30,8 @@ module Graphics.WebGLTexture
   , handleLoad2D
   , createTexture
 
+  , targetTypeToConst
+
 )where
 
 import Control.Monad.Eff.WebGL
@@ -157,6 +159,19 @@ handleLoad2D texture filterSpec whatever = do
     MIPMAP -> generateMipmap_ _TEXTURE_2D
     _ -> return unit
 
+newTexture :: forall eff. String -> TexFilterSpec -> EffWebGL eff WebGLTex
+newTexture name filterSpec = do
+  texture <- createTexture
+  bindTexture TEXTURE_2D texture
+  pixelStorei UNPACK_FLIP_Y_WEBGL 1
+  texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
+  texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
+  texImage2DNull TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE
+  case filterSpec of
+    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    _ -> return unit
+  return texture
+
 texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
 texParameteri target pname param = texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
 
@@ -177,6 +192,12 @@ texImage2D :: forall eff a. TargetType -> GLint -> InternalFormat -> InternalFor
 texImage2D target level internalFormat format typ pixels =
   texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     (internalFormatToConst format) (textureTypeToConst typ) pixels
+
+texImage2DNull :: forall eff. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType
+                    -> EffWebGL eff Unit
+texImage2DNull target level internalFormat format typ =
+  texImage2DNull_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+    (internalFormatToConst format) (textureTypeToConst typ)
 
 activeTexture :: forall eff. Number -> Eff (webgl :: WebGl | eff) Unit
 activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
@@ -217,3 +238,18 @@ foreign import texImage2D__
                    GLenum->
                    a
                    -> EffWebGL eff Unit
+
+foreign import texImage2DNull_
+  """function texImage2DNull_(target)
+   {return function(level)
+    {return function(internalformat)
+        {return function(format)
+         {return function(type)
+           {return function()
+            {gl.texImage2D(target,level,internalformat,format,type,null);};};};};};};"""
+    :: forall eff. GLenum->
+                   GLint->
+                   GLenum->
+                   GLenum->
+                   GLenum->
+                   EffWebGL eff Unit

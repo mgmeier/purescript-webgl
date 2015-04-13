@@ -26,6 +26,7 @@ module Graphics.WebGLFramebuffer
     , renderbufferStorage
     , AttachementPoint(..)
     , framebufferRenderbuffer
+    , framebufferTexture2D
 
     , readPixels
 
@@ -34,6 +35,7 @@ module Graphics.WebGLFramebuffer
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLRaw
+import Graphics.WebGLTexture
 import Control.Monad.Eff
 import Data.ArrayBuffer.Types
 import Data.TypedArray
@@ -93,6 +95,10 @@ renderbufferStorage renderbufferFormat width height =
 framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf ->  EffWebGL eff Unit
 framebufferRenderbuffer attachementPoint (WebGLRendBuf buf) =
   framebufferRenderbuffer_ _FRAMEBUFFER (attachementPointToConst attachementPoint) _RENDERBUFFER buf
+
+framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTexture -> EffWebGL eff Unit
+framebufferTexture2D attachementPoint targetType texture =
+  framebufferTexture2D_ _FRAMEBUFFER (attachementPointToConst attachementPoint) (targetTypeToConst targetType) texture 0
 
 foreign import unbindRenderbuffer_
   """function unbindRenderbuffer_(target)

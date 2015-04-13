@@ -529,6 +529,13 @@ framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf -> EffWe
 ```
 
 
+#### `framebufferTexture2D`
+
+``` purescript
+framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTexture -> EffWebGL eff Unit
+```
+
+
 #### `readPixels`
 
 ``` purescript
@@ -3787,6 +3794,13 @@ data TargetType
   | TEXTURE_CUBE_MAP_NEGATIVE_Y 
   | TEXTURE_CUBE_MAP_POSITIVE_Z 
   | TEXTURE_CUBE_MAP_NEGATIVE_Z 
+```
+
+
+#### `targetTypeToConst`
+
+``` purescript
+targetTypeToConst :: TargetType -> GLenum
 ```
 
 
