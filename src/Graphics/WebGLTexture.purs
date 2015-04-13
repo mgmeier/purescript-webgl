@@ -160,8 +160,8 @@ handleLoad2D texture filterSpec whatever = do
     MIPMAP -> generateMipmap_ _TEXTURE_2D
     _ -> return unit
 
-newTexture :: forall eff. String -> TexFilterSpec -> EffWebGL eff WebGLTex
-newTexture name filterSpec = do
+newTexture :: forall eff. TexFilterSpec -> EffWebGL eff WebGLTex
+newTexture filterSpec = do
   texture <- createTexture
   bindTexture TEXTURE_2D texture
   pixelStorei UNPACK_FLIP_Y_WEBGL 1
