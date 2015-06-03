@@ -178,10 +178,31 @@ makeBufferFloat :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer T.
 ```
 
 
+#### `makeBufferFloatDyn`
+
+``` purescript
+makeBufferFloatDyn :: forall eff. [Number] -> Eff (webgl :: WebGl | eff) (Buffer T.Float32)
+```
+
+
 #### `makeBuffer`
 
 ``` purescript
 makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
+```
+
+
+#### `makeBufferDyn`
+
+``` purescript
+makeBufferDyn :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number] -> Eff (webgl :: WebGl | eff) (Buffer a)
+```
+
+
+#### `fillBuffer`
+
+``` purescript
+fillBuffer :: forall a eff. Buffer a -> Number -> [Number] -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 

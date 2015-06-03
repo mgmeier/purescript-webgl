@@ -38,7 +38,10 @@ module Graphics.WebGL
   , Buffer(..)
   , BufferTarget(..)
   , makeBuffer
+  , makeBufferDyn
   , makeBufferFloat
+  , makeBufferFloatDyn
+  , fillBuffer
 
   , setUniformFloats
   , setUniformBoolean
@@ -83,7 +86,7 @@ module Graphics.WebGL
   , isContextLost
 
   , requestAnimationFrame
-  
+
 
   ) where
 
@@ -255,11 +258,16 @@ type Buffer a = {
   }
 
 makeBufferFloat :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
-makeBufferFloat vertices = do
+makeBufferFloat vertices = makeBufferFloat' vertices _STATIC_DRAW
+
+makeBufferFloatDyn :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
+makeBufferFloatDyn vertices = makeBufferFloat' vertices _DYNAMIC_DRAW
+
+makeBufferFloat' vertices flag = do
   buffer <- createBuffer_
   bindBuffer_ _ARRAY_BUFFER buffer
   let typedArray = T.asFloat32Array vertices
-  bufferData _ARRAY_BUFFER typedArray _STATIC_DRAW
+  bufferData _ARRAY_BUFFER typedArray flag
   return {
       webGLBuffer : buffer,
       bufferType  : _ARRAY_BUFFER,
@@ -268,17 +276,31 @@ makeBufferFloat vertices = do
 
 makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number]
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
-makeBuffer bufferTarget conversion vertices = do
+makeBuffer bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _STATIC_DRAW
+
+makeBufferDyn :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number]
+                  ->  Eff (webgl :: WebGl | eff) (Buffer a)
+makeBufferDyn bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _DYNAMIC_DRAW
+
+makeBuffer' bufferTarget conversion vertices flag = do
   let targetConst = bufferTargetToConst bufferTarget
   buffer <- createBuffer_
   bindBuffer_ targetConst buffer
   let typedArray = conversion vertices
-  bufferData targetConst typedArray _STATIC_DRAW
+  bufferData targetConst typedArray flag
   return {
       webGLBuffer : buffer,
       bufferType  : targetConst,
       bufferSize  : length vertices
     }
+
+fillBuffer :: forall a eff. Buffer a -> Number -> [Number] -> Eff (webgl :: WebGl | eff) Unit
+fillBuffer buffer offset vertices = do
+    bindBuffer_ buffer.bufferType buffer.webGLBuffer
+    let typedArray = T.asFloat32Array vertices
+    bufferSubData_ buffer.bufferType offset typedArray
+    return unit
+
 
 setUniformFloats :: forall eff typ. Uniform typ -> [Number] -> EffWebGL eff Unit
 setUniformFloats (Uniform uni) value
@@ -631,13 +653,24 @@ foreign import getContext """
   function getContext(){ return context; }
 """ :: forall e. Eff e Context
 
-foreign import bufferData """
-    function bufferData(target)
-     {return function(data)
-      {return function(usage)
-       {return function()
-        {gl.bufferData(target,data,usage);};};};};"""
-      :: forall a eff. GLenum->
-                     T.ArrayView a ->
-                     GLenum
-                     -> (Eff (webgl :: WebGl | eff) Unit)
+foreign import bufferData
+  """function bufferData(target)
+   {return function(data)
+    {return function(usage)
+     {return function()
+      {gl.bufferData(target,data,usage);};};};};"""
+    :: forall a eff. GLenum->
+                   T.ArrayView a ->
+                   GLenum
+                   -> (Eff (webgl :: WebGl | eff) Unit)
+
+foreign import bufferSubData
+  """function bufferSubData(target)
+   {return function(offset)
+    {return function(data)
+     {return function()
+      {gl.bufferSubData(target,offset,data);};};};};"""
+    :: forall a eff. GLenum->
+                   GLintptr->
+                   T.ArrayView a
+                   -> (Eff (webgl :: WebGl | eff) Unit)
