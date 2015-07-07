@@ -5,7 +5,7 @@
 (function () {
     "use strict";
 
-    eport.runWebGl_ = function (f) {
+    exports.runWebGl_ = function (f) {
       return f;
   };
 
