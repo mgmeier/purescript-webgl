@@ -376,10 +376,10 @@ data ShaderType =   FragmentShader
 asArrayBuffer ::Array Number -> T.Float32Array
 asArrayBuffer = T.asFloat32Array
 
-getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
 getCanvasWidth context = getCanvasWidth_ context.canvasName
 
-getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
 getCanvasHeight context = getCanvasHeight_ context.canvasName
 
 makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Either WebGLShader String)
@@ -548,9 +548,9 @@ foreign import shaderBindings :: forall eff bindings. WebGLProgram -> Eff eff bi
 
 foreign import initGL :: forall eff. String -> ContextAttributes -> (Eff (eff) Boolean)
 
-foreign import getCanvasWidth_ ::  forall eff. String -> Eff (webgl :: WebGl | eff) Number
+foreign import getCanvasWidth_ ::  forall eff. String -> Eff (webgl :: WebGl | eff) Int
 
-foreign import getCanvasHeight_ :: forall eff. String -> Eff (webgl :: WebGl | eff) Number
+foreign import getCanvasHeight_ :: forall eff. String -> Eff (webgl :: WebGl | eff) Int
 
 foreign import requestAnimationFrame_ :: forall a eff. Eff eff Context -> Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
