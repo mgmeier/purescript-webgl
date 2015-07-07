@@ -20,7 +20,4 @@ foreign import data WebGl :: !
 
 type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
 
-foreign import runWebGl_ """
-  function runWebGl_(f) {
-      return f;
-  }""" :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
+foreign import runWebGl_ :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a

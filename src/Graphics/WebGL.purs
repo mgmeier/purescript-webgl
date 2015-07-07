@@ -90,6 +90,7 @@ module Graphics.WebGL
 
   ) where
 
+import Prelude
 import Control.Monad.Eff.WebGL
 import Graphics.WebGLRaw
 import qualified Data.Matrix as M
@@ -103,9 +104,10 @@ import Control.Monad
 import Data.Foldable
 import Data.Maybe
 import Data.Maybe.Unsafe (fromJust)
-import Data.Array (reverse,length,map,(!!))
+import Data.Array (reverse,length,(!!))
 import Data.Array.Unsafe (head)
 import Data.Either
+import Data.Int.Bits ((.|.))
 
 type WebGLContext = {
     canvasName :: String
@@ -162,14 +164,14 @@ newtype Uniform typ = Uniform
     {
       uLocation :: WebGLUniformLocation,
       uName     :: String,
-      uType     :: Number
+      uType     :: Int
     }
 
 newtype Attribute typ = Attribute {
     aLocation :: GLint,
     aName     :: String,
-    aItemType :: Number,
-    aItemSize :: Number}
+    aItemType :: Int,
+    aItemSize :: Int}
 
 data Vec2
 data Vec3
@@ -206,61 +208,16 @@ withShaders (Shaders fragmetShaderSource vertexShaderSource) failure success = d
                   success (withBindings{webGLProgram = WebGLProg p})
 
 
-foreign import shaderBindings
-  """
-        function shaderBindings(program) {
-          return function() {
-            var bindings = {}
-            var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-            for (var i = 0; i < numUniforms; i += 1) {
-                var uniform = gl.getActiveUniform(program, i);
-                var uniformLocation = gl.getUniformLocation(program, uniform.name);
-                var newUniform = {};
-                newUniform["uLocation"]=uniformLocation;
-                newUniform["uName"]=uniform.name;
-                newUniform["uType"]=uniform.type;
-                bindings[uniform.name]=newUniform;
-              }
-            var numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
-            for (var i = 0; i < numAttributes; i += 1) {
-                var attribute = gl.getActiveAttrib(program, i);
-                var attribLocation = gl.getAttribLocation(program, attribute.name);
-                gl.enableVertexAttribArray(attribLocation);
-                var newAttr = {};
-                newAttr["aLocation"]=attribLocation;
-                newAttr["aName"]=attribute.name;
-                newAttr["aItemType"]=attribute.type;
-                switch (attribute.type) {
-                  case gl.FLOAT_VEC2:
-                    newAttr["aItemSize"]=2;
-                    break;
-                  case gl.FLOAT_VEC3:
-                    newAttr["aItemSize"]=3;
-                    break;
-                  case gl.FLOAT_VEC4:
-                    newAttr["aItemSize"]=4;
-                    break;
-                  default:
-                    LOG("Unsupported attribute type: " + attribute.type);
-                    newAttr["aItemSize"]=1;
-                    break;
-                }
-                bindings[attribute.name]=newAttr;
-            }
-            return bindings;
-            };}
-  """ :: forall eff bindings. WebGLProgram -> Eff eff bindings
-
 type Buffer a = {
     webGLBuffer :: WebGLBuffer,
-    bufferType  :: Number,
-    bufferSize  :: Number
+    bufferType  :: Int,
+    bufferSize  :: Int
   }
 
-makeBufferFloat :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
+makeBufferFloat :: forall eff. Array Number ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 makeBufferFloat vertices = makeBufferFloat' vertices _STATIC_DRAW
 
-makeBufferFloatDyn :: forall eff. [Number] ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
+makeBufferFloatDyn :: forall eff. Array Number ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 makeBufferFloatDyn vertices = makeBufferFloat' vertices _DYNAMIC_DRAW
 
 makeBufferFloat' vertices flag = do
@@ -274,11 +231,11 @@ makeBufferFloat' vertices flag = do
       bufferSize  : length vertices
     }
 
-makeBuffer :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number]
+makeBuffer :: forall a eff. BufferTarget -> (Array Number -> T.ArrayView a) -> Array Number
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBuffer bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _STATIC_DRAW
 
-makeBufferDyn :: forall a eff. BufferTarget -> ([Number] -> T.ArrayView a) -> [Number]
+makeBufferDyn :: forall a eff. BufferTarget -> (Array Number -> T.ArrayView a) -> Array Number
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferDyn bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _DYNAMIC_DRAW
 
@@ -294,7 +251,7 @@ makeBuffer' bufferTarget conversion vertices flag = do
       bufferSize  : length vertices
     }
 
-fillBuffer :: forall a eff. Buffer a -> Number -> [Number] -> Eff (webgl :: WebGl | eff) Unit
+fillBuffer :: forall a eff. Buffer a -> Int -> Array Number -> Eff (webgl :: WebGl | eff) Unit
 fillBuffer buffer offset vertices = do
     bindBuffer_ buffer.bufferType buffer.webGLBuffer
     let typedArray = T.asFloat32Array vertices
@@ -302,7 +259,7 @@ fillBuffer buffer offset vertices = do
     return unit
 
 
-setUniformFloats :: forall eff typ. Uniform typ -> [Number] -> EffWebGL eff Unit
+setUniformFloats :: forall eff typ. Uniform typ -> Array Number -> EffWebGL eff Unit
 setUniformFloats (Uniform uni) value
   | uni.uType == _FLOAT         = uniform1f_ uni.uLocation (head value)
   | uni.uType == _FLOAT_MAT4    = uniformMatrix4fv_ uni.uLocation false (asArrayBuffer value)
@@ -320,9 +277,10 @@ setUniformBoolean (Uniform uni) value
       toNumber false = 0
 
 bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
-bindBufAndSetVertexAttr buffer bind = do
-  bindBuffer_ buffer.bufferType buffer.webGLBuffer
-  vertexPointer bind
+bindBufAndSetVertexAttr buffer attr = do
+    bindBuffer_ buffer.bufferType buffer.webGLBuffer
+    vertexPointer attr
+
 
 bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 bindBuf buffer = bindBuffer_ buffer.bufferType buffer.webGLBuffer
@@ -351,7 +309,7 @@ blendEquation = blendEquation_ <<< blendEquationToConst
 blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
 blendEquationSeparate a b = blendEquationSeparate_ (blendEquationToConst a) (blendEquationToConst b)
 
-clear :: forall eff. [Mask] -> (Eff (webgl :: WebGl | eff) Unit)
+clear :: forall eff. Array Mask -> (Eff (webgl :: WebGl | eff) Unit)
 clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
 
 clearColor = clearColor_
@@ -364,7 +322,7 @@ colorMask = colorMask_
 
 data Func = NEVER | ALWAYS | LESS | EQUAL | LEQUAL | GREATER | GEQUAL | NOTEQUAL
 
-funcToConst :: Func -> Number
+funcToConst :: Func -> Int
 funcToConst NEVER   = _NEVER
 funcToConst ALWAYS  = _ALWAYS
 funcToConst LESS    = _LESS
@@ -385,7 +343,7 @@ drawArr mode buffer a@(Attribute attrLoc) = do
   bindBufAndSetVertexAttr buffer a
   drawArrays_ (modeToConst mode) 0 (buffer.bufferSize / attrLoc.aItemSize)
 
-drawElements :: forall a eff. Mode -> Number -> EffWebGL eff Unit
+drawElements :: forall a eff. Mode -> Int -> EffWebGL eff Unit
 drawElements mode count = drawElements_ (modeToConst mode) count _UNSIGNED_SHORT 0
 
 enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
@@ -415,7 +373,7 @@ disableVertexAttribArray (Attribute att) = disableVertexAttribArray_ att.aLocati
 data ShaderType =   FragmentShader
                   | VertexShader
 
-asArrayBuffer ::[Number] -> T.Float32Array
+asArrayBuffer ::Array Number -> T.Float32Array
 asArrayBuffer = T.asFloat32Array
 
 getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
@@ -467,7 +425,7 @@ data Capacity = BLEND
                 | SCISSOR_TEST
                   -- ^ Abandon fragments outside a scissor rectangle.
 
-capacityToConst :: Capacity -> Number
+capacityToConst :: Capacity -> Int
 capacityToConst BLEND = _BLEND
 capacityToConst DEPTH_TEST = _DEPTH_TEST
 capacityToConst CULL_FACE = _CULL_FACE
@@ -482,7 +440,7 @@ data Mask = DEPTH_BUFFER_BIT
             | COLOR_BUFFER_BIT
                 -- ^ Clears the color buffer	0x00004000
 
-maskToConst :: Mask -> Number
+maskToConst :: Mask -> Int
 maskToConst DEPTH_BUFFER_BIT   = _DEPTH_BUFFER_BIT
 maskToConst STENCIL_BUFFER_BIT = _STENCIL_BUFFER_BIT
 maskToConst COLOR_BUFFER_BIT   = _COLOR_BUFFER_BIT
@@ -503,7 +461,7 @@ data Mode = POINTS
           | TRIANGLE_FAN
             -- ^ Similar to gl.TRIANGLE_STRIP, but creates a fan shaped output. For example 12 vertices create 10 triangles.
 
-modeToConst :: Mode -> Number
+modeToConst :: Mode -> Int
 modeToConst POINTS = _POINTS
 modeToConst LINES = _LINES
 modeToConst LINE_STRIP = _LINE_STRIP
@@ -543,7 +501,7 @@ data BlendingFactor =
             | BLEND_COLOR
 
 
-blendingFactorToConst :: BlendingFactor -> Number
+blendingFactorToConst :: BlendingFactor -> Int
 blendingFactorToConst ZERO = _ZERO
 blendingFactorToConst ONE = _ONE
 blendingFactorToConst SRC_COLOR = _SRC_COLOR
@@ -574,7 +532,7 @@ data BlendEquation =
             | FUNC_SUBTRACT
             | FUNC_REVERSE_SUBTRACT
 
-blendEquationToConst :: BlendEquation -> Number
+blendEquationToConst :: BlendEquation -> Int
 blendEquationToConst FUNC_ADD = _FUNC_ADD
 blendEquationToConst BLEND_EQUATION = _BLEND_EQUATION
 blendEquationToConst BLEND_EQUATION_RGB = _BLEND_EQUATION_RGB
@@ -585,92 +543,30 @@ blendEquationToConst FUNC_REVERSE_SUBTRACT = _FUNC_REVERSE_SUBTRACT
 
 -- * Some hand written foreign functions
 
-foreign import initGL """
-        function initGL(canvasId) {
-          return function(attr) {
-            return function() {
-              var canvas = document.getElementById(canvasId);
-              try {
-                gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
-              }
-              catch(e) {return false}
-              if (!gl)
-              {
-                gl = null;
-                return false;
-              }
-              return true;
-              }
-            }
-        }""" :: forall eff. String -> ContextAttributes -> (Eff (eff) Boolean)
 
-foreign import getCanvasWidth_ """
-        function getCanvasWidth_(canvasId) {
-          return function() {
-            var canvas = document.getElementById(canvasId);
-            return canvas.width;
-            };} """ ::  forall eff. String -> Eff (webgl :: WebGl | eff) Number
+foreign import shaderBindings :: forall eff bindings. WebGLProgram -> Eff eff bindings
 
-foreign import getCanvasHeight_ """
-        function getCanvasHeight_(canvasId) {
-          return function() {
-            var canvas = document.getElementById(canvasId);
-            return canvas.height;
-            };}""" :: forall eff. String -> Eff (webgl :: WebGl | eff) Number
+foreign import initGL :: forall eff. String -> ContextAttributes -> (Eff (eff) Boolean)
 
-foreign import requestAnimationFrame_ """
-  var rAF = null;
+foreign import getCanvasWidth_ ::  forall eff. String -> Eff (webgl :: WebGl | eff) Number
 
-  function requestAnimationFrame_(getContext){
-    return function(x){
-      if(!rAF){
-        rAF = (function(){
-          var c = getContext();
-          return  c.requestAnimationFrame       ||
-                  c.webkitRequestAnimationFrame ||
-                  c.mozRequestAnimationFrame    ||
-                  c.oRequestAnimationFrame ||
-                  c.msRequestAnimationFrame ||
-                  function( callback ){
-                    c.setTimeout(callback, 1000 / 60);
-                  };
-        })();
-      }
-      return function(){ return rAF(x); };
-    }
-  };
-""" :: forall a eff. Eff eff Context -> Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
+foreign import getCanvasHeight_ :: forall eff. String -> Eff (webgl :: WebGl | eff) Number
+
+foreign import requestAnimationFrame_ :: forall a eff. Eff eff Context -> Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
 requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 requestAnimationFrame =  requestAnimationFrame_ getContext
 
 foreign import data Context :: *
 
-foreign import getContext """
-  var context;
-  try      { context = Function('return this')() || (42, eval)('this'); }
-  catch(e) { context = window; }
-  function getContext(){ return context; }
-""" :: forall e. Eff e Context
+foreign import getContext :: forall e. Eff e Context
 
-foreign import bufferData
-  """function bufferData(target)
-   {return function(data)
-    {return function(usage)
-     {return function()
-      {gl.bufferData(target,data,usage);};};};};"""
-    :: forall a eff. GLenum->
+foreign import bufferData :: forall a eff. GLenum->
                    T.ArrayView a ->
                    GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bufferSubData
-  """function bufferSubData(target)
-   {return function(offset)
-    {return function(data)
-     {return function()
-      {gl.bufferSubData(target,offset,data);};};};};"""
-    :: forall a eff. GLenum->
+foreign import bufferSubData :: forall a eff. GLenum->
                    GLintptr->
                    T.ArrayView a
                    -> (Eff (webgl :: WebGl | eff) Unit)

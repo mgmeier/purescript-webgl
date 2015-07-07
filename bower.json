@@ -26,6 +26,7 @@
     "purescript-typedarray": "*",
     "purescript-vector": "*",
     "purescript-matrix": "*",
-    "purescript-extensions": "*"
+    "purescript-extensions": "*",
+    "purescript-integers": "*"
   }
 }

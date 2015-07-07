@@ -32,6 +32,7 @@ module Graphics.WebGLFramebuffer
 
 )where
 
+import Prelude
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLRaw
@@ -71,12 +72,6 @@ bindFramebuffer (WebGLBuf buf) = bindFramebuffer_ _FRAMEBUFFER buf
 unbindFramebuffer :: forall eff. EffWebGL eff Unit
 unbindFramebuffer = unbindFramebuffer_ _FRAMEBUFFER
 
-foreign import unbindFramebuffer_
-  """function unbindFramebuffer_(target)
-    {return function()
-     {gl.bindFramebuffer(target,null);};};"""
-    :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
-
 createRenderbuffer :: forall eff. EffWebGL eff WebGLRendBuf
 createRenderbuffer = do
   b <- createRenderbuffer_
@@ -88,7 +83,7 @@ bindRenderbuffer (WebGLRendBuf buf) = bindRenderbuffer_ _RENDERBUFFER buf
 unbindRenderbuffer :: forall eff. EffWebGL eff Unit
 unbindRenderbuffer = unbindRenderbuffer_ _RENDERBUFFER
 
-renderbufferStorage :: forall eff. RenderbufferFormat -> Number -> Number -> EffWebGL eff Unit
+renderbufferStorage :: forall eff. RenderbufferFormat -> Int -> Int -> EffWebGL eff Unit
 renderbufferStorage renderbufferFormat width height =
   renderbufferStorage_ _RENDERBUFFER (renderbufferFormatToConst renderbufferFormat) width height
 
@@ -99,12 +94,6 @@ framebufferRenderbuffer attachementPoint (WebGLRendBuf buf) =
 framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTex -> EffWebGL eff Unit
 framebufferTexture2D attachementPoint targetType (WebGLTex texture) =
   framebufferTexture2D_ _FRAMEBUFFER (attachementPointToConst attachementPoint) (targetTypeToConst targetType) texture 0
-
-foreign import unbindRenderbuffer_
-  """function unbindRenderbuffer_(target)
-    {return function()
-     {gl.bindRenderbuffer(target,null);};};"""
-    :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 
 readPixels :: forall eff. GLint ->
                GLint ->
@@ -117,18 +106,11 @@ readPixels x y width height uint8Array =
     readPixels__ x y width height _RGBA _UNSIGNED_BYTE copiedArray
     return copiedArray
 
-foreign import readPixels__
-  """function readPixels__(x)
-   {return function(y)
-    {return function(width)
-     {return function(height)
-      {return function(format)
-       {return function(type)
-        {return function(pixels)
-         {return function()
-          { gl.readPixels(x,y,width,height,format,type,pixels);};};};};};};};};
-"""
-    :: forall a eff. GLint->
+foreign import unbindRenderbuffer_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+
+foreign import unbindFramebuffer_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+
+foreign import readPixels__ :: forall a eff. GLint->
                    GLint->
                    GLsizei->
                    GLsizei->

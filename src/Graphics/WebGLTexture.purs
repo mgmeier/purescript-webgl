@@ -36,10 +36,10 @@ module Graphics.WebGLTexture
 
 )where
 
+import Prelude
 import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLRaw
-import Graphics.Canvas.Extended
 
 import Control.Monad.Eff
 
@@ -161,7 +161,7 @@ handleLoad2D texture filterSpec whatever = do
     MIPMAP -> generateMipmap_ _TEXTURE_2D
     _ -> return unit
 
-newTexture :: forall eff. Number -> Number -> TexFilterSpec -> EffWebGL eff WebGLTex
+newTexture :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
 newTexture width height filterSpec = do
   texture <- createTexture
   bindTexture TEXTURE_2D texture
@@ -177,10 +177,10 @@ newTexture width height filterSpec = do
 texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
 texParameteri target pname param = texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
 
-pixelStorei :: forall eff. SymbolicParameter -> Number -> EffWebGL eff Unit
+pixelStorei :: forall eff. SymbolicParameter -> Int -> EffWebGL eff Unit
 pixelStorei symbolicParameter num = pixelStorei_ (symbolicParameterToConst symbolicParameter) num
 
-withTexture2D :: forall eff typ. WebGLTex -> Number -> Uniform typ -> Number -> EffWebGL eff Unit
+withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit
 withTexture2D texture index (Uniform sampler) pos = do
   activeTexture index
   bindTexture TEXTURE_2D texture
@@ -204,7 +204,7 @@ texImage2DNull target level internalFormat width height format typ =
   texImage2DNull_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     width height 0 (internalFormatToConst format) (textureTypeToConst typ)
 
-activeTexture :: forall eff. Number -> Eff (webgl :: WebGl | eff) Unit
+activeTexture :: forall eff. Int -> Eff (webgl :: WebGl | eff) Unit
 activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
 
 createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
@@ -214,29 +214,11 @@ createTexture = do
 
 uniform1i = uniform1i_
 
-foreign import loadImage
-"""
-    function loadImage (name)
-     {return function(continuation)
-       {return function()
-        {var i = new Image();
-         i.src = name;
-         i.onload = continuation (i);
-          };};};"""
-      :: forall a eff. String ->
+foreign import loadImage :: forall a eff. String ->
                      (Image -> EffWebGL eff a)
                      -> EffWebGL eff Unit
 
-foreign import texImage2D__
-  """function texImage2D__(target)
-   {return function(level)
-    {return function(internalformat)
-        {return function(format)
-         {return function(type)
-          {return function(pixels)
-           {return function()
-            {gl.texImage2D(target,level,internalformat,format,type,pixels);};};};};};};};"""
-    :: forall a eff. GLenum->
+foreign import texImage2D__ :: forall a eff. GLenum->
                    GLint->
                    GLenum->
                    GLenum->
@@ -244,18 +226,7 @@ foreign import texImage2D__
                    a
                    -> EffWebGL eff Unit
 
-foreign import texImage2DNull_
-  """function texImage2DNull_(target)
-   {return function(level)
-    {return function(internalformat)
-     {return function(width)
-      {return function(height)
-       {return function(border)
-        {return function(format)
-         {return function(type)
-           {return function()
-            {gl.texImage2D(target,level,internalformat,width,height,border,format,type,null);};};};};};};};};};"""
-    :: forall eff. GLenum->
+foreign import texImage2DNull_ :: forall eff. GLenum->
                    GLint->
                    GLenum->
                    GLsizei->
@@ -265,9 +236,8 @@ foreign import texImage2DNull_
                    GLenum->
                    (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindTexture__
-  """function bindTexture__(target)
-    {return function()
-     {gl.bindTexture(target,null);};};"""
-    :: forall eff. GLenum
+foreign import bindTexture__ :: forall eff. GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
+
+-- Should go to: Graphics.Canvas
+foreign import data Image :: *
