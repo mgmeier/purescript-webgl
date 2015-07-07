@@ -552,14 +552,7 @@ foreign import getCanvasWidth_ ::  forall eff. String -> Eff (webgl :: WebGl | e
 
 foreign import getCanvasHeight_ :: forall eff. String -> Eff (webgl :: WebGl | eff) Int
 
-foreign import requestAnimationFrame_ :: forall a eff. Eff eff Context -> Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
-
-requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
-requestAnimationFrame =  requestAnimationFrame_ getContext
-
-foreign import data Context :: *
-
-foreign import getContext :: forall e. Eff e Context
+foreign import requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
 foreign import bufferData :: forall a eff. GLenum->
                    T.ArrayView a ->

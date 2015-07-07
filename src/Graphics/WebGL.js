@@ -48,7 +48,7 @@
         };};
 
 
-        exports.initGL = function (canvasId) {
+    exports.initGL = function (canvasId) {
           return function(attr) {
             return function() {
               var canvas = document.getElementById(canvasId);
@@ -80,33 +80,21 @@
             };
         };
 
-        var rAF = null;
-
-        exports.requestAnimationFrame = function _(getContext){
-            return function(x){
-              if(!rAF){
-                rAF = (function(){
-                  var c = getContext();
-                  return  c.requestAnimationFrame       ||
-                          c.webkitRequestAnimationFrame ||
-                          c.mozRequestAnimationFrame    ||
-                          c.oRequestAnimationFrame ||
-                          c.msRequestAnimationFrame ||
-                          function( callback ){
-                            c.setTimeout(callback, 1000 / 60);
-                          };
-                })();
-              }
-              return function(){ return rAF(x); };
-          };
-          };
-
-      var context;
-
-      try      { context = Function('return this')() || (42, eval)('this'); }
-      catch(e) { context = window; }
-
-      exports.getContext = function (){ return context; };
+        if (typeof rAF === 'undefined') {
+           var rAF = (function(){
+              return  window.requestAnimationFrame       ||
+                      window.webkitRequestAnimationFrame ||
+                      window.mozRequestAnimationFrame    ||
+                      function( callback ){
+                        window.setTimeout(callback, 1000 / 60);
+                      };
+                  })();
+        }
+        exports.requestAnimationFrame = function(x){
+            return function(){
+              return rAF(x);
+            };
+        };
 
       exports.bufferData = function(target)
        {return function(data)
