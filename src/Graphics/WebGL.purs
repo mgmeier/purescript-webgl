@@ -231,11 +231,11 @@ makeBufferFloat' vertices flag = do
       bufferSize  : length vertices
     }
 
-makeBuffer :: forall a eff num. (Num num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
+makeBuffer :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBuffer bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _STATIC_DRAW
 
-makeBufferDyn :: forall a eff num. (Num num) =>  BufferTarget -> (Array num -> T.ArrayView a) -> Array num
+makeBufferDyn :: forall a eff num. (ModuloSemiring num) =>  BufferTarget -> (Array num -> T.ArrayView a) -> Array num
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferDyn bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _DYNAMIC_DRAW
 
