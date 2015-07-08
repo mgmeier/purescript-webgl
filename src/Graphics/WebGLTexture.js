@@ -2,7 +2,7 @@
 
 // module Graphics.WebGLTexture
 
-(function () {
+
     "use strict";
 
     exports.loadImage = function(name)
@@ -36,4 +36,3 @@
     exports.bindTexture__ = function(target)
         {return function()
          {gl.bindTexture(target,null);};};
-})();
