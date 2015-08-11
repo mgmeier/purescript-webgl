@@ -41,7 +41,10 @@ import Control.Monad.Eff.WebGL
 import Graphics.WebGL
 import Graphics.WebGLRaw
 
+import Data.Int.Bits ((.&.),(.|.))
 import Control.Monad.Eff
+import Control.Monad (when)
+import Extensions (Image(..))
 
 newtype WebGLTex = WebGLTex WebGLTexture
 
@@ -160,6 +163,7 @@ handleLoad2D texture filterSpec whatever = do
   case filterSpec of
     MIPMAP -> generateMipmap_ _TEXTURE_2D
     _ -> return unit
+  unbindTexture TEXTURE_2D
 
 newTexture :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
 newTexture width height filterSpec = do
@@ -167,6 +171,9 @@ newTexture width height filterSpec = do
   bindTexture TEXTURE_2D texture
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
+  when (((width .|. height) .&. 1) == 1) $ do
+    texParameteri TTEXTURE_2D TEXTURE_WRAP_S _CLAMP_TO_EDGE
+    texParameteri TTEXTURE_2D TEXTURE_WRAP_T _CLAMP_TO_EDGE
   texImage2DNull TEXTURE_2D 0 IF_RGBA width height IF_RGBA UNSIGNED_BYTE
   case filterSpec of
     MIPMAP -> generateMipmap_ _TEXTURE_2D
@@ -238,6 +245,3 @@ foreign import texImage2DNull_ :: forall eff. GLenum->
 
 foreign import bindTexture__ :: forall eff. GLenum
                    -> (Eff (webgl :: WebGl | eff) Unit)
-
--- Should go to: Graphics.Canvas
-foreign import data Image :: *
