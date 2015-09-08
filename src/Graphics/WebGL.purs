@@ -108,6 +108,7 @@ import Data.Array (reverse,length,(!!))
 import Data.Array.Unsafe (head)
 import Data.Either
 import Data.Int.Bits ((.|.))
+import Extensions (fail)
 
 type WebGLContext = {
     canvasName :: String
@@ -268,6 +269,7 @@ setUniformFloats (Uniform uni) value
   | uni.uType == _FLOAT_VEC4    = uniform4fv_ uni.uLocation (asArrayBuffer value)
   | uni.uType == _FLOAT_VEC3    = uniform3fv_ uni.uLocation (asArrayBuffer value)
   | uni.uType == _FLOAT_VEC2    = uniform2fv_ uni.uLocation (asArrayBuffer value)
+  | otherwise                   = fail "WebGL>>setUniformFloats: Called for non float uniform!"
 
 setUniformBoolean :: forall eff typ. Uniform typ -> Boolean -> EffWebGL eff Unit
 setUniformBoolean (Uniform uni) value
@@ -275,6 +277,7 @@ setUniformBoolean (Uniform uni) value
     where
       toNumber true = 1
       toNumber false = 0
+  | otherwise                   = fail "WebGL>>setUniformBoolean: Called for not boolean uniform!"
 
 bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
 bindBufAndSetVertexAttr buffer attr = do

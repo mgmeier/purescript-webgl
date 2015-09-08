@@ -44,7 +44,7 @@ import Graphics.WebGLRaw
 import Data.Int.Bits ((.&.),(.|.))
 import Control.Monad.Eff
 import Control.Monad (when)
-import Extensions (Image(..))
+import Extensions (Image(), fail)
 
 newtype WebGLTex = WebGLTex WebGLTexture
 
@@ -122,7 +122,7 @@ data TexParName =
   | TEXTURE_MAG_FILTER
   | TEXTURE_WRAP_S
   | TEXTURE_WRAP_T
-  | TEXTURE_MAX_ANISOTROPY_EXT
+--  | TEXTURE_MAX_ANISOTROPY_EXT
 
 texParNameToConst :: TexParName -> GLenum
 texParNameToConst TEXTURE_MIN_FILTER = _TEXTURE_MIN_FILTER
@@ -213,6 +213,7 @@ texImage2DNull target level internalFormat width height format typ =
 
 activeTexture :: forall eff. Int -> Eff (webgl :: WebGl | eff) Unit
 activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
+                | otherwise                             = fail "WebGLTexture>>activeTexture: wrong argument!"
 
 createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
 createTexture = do

@@ -140,13 +140,13 @@ makeBufferFloatDyn :: forall eff. Array Number -> Eff (webgl :: WebGl | eff) (Bu
 #### `makeBuffer`
 
 ``` purescript
-makeBuffer :: forall a eff. BufferTarget -> (Array Number -> ArrayView a) -> Array Number -> Eff (webgl :: WebGl | eff) (Buffer a)
+makeBuffer :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
 ```
 
 #### `makeBufferDyn`
 
 ``` purescript
-makeBufferDyn :: forall a eff. BufferTarget -> (Array Number -> ArrayView a) -> Array Number -> Eff (webgl :: WebGl | eff) (Buffer a)
+makeBufferDyn :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
 ```
 
 #### `fillBuffer`
@@ -280,13 +280,13 @@ disableVertexAttribArray :: forall eff a. Attribute a -> Eff (webgl :: WebGl | e
 #### `getCanvasWidth`
 
 ``` purescript
-getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
 ```
 
 #### `getCanvasHeight`
 
 ``` purescript
-getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Number
+getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
 ```
 
 #### `Capacity`

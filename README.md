@@ -133,5 +133,3 @@ Textures are supported via the module Graphics.WebGLTexture. A texture can be cr
 ~~~
 
 The interface is not stable, but the basic constructs (effect, shaders) will not be dropped.
-
-Have fun. Jürgen

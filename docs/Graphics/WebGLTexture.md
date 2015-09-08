@@ -76,7 +76,6 @@ data TexParName
   | TEXTURE_MAG_FILTER
   | TEXTURE_WRAP_S
   | TEXTURE_WRAP_T
-  | TEXTURE_MAX_ANISOTROPY_EXT
 ```
 
 #### `TexFilterSpec`
