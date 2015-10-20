@@ -318,13 +318,13 @@ blendEquationSeparate a b = runFn2 blendEquationSeparate_ (blendEquationToConst 
 clear :: forall eff. Array Mask -> (Eff (webgl :: WebGl | eff) Unit)
 clear masks = runFn1 clear_ $ foldl (.|.) 0 (map maskToConst masks)
 
-clearColor = clearColor_
+clearColor = runFn4 clearColor_
 
-clearDepth = clearDepth_
+clearDepth = runFn1 clearDepth_
 
-clearStencil = clearStencil_
+clearStencil = runFn1 clearStencil_
 
-colorMask = colorMask_
+colorMask = runFn4 colorMask_
 
 data Func = NEVER | ALWAYS | LESS | EQUAL | LEQUAL | GREATER | GEQUAL | NOTEQUAL
 
@@ -355,7 +355,7 @@ drawElements mode count = runFn4 drawElements_ (modeToConst mode) count _UNSIGNE
 enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
 enable = runFn1 enable_ <<< capacityToConst
 
-isContextLost = isContextLost_
+isContextLost = runFn0 isContextLost_
 
 isEnabled :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Boolean)
 isEnabled = runFn1 isEnabled_ <<< capacityToConst
@@ -364,7 +364,7 @@ vertexPointer ::  forall eff typ. Attribute typ -> EffWebGL eff Unit
 vertexPointer (Attribute attrLoc) =
   runFn6 vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
 
-viewport = viewport_
+viewport = runFn4 viewport_
 
 enableVertexAttribArray :: forall eff a . Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
 enableVertexAttribArray (Attribute att)  = runFn1 enableVertexAttribArray_ att.aLocation
