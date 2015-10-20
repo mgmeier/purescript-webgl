@@ -62,7 +62,6 @@
               return true;
           };
       };
-  };
 
         exports.getCanvasWidth_ = function(canvasId) {
           return function() {
