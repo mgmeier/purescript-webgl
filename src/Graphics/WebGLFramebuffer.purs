@@ -40,6 +40,7 @@ import Graphics.WebGLTexture
 import Control.Monad.Eff
 import Data.ArrayBuffer.Types
 import Data.TypedArray
+import Data.Function
 
 newtype WebGLBuf = WebGLBuf WebGLFramebuffer
 
@@ -63,37 +64,37 @@ attachementPointToConst DEPTH_STENCIL_ATTACHMENT = _DEPTH_STENCIL_ATTACHMENT
 
 createFramebuffer :: forall eff. EffWebGL eff WebGLBuf
 createFramebuffer = do
-  b <- createFramebuffer_
+  b <- runFn0 createFramebuffer_
   return (WebGLBuf b)
 
 bindFramebuffer :: forall eff. WebGLBuf -> EffWebGL eff Unit
-bindFramebuffer (WebGLBuf buf) = bindFramebuffer_ _FRAMEBUFFER buf
+bindFramebuffer (WebGLBuf buf) = runFn2 bindFramebuffer_ _FRAMEBUFFER buf
 
 unbindFramebuffer :: forall eff. EffWebGL eff Unit
-unbindFramebuffer = unbindFramebuffer_ _FRAMEBUFFER
+unbindFramebuffer = runFn1 unbindFramebuffer_ _FRAMEBUFFER
 
 createRenderbuffer :: forall eff. EffWebGL eff WebGLRendBuf
 createRenderbuffer = do
-  b <- createRenderbuffer_
+  b <- runFn0 createRenderbuffer_
   return (WebGLRendBuf b)
 
 bindRenderbuffer :: forall eff. WebGLRendBuf -> EffWebGL eff Unit
-bindRenderbuffer (WebGLRendBuf buf) = bindRenderbuffer_ _RENDERBUFFER buf
+bindRenderbuffer (WebGLRendBuf buf) = runFn2 bindRenderbuffer_ _RENDERBUFFER buf
 
 unbindRenderbuffer :: forall eff. EffWebGL eff Unit
-unbindRenderbuffer = unbindRenderbuffer_ _RENDERBUFFER
+unbindRenderbuffer = runFn1 unbindRenderbuffer_ _RENDERBUFFER
 
 renderbufferStorage :: forall eff. RenderbufferFormat -> Int -> Int -> EffWebGL eff Unit
 renderbufferStorage renderbufferFormat width height =
-  renderbufferStorage_ _RENDERBUFFER (renderbufferFormatToConst renderbufferFormat) width height
+  runFn4 renderbufferStorage_ _RENDERBUFFER (renderbufferFormatToConst renderbufferFormat) width height
 
 framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf ->  EffWebGL eff Unit
 framebufferRenderbuffer attachementPoint (WebGLRendBuf buf) =
-  framebufferRenderbuffer_ _FRAMEBUFFER (attachementPointToConst attachementPoint) _RENDERBUFFER buf
+  runFn4 framebufferRenderbuffer_ _FRAMEBUFFER (attachementPointToConst attachementPoint) _RENDERBUFFER buf
 
 framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTex -> EffWebGL eff Unit
 framebufferTexture2D attachementPoint targetType (WebGLTex texture) =
-  framebufferTexture2D_ _FRAMEBUFFER (attachementPointToConst attachementPoint) (targetTypeToConst targetType) texture 0
+  runFn5 framebufferTexture2D_ _FRAMEBUFFER (attachementPointToConst attachementPoint) (targetTypeToConst targetType) texture 0
 
 readPixels :: forall eff. GLint ->
                GLint ->
@@ -103,18 +104,18 @@ readPixels :: forall eff. GLint ->
 readPixels x y width height uint8Array =
   let copiedArray = asUint8Array (asArray uint8Array)
   in do
-    readPixels__ x y width height _RGBA _UNSIGNED_BYTE copiedArray
+    runFn7 readPixels__ x y width height _RGBA _UNSIGNED_BYTE copiedArray
     return copiedArray
 
-foreign import unbindRenderbuffer_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+foreign import unbindRenderbuffer_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import unbindFramebuffer_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+foreign import unbindFramebuffer_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import readPixels__ :: forall a eff. GLint->
-                   GLint->
-                   GLsizei->
-                   GLsizei->
-                   GLenum->
-                   GLenum->
-                   ArrayView a
-                   -> Eff (webgl :: WebGl | eff) Unit
+foreign import readPixels__ :: forall a eff. Fn7 GLint
+                   GLint
+                   GLsizei
+                   GLsizei
+                   GLenum
+                   GLenum
+                   (ArrayView a)
+                   (Eff (webgl :: WebGl | eff) Unit)

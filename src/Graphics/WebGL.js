@@ -4,7 +4,7 @@
 
     "use strict";
 
-    exports.shaderBindings = function (program) {
+    exports.shaderBindings_ = function (program) {
           return function() {
             var bindings = {};
             var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
@@ -47,8 +47,7 @@
         };};
 
 
-    exports.initGL = function (canvasId) {
-          return function(attr) {
+    exports.initGL_ = function (canvasId, attr) {
             return function() {
               var canvas = document.getElementById(canvasId);
               try {
@@ -79,7 +78,7 @@
             };
         };
 
-        exports.requestAnimationFrame = function(x){
+        exports.requestAnimationFrame_ = function(x){
             if (typeof rAF === 'undefined') {
                var rAF = (function(){
                   return  window.requestAnimationFrame       ||
@@ -95,14 +94,10 @@
             };
         };
 
-      exports.bufferData = function(target)
-       {return function(data)
-        {return function(usage)
+      exports.bufferData__ = function(target,data,usage)
          {return function()
-          {gl.bufferData(target,data,usage);};};};};
+          {gl.bufferData(target,data,usage);};};
 
-    exports.bufferSubData = function(target)
-       {return function(offset)
-        {return function(data)
+      exports.bufferSubData__ = function(target,offset,data)
          {return function()
-          {gl.bufferSubData(target,offset,data);};};};};
+          {gl.bufferSubData(target,offset,data);};};

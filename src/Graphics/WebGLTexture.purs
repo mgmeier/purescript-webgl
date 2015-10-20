@@ -45,6 +45,7 @@ import Data.Int.Bits ((.&.),(.|.))
 import Control.Monad.Eff
 import Control.Monad (when)
 import Extensions (Image(), fail)
+import Data.Function
 
 newtype WebGLTex = WebGLTex WebGLTexture
 
@@ -149,7 +150,7 @@ texFilterSpecToMinConst MIPMAP = _LINEAR_MIPMAP_NEAREST
 texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
 texture2DFor name filterSpec continuation = do
   texture <- createTexture
-  loadImage name \image -> do
+  runFn2 loadImage_ name \image -> do
     handleLoad2D texture filterSpec image
     continuation texture
 
@@ -161,7 +162,7 @@ handleLoad2D texture filterSpec whatever = do
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
   case filterSpec of
-    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
     _ -> return unit
   unbindTexture TEXTURE_2D
 
@@ -176,16 +177,16 @@ newTexture width height filterSpec = do
     texParameteri TTEXTURE_2D TEXTURE_WRAP_T _CLAMP_TO_EDGE
   texImage2DNull TEXTURE_2D 0 IF_RGBA width height IF_RGBA UNSIGNED_BYTE
   case filterSpec of
-    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
     _ -> return unit
   unbindTexture TEXTURE_2D
   return texture
 
 texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
-texParameteri target pname param = texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
+texParameteri target pname param = runFn3 texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
 
 pixelStorei :: forall eff. SymbolicParameter -> Int -> EffWebGL eff Unit
-pixelStorei symbolicParameter num = pixelStorei_ (symbolicParameterToConst symbolicParameter) num
+pixelStorei symbolicParameter num = runFn2 pixelStorei_ (symbolicParameterToConst symbolicParameter) num
 
 withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit
 withTexture2D texture index (Uniform sampler) pos = do
@@ -194,55 +195,55 @@ withTexture2D texture index (Uniform sampler) pos = do
   uniform1i sampler.uLocation pos
 
 bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
-bindTexture tt (WebGLTex texture) = bindTexture_ (targetTypeToConst tt) texture
+bindTexture tt (WebGLTex texture) = runFn2 bindTexture_ (targetTypeToConst tt) texture
 
 unbindTexture :: forall eff. TargetType -> EffWebGL eff Unit
-unbindTexture tt = bindTexture__ (targetTypeToConst tt)
+unbindTexture tt = runFn1 bindTexture__ (targetTypeToConst tt)
 
 texImage2D :: forall eff a. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> a
                     -> EffWebGL eff Unit
 texImage2D target level internalFormat format typ pixels =
-  texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+  runFn6 texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     (internalFormatToConst format) (textureTypeToConst typ) pixels
 
 texImage2DNull :: forall eff. TargetType -> GLint -> InternalFormat -> GLsizei -> GLsizei -> InternalFormat -> TextureType
                     -> EffWebGL eff Unit
 texImage2DNull target level internalFormat width height format typ =
-  texImage2DNull_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+  runFn8 texImage2DNull_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     width height 0 (internalFormatToConst format) (textureTypeToConst typ)
 
 activeTexture :: forall eff. Int -> Eff (webgl :: WebGl | eff) Unit
-activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
+activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = runFn1 activeTexture_ (_TEXTURE0 + n)
                 | otherwise                             = fail "WebGLTexture>>activeTexture: wrong argument!"
 
 createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
 createTexture = do
-          texture <- createTexture_
+          texture <- runFn0 createTexture_
           return (WebGLTex texture)
 
-uniform1i = uniform1i_
+uniform1i = runFn2 uniform1i_
 
-foreign import loadImage :: forall a eff. String ->
+foreign import loadImage_ :: forall a eff. Fn2 String
                      (Image -> EffWebGL eff a)
-                     -> EffWebGL eff Unit
+                     (EffWebGL eff Unit)
 
-foreign import texImage2D__ :: forall a eff. GLenum->
-                   GLint->
-                   GLenum->
-                   GLenum->
-                   GLenum->
+foreign import texImage2D__ :: forall a eff. Fn6 GLenum
+                   GLint
+                   GLenum
+                   GLenum
+                   GLenum
                    a
-                   -> EffWebGL eff Unit
+                   (EffWebGL eff Unit)
 
-foreign import texImage2DNull_ :: forall eff. GLenum->
-                   GLint->
-                   GLenum->
-                   GLsizei->
-                   GLsizei->
-                   GLint->
-                   GLenum->
-                   GLenum->
+foreign import texImage2DNull_ :: forall eff. Fn8 GLenum
+                   GLint
+                   GLenum
+                   GLsizei
+                   GLsizei
+                   GLint
+                   GLenum
+                   GLenum
                    (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindTexture__ :: forall eff. GLenum
-                   -> (Eff (webgl :: WebGl | eff) Unit)
+foreign import bindTexture__ :: forall eff. Fn1 GLenum
+                   (Eff (webgl :: WebGl | eff) Unit)

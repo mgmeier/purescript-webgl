@@ -31,6 +31,7 @@
     "purescript-vector": "*",
     "purescript-matrix": "*",
     "purescript-extensions": "*",
-    "purescript-integers": "*"
+    "purescript-integers": "*",
+    "purescript-functions": "*"
   }
 }
