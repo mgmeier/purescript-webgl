@@ -16,11 +16,12 @@ module Graphics.WebGLFramebuffer
 (
     WebGLBuf(..)
     , createFramebuffer
+    , checkFramebufferStatus
     , bindFramebuffer
     , unbindFramebuffer
     , WebGLRendBuf(..)
     , createRenderbuffer
-    , bindRenderbuffer 
+    , bindRenderbuffer
     , unbindRenderbuffer
     , RenderbufferFormat(..)
     , renderbufferStorage
@@ -61,6 +62,9 @@ attachementPointToConst COLOR_ATTACHMENT0 = _COLOR_ATTACHMENT0
 attachementPointToConst DEPTH_ATTACHMENT  = _DEPTH_ATTACHMENT
 attachementPointToConst STENCIL_ATTACHMENT = _STENCIL_ATTACHMENT
 attachementPointToConst DEPTH_STENCIL_ATTACHMENT = _DEPTH_STENCIL_ATTACHMENT
+
+checkFramebufferStatus :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLenum
+checkFramebufferStatus = runFn1 checkFramebufferStatus_
 
 createFramebuffer :: forall eff. EffWebGL eff WebGLBuf
 createFramebuffer = do
