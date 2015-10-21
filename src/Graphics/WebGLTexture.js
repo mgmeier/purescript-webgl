@@ -10,7 +10,7 @@
         {var i = new Image();
          i.src = name;
          i.onload = continuation (i);
-          };};};
+          };};
 
     exports.texImage2D__ = function(target,level,internalformat,format,type,pixels)
                {return function()

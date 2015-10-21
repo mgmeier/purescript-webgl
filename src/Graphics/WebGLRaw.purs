@@ -25,6 +25,7 @@ type GLfloat = Number
 type GLclampf = Number
 type FloatArray = Float32Array
 
+
 -- *TypeDecls
 foreign import data WebGLContextAttributes :: *
 foreign import data WebGLProgram :: *
@@ -955,61 +956,61 @@ foreign import getExtension_:: forall eff ret. Fn1 String
 foreign import activeTexture_:: forall eff. Fn1 GLenum
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import attachShader_:: forall eff. Fn2 WebGLProgram 
+foreign import attachShader_:: forall eff. Fn2 WebGLProgram
                                                WebGLShader
                                                (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindAttribLocation_:: forall eff. Fn3 WebGLProgram 
-                                                     GLuint 
+foreign import bindAttribLocation_:: forall eff. Fn3 WebGLProgram
+                                                     GLuint
                                                      String
                                                      (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindBuffer_:: forall eff. Fn2 GLenum 
+foreign import bindBuffer_:: forall eff. Fn2 GLenum
                                              WebGLBuffer
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindFramebuffer_:: forall eff. Fn2 GLenum 
+foreign import bindFramebuffer_:: forall eff. Fn2 GLenum
                                                   WebGLFramebuffer
                                                   (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindRenderbuffer_:: forall eff. Fn2 GLenum 
+foreign import bindRenderbuffer_:: forall eff. Fn2 GLenum
                                                    WebGLRenderbuffer
                                                    (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindTexture_:: forall eff. Fn2 GLenum 
+foreign import bindTexture_:: forall eff. Fn2 GLenum
                                               WebGLTexture
                                               (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendColor_:: forall eff. Fn4 GLclampf 
-                                             GLclampf 
-                                             GLclampf 
+foreign import blendColor_:: forall eff. Fn4 GLclampf
+                                             GLclampf
+                                             GLclampf
                                              GLclampf
                                              (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import blendEquation_:: forall eff. Fn1 GLenum
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendEquationSeparate_:: forall eff. Fn2 GLenum 
+foreign import blendEquationSeparate_:: forall eff. Fn2 GLenum
                                                         GLenum
                                                         (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendFunc_:: forall eff. Fn2 GLenum 
+foreign import blendFunc_:: forall eff. Fn2 GLenum
                                             GLenum
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import blendFuncSeparate_:: forall eff. Fn4 GLenum 
-                                                    GLenum 
-                                                    GLenum 
+foreign import blendFuncSeparate_:: forall eff. Fn4 GLenum
+                                                    GLenum
+                                                    GLenum
                                                     GLenum
                                                     (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bufferData_:: forall eff. Fn3 GLenum 
-                                             Float32Array 
+foreign import bufferData_:: forall eff. Fn3 GLenum
+                                             Float32Array
                                              GLenum
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bufferSubData_:: forall eff. Fn3 GLenum 
-                                                GLintptr 
+foreign import bufferSubData_:: forall eff. Fn3 GLenum
+                                                GLintptr
                                                 Float32Array
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1019,9 +1020,9 @@ foreign import checkFramebufferStatus_:: forall eff. Fn1 GLenum
 foreign import clear_:: forall eff. Fn1 GLbitfield
                                         (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import clearColor_:: forall eff. Fn4 GLclampf 
-                                             GLclampf 
-                                             GLclampf 
+foreign import clearColor_:: forall eff. Fn4 GLclampf
+                                             GLclampf
+                                             GLclampf
                                              GLclampf
                                              (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1031,32 +1032,32 @@ foreign import clearDepth_:: forall eff. Fn1 GLclampf
 foreign import clearStencil_:: forall eff. Fn1 GLint
                                                (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import colorMask_:: forall eff. Fn4 GLboolean 
-                                            GLboolean 
-                                            GLboolean 
+foreign import colorMask_:: forall eff. Fn4 GLboolean
+                                            GLboolean
+                                            GLboolean
                                             GLboolean
                                             (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import compileShader_:: forall eff. Fn1 WebGLShader
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import copyTexImage2D_:: forall eff. Fn8 GLenum 
-                                                 GLint 
-                                                 GLenum 
-                                                 GLint 
-                                                 GLint 
-                                                 GLsizei 
-                                                 GLsizei 
+foreign import copyTexImage2D_:: forall eff. Fn8 GLenum
+                                                 GLint
+                                                 GLenum
+                                                 GLint
+                                                 GLint
+                                                 GLsizei
+                                                 GLsizei
                                                  GLint
                                                  (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import copyTexSubImage2D_:: forall eff. Fn8 GLenum 
-                                                    GLint 
-                                                    GLint 
-                                                    GLint 
-                                                    GLint 
-                                                    GLint 
-                                                    GLsizei 
+foreign import copyTexSubImage2D_:: forall eff. Fn8 GLenum
+                                                    GLint
+                                                    GLint
+                                                    GLint
+                                                    GLint
+                                                    GLint
+                                                    GLsizei
                                                     GLsizei
                                                     (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1100,11 +1101,11 @@ foreign import depthFunc_:: forall eff. Fn1 GLenum
 foreign import depthMask_:: forall eff. Fn1 GLboolean
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import depthRange_:: forall eff. Fn2 GLclampf 
+foreign import depthRange_:: forall eff. Fn2 GLclampf
                                              GLclampf
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import detachShader_:: forall eff. Fn2 WebGLProgram 
+foreign import detachShader_:: forall eff. Fn2 WebGLProgram
                                                WebGLShader
                                                (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1114,14 +1115,14 @@ foreign import disable_:: forall eff. Fn1 GLenum
 foreign import disableVertexAttribArray_:: forall eff. Fn1 GLuint
                                                            (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import drawArrays_:: forall eff. Fn3 GLenum 
-                                             GLint 
+foreign import drawArrays_:: forall eff. Fn3 GLenum
+                                             GLint
                                              GLsizei
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import drawElements_:: forall eff. Fn4 GLenum 
-                                               GLsizei 
-                                               GLenum 
+foreign import drawElements_:: forall eff. Fn4 GLenum
+                                               GLsizei
+                                               GLenum
                                                GLintptr
                                                (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1135,16 +1136,16 @@ foreign import finish_:: forall eff. Fn0 (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import flush_:: forall eff. Fn0 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import framebufferRenderbuffer_:: forall eff. Fn4 GLenum 
-                                                          GLenum 
-                                                          GLenum 
+foreign import framebufferRenderbuffer_:: forall eff. Fn4 GLenum
+                                                          GLenum
+                                                          GLenum
                                                           WebGLRenderbuffer
                                                           (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import framebufferTexture2D_:: forall eff. Fn5 GLenum 
-                                                       GLenum 
-                                                       GLenum 
-                                                       WebGLTexture 
+foreign import framebufferTexture2D_:: forall eff. Fn5 GLenum
+                                                       GLenum
+                                                       GLenum
+                                                       WebGLTexture
                                                        GLint
                                                        (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1154,47 +1155,47 @@ foreign import frontFace_:: forall eff. Fn1 GLenum
 foreign import generateMipmap_:: forall eff. Fn1 GLenum
                                                  (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import getActiveAttrib_:: forall eff. Fn2 WebGLProgram 
+foreign import getActiveAttrib_:: forall eff. Fn2 WebGLProgram
                                                   GLuint
                                                   (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
 
-foreign import getActiveUniform_:: forall eff. Fn2 WebGLProgram 
+foreign import getActiveUniform_:: forall eff. Fn2 WebGLProgram
                                                    GLuint
                                                    (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
 
 foreign import getAttachedShaders_:: forall eff. Fn1 WebGLProgram
                                                      (Eff (webgl :: WebGl | eff) WebGLShader)
 
-foreign import getAttribLocation_:: forall eff. Fn2 WebGLProgram 
+foreign import getAttribLocation_:: forall eff. Fn2 WebGLProgram
                                                     String
                                                     (Eff (webgl :: WebGl | eff) GLint)
 
 foreign import getParameter_:: forall eff ret. Fn1 GLenum
                                                    (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getBufferParameter_:: forall eff ret. Fn2 GLenum 
+foreign import getBufferParameter_:: forall eff ret. Fn2 GLenum
                                                          GLenum
                                                          (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getError_:: forall eff. Fn0 (Eff (webgl :: WebGl | eff) GLenum)
 
-foreign import getFramebufferAttachmentParameter_:: forall eff ret. Fn3 GLenum 
-                                                                        GLenum 
+foreign import getFramebufferAttachmentParameter_:: forall eff ret. Fn3 GLenum
+                                                                        GLenum
                                                                         GLenum
                                                                         (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getProgramParameter_:: forall eff ret. Fn2 WebGLProgram 
+foreign import getProgramParameter_:: forall eff ret. Fn2 WebGLProgram
                                                           GLenum
                                                           (Eff (webgl :: WebGl | eff) ret)
 
 foreign import getProgramInfoLog_:: forall eff. Fn1 WebGLProgram
                                                     (Eff (webgl :: WebGl | eff) String)
 
-foreign import getRenderbufferParameter_:: forall eff ret. Fn2 GLenum 
+foreign import getRenderbufferParameter_:: forall eff ret. Fn2 GLenum
                                                                GLenum
                                                                (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getShaderParameter_:: forall eff ret. Fn2 WebGLShader 
+foreign import getShaderParameter_:: forall eff ret. Fn2 WebGLShader
                                                          GLenum
                                                          (Eff (webgl :: WebGl | eff) ret)
 
@@ -1204,27 +1205,27 @@ foreign import getShaderInfoLog_:: forall eff. Fn1 WebGLShader
 foreign import getShaderSource_:: forall eff. Fn1 WebGLShader
                                                   (Eff (webgl :: WebGl | eff) String)
 
-foreign import getTexParameter_:: forall eff ret. Fn2 GLenum 
+foreign import getTexParameter_:: forall eff ret. Fn2 GLenum
                                                       GLenum
                                                       (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getUniform_:: forall eff ret. Fn2 WebGLProgram 
+foreign import getUniform_:: forall eff ret. Fn2 WebGLProgram
                                                  WebGLUniformLocation
                                                  (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getUniformLocation_:: forall eff. Fn2 WebGLProgram 
+foreign import getUniformLocation_:: forall eff. Fn2 WebGLProgram
                                                      String
                                                      (Eff (webgl :: WebGl | eff) WebGLUniformLocation)
 
-foreign import getVertexAttrib_:: forall eff ret. Fn2 GLuint 
+foreign import getVertexAttrib_:: forall eff ret. Fn2 GLuint
                                                       GLenum
                                                       (Eff (webgl :: WebGl | eff) ret)
 
-foreign import getVertexAttribOffset_:: forall eff. Fn2 GLuint 
+foreign import getVertexAttribOffset_:: forall eff. Fn2 GLuint
                                                         GLenum
                                                         (Eff (webgl :: WebGl | eff) GLsizeiptr)
 
-foreign import hint_:: forall eff. Fn2 GLenum 
+foreign import hint_:: forall eff. Fn2 GLenum
                                        GLenum
                                        (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1255,192 +1256,192 @@ foreign import lineWidth_:: forall eff. Fn1 GLfloat
 foreign import linkProgram_:: forall eff. Fn1 WebGLProgram
                                               (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import pixelStorei_:: forall eff. Fn2 GLenum 
+foreign import pixelStorei_:: forall eff. Fn2 GLenum
                                               GLint
                                               (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import polygonOffset_:: forall eff. Fn2 GLfloat 
+foreign import polygonOffset_:: forall eff. Fn2 GLfloat
                                                 GLfloat
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import readPixels_:: forall eff. Fn7 GLint 
-                                             GLint 
-                                             GLsizei 
-                                             GLsizei 
-                                             GLenum 
-                                             GLenum 
+foreign import readPixels_:: forall eff. Fn7 GLint
+                                             GLint
+                                             GLsizei
+                                             GLsizei
+                                             GLenum
+                                             GLenum
                                              ArrayBufferView
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import renderbufferStorage_:: forall eff. Fn4 GLenum 
-                                                      GLenum 
-                                                      GLsizei 
+foreign import renderbufferStorage_:: forall eff. Fn4 GLenum
+                                                      GLenum
+                                                      GLsizei
                                                       GLsizei
                                                       (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import sampleCoverage_:: forall eff. Fn2 GLclampf 
+foreign import sampleCoverage_:: forall eff. Fn2 GLclampf
                                                  GLboolean
                                                  (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import scissor_:: forall eff. Fn4 GLint 
-                                          GLint 
-                                          GLsizei 
+foreign import scissor_:: forall eff. Fn4 GLint
+                                          GLint
+                                          GLsizei
                                           GLsizei
                                           (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import shaderSource_:: forall eff. Fn2 WebGLShader 
+foreign import shaderSource_:: forall eff. Fn2 WebGLShader
                                                String
                                                (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilFunc_:: forall eff. Fn3 GLenum 
-                                              GLint 
+foreign import stencilFunc_:: forall eff. Fn3 GLenum
+                                              GLint
                                               GLuint
                                               (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilFuncSeparate_:: forall eff. Fn4 GLenum 
-                                                      GLenum 
-                                                      GLint 
+foreign import stencilFuncSeparate_:: forall eff. Fn4 GLenum
+                                                      GLenum
+                                                      GLint
                                                       GLuint
                                                       (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import stencilMask_:: forall eff. Fn1 GLuint
                                               (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilMaskSeparate_:: forall eff. Fn2 GLenum 
+foreign import stencilMaskSeparate_:: forall eff. Fn2 GLenum
                                                       GLuint
                                                       (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilOp_:: forall eff. Fn3 GLenum 
-                                            GLenum 
+foreign import stencilOp_:: forall eff. Fn3 GLenum
+                                            GLenum
                                             GLenum
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import stencilOpSeparate_:: forall eff. Fn4 GLenum 
-                                                    GLenum 
-                                                    GLenum 
+foreign import stencilOpSeparate_:: forall eff. Fn4 GLenum
+                                                    GLenum
+                                                    GLenum
                                                     GLenum
                                                     (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texImage2D_:: forall eff. Fn9 GLenum 
-                                             GLint 
-                                             GLenum 
-                                             GLsizei 
-                                             GLsizei 
-                                             GLint 
-                                             GLenum 
-                                             GLenum 
+foreign import texImage2D_:: forall eff. Fn9 GLenum
+                                             GLint
+                                             GLenum
+                                             GLsizei
+                                             GLsizei
+                                             GLint
+                                             GLenum
+                                             GLenum
                                              ArrayBufferView
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texParameterf_:: forall eff. Fn3 GLenum 
-                                                GLenum 
+foreign import texParameterf_:: forall eff. Fn3 GLenum
+                                                GLenum
                                                 GLfloat
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texParameteri_:: forall eff. Fn3 GLenum 
-                                                GLenum 
+foreign import texParameteri_:: forall eff. Fn3 GLenum
+                                                GLenum
                                                 GLint
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import texSubImage2D_:: forall eff. Fn9 GLenum 
-                                                GLint 
-                                                GLint 
-                                                GLint 
-                                                GLsizei 
-                                                GLsizei 
-                                                GLenum 
-                                                GLenum 
+foreign import texSubImage2D_:: forall eff. Fn9 GLenum
+                                                GLint
+                                                GLint
+                                                GLint
+                                                GLsizei
+                                                GLsizei
+                                                GLenum
+                                                GLenum
                                                 ArrayBufferView
                                                 (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1f_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform1f_:: forall eff. Fn2 WebGLUniformLocation
                                             GLfloat
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1fv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform1fv_:: forall eff. Fn2 WebGLUniformLocation
                                              FloatArray
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1i_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform1i_:: forall eff. Fn2 WebGLUniformLocation
                                             GLint
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform1iv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform1iv_:: forall eff. Fn2 WebGLUniformLocation
                                              Int32Array
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2f_:: forall eff. Fn3 WebGLUniformLocation 
-                                            GLfloat 
+foreign import uniform2f_:: forall eff. Fn3 WebGLUniformLocation
+                                            GLfloat
                                             GLfloat
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2fv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform2fv_:: forall eff. Fn2 WebGLUniformLocation
                                              FloatArray
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2i_:: forall eff. Fn3 WebGLUniformLocation 
-                                            GLint 
+foreign import uniform2i_:: forall eff. Fn3 WebGLUniformLocation
+                                            GLint
                                             GLint
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform2iv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform2iv_:: forall eff. Fn2 WebGLUniformLocation
                                              Int32Array
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3f_:: forall eff. Fn4 WebGLUniformLocation 
-                                            GLfloat 
-                                            GLfloat 
+foreign import uniform3f_:: forall eff. Fn4 WebGLUniformLocation
+                                            GLfloat
+                                            GLfloat
                                             GLfloat
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3fv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform3fv_:: forall eff. Fn2 WebGLUniformLocation
                                              FloatArray
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3i_:: forall eff. Fn4 WebGLUniformLocation 
-                                            GLint 
-                                            GLint 
+foreign import uniform3i_:: forall eff. Fn4 WebGLUniformLocation
+                                            GLint
+                                            GLint
                                             GLint
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform3iv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform3iv_:: forall eff. Fn2 WebGLUniformLocation
                                              Int32Array
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4f_:: forall eff. Fn5 WebGLUniformLocation 
-                                            GLfloat 
-                                            GLfloat 
-                                            GLfloat 
+foreign import uniform4f_:: forall eff. Fn5 WebGLUniformLocation
+                                            GLfloat
+                                            GLfloat
+                                            GLfloat
                                             GLfloat
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4fv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform4fv_:: forall eff. Fn2 WebGLUniformLocation
                                              FloatArray
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4i_:: forall eff. Fn5 WebGLUniformLocation 
-                                            GLint 
-                                            GLint 
-                                            GLint 
+foreign import uniform4i_:: forall eff. Fn5 WebGLUniformLocation
+                                            GLint
+                                            GLint
+                                            GLint
                                             GLint
                                             (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniform4iv_:: forall eff. Fn2 WebGLUniformLocation 
+foreign import uniform4iv_:: forall eff. Fn2 WebGLUniformLocation
                                              Int32Array
                                              (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniformMatrix2fv_:: forall eff. Fn3 WebGLUniformLocation 
-                                                   GLboolean 
+foreign import uniformMatrix2fv_:: forall eff. Fn3 WebGLUniformLocation
+                                                   GLboolean
                                                    FloatArray
                                                    (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniformMatrix3fv_:: forall eff. Fn3 WebGLUniformLocation 
-                                                   GLboolean 
+foreign import uniformMatrix3fv_:: forall eff. Fn3 WebGLUniformLocation
+                                                   GLboolean
                                                    FloatArray
                                                    (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import uniformMatrix4fv_:: forall eff. Fn3 WebGLUniformLocation 
-                                                   GLboolean 
+foreign import uniformMatrix4fv_:: forall eff. Fn3 WebGLUniformLocation
+                                                   GLboolean
                                                    FloatArray
                                                    (Eff (webgl :: WebGl | eff) Unit)
 
@@ -1450,54 +1451,54 @@ foreign import useProgram_:: forall eff. Fn1 WebGLProgram
 foreign import validateProgram_:: forall eff. Fn1 WebGLProgram
                                                   (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib1f_:: forall eff. Fn2 GLuint 
+foreign import vertexAttrib1f_:: forall eff. Fn2 GLuint
                                                  GLfloat
                                                  (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib1fv_:: forall eff. Fn2 GLuint 
+foreign import vertexAttrib1fv_:: forall eff. Fn2 GLuint
                                                   FloatArray
                                                   (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib2f_:: forall eff. Fn3 GLuint 
-                                                 GLfloat 
+foreign import vertexAttrib2f_:: forall eff. Fn3 GLuint
+                                                 GLfloat
                                                  GLfloat
                                                  (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib2fv_:: forall eff. Fn2 GLuint 
+foreign import vertexAttrib2fv_:: forall eff. Fn2 GLuint
                                                   FloatArray
                                                   (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib3f_:: forall eff. Fn4 GLuint 
-                                                 GLfloat 
-                                                 GLfloat 
+foreign import vertexAttrib3f_:: forall eff. Fn4 GLuint
+                                                 GLfloat
+                                                 GLfloat
                                                  GLfloat
                                                  (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib3fv_:: forall eff. Fn2 GLuint 
+foreign import vertexAttrib3fv_:: forall eff. Fn2 GLuint
                                                   FloatArray
                                                   (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib4f_:: forall eff. Fn5 GLuint 
-                                                 GLfloat 
-                                                 GLfloat 
-                                                 GLfloat 
+foreign import vertexAttrib4f_:: forall eff. Fn5 GLuint
+                                                 GLfloat
+                                                 GLfloat
+                                                 GLfloat
                                                  GLfloat
                                                  (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttrib4fv_:: forall eff. Fn2 GLuint 
+foreign import vertexAttrib4fv_:: forall eff. Fn2 GLuint
                                                   FloatArray
                                                   (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import vertexAttribPointer_:: forall eff. Fn6 GLuint 
-                                                      GLint 
-                                                      GLenum 
-                                                      GLboolean 
-                                                      GLsizei 
+foreign import vertexAttribPointer_:: forall eff. Fn6 GLuint
+                                                      GLint
+                                                      GLenum
+                                                      GLboolean
+                                                      GLsizei
                                                       GLintptr
                                                       (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import viewport_:: forall eff. Fn4 GLint 
-                                           GLint 
-                                           GLsizei 
+foreign import viewport_:: forall eff. Fn4 GLint
+                                           GLint
+                                           GLsizei
                                            GLsizei
                                            (Eff (webgl :: WebGl | eff) Unit)

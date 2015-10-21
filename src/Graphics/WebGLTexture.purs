@@ -221,6 +221,7 @@ createTexture = do
           texture <- runFn0 createTexture_
           return (WebGLTex texture)
 
+uniform1i :: forall eff. WebGLUniformLocation -> GLint -> Eff (webgl :: WebGl | eff) Unit
 uniform1i = runFn2 uniform1i_
 
 foreign import loadImage_ :: forall a eff. Fn2 String

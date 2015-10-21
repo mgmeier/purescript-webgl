@@ -20,7 +20,7 @@ module Graphics.WebGLFramebuffer
     , unbindFramebuffer
     , WebGLRendBuf(..)
     , createRenderbuffer
-    , bindRenderbuffer
+    , bindRenderbuffer 
     , unbindRenderbuffer
     , RenderbufferFormat(..)
     , renderbufferStorage

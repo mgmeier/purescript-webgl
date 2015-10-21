@@ -189,6 +189,7 @@ newtype WebGLProg = WebGLProg WebGLProgram
 
 data Shaders bindings = Shaders String String
 
+requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 requestAnimationFrame = runFn1 requestAnimationFrame_
 
 withShaders :: forall bindings eff a. Shaders (Object bindings) -> (String -> EffWebGL eff a) ->
@@ -224,6 +225,7 @@ makeBufferFloat vertices = makeBufferFloat' vertices _STATIC_DRAW
 makeBufferFloatDyn :: forall eff. Array Number ->  Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 makeBufferFloatDyn vertices = makeBufferFloat' vertices _DYNAMIC_DRAW
 
+makeBufferFloat' :: forall eff. Array Number ->  Int -> Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 makeBufferFloat' vertices flag = do
   buffer <- runFn0 createBuffer_
   runFn2 bindBuffer_ _ARRAY_BUFFER buffer
@@ -243,6 +245,8 @@ makeBufferDyn :: forall a eff num. (ModuloSemiring num) =>  BufferTarget -> (Arr
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferDyn bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _DYNAMIC_DRAW
 
+makeBuffer' :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
+                  ->  Int -> Eff (webgl :: WebGl | eff) (Buffer a)
 makeBuffer' bufferTarget conversion vertices flag = do
   let targetConst = bufferTargetToConst bufferTarget
   buffer <- runFn0 createBuffer_
@@ -291,7 +295,8 @@ bindBufAndSetVertexAttr buffer attr = do
 bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 bindBuf buffer = runFn2 bindBuffer_ buffer.bufferType buffer.webGLBuffer
 
-blendColor = blendColor_
+blendColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+blendColor = runFn4 blendColor_
 
 blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
 blendFunc a b = runFn2 blendFunc_ (blendingFactorToConst a) (blendingFactorToConst b)
@@ -318,12 +323,16 @@ blendEquationSeparate a b = runFn2 blendEquationSeparate_ (blendEquationToConst 
 clear :: forall eff. Array Mask -> (Eff (webgl :: WebGl | eff) Unit)
 clear masks = runFn1 clear_ $ foldl (.|.) 0 (map maskToConst masks)
 
+clearColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
 clearColor = runFn4 clearColor_
 
+clearDepth :: forall eff. GLclampf -> Eff (webgl :: WebGl | eff) Unit
 clearDepth = runFn1 clearDepth_
 
+clearStencil :: forall eff. GLint -> Eff (webgl :: WebGl | eff) Unit
 clearStencil = runFn1 clearStencil_
 
+colorMask :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
 colorMask = runFn4 colorMask_
 
 data Func = NEVER | ALWAYS | LESS | EQUAL | LEQUAL | GREATER | GEQUAL | NOTEQUAL
@@ -349,12 +358,13 @@ drawArr mode buffer a@(Attribute attrLoc) = do
   bindBufAndSetVertexAttr buffer a
   runFn3 drawArrays_ (modeToConst mode) 0 (buffer.bufferSize / attrLoc.aItemSize)
 
-drawElements :: forall a eff. Mode -> Int -> EffWebGL eff Unit
+drawElements :: forall eff. Mode -> Int -> EffWebGL eff Unit
 drawElements mode count = runFn4 drawElements_ (modeToConst mode) count _UNSIGNED_SHORT 0
 
 enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
 enable = runFn1 enable_ <<< capacityToConst
 
+isContextLost :: forall eff. Eff (webgl :: WebGl | eff) Boolean
 isContextLost = runFn0 isContextLost_
 
 isEnabled :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Boolean)
@@ -364,6 +374,7 @@ vertexPointer ::  forall eff typ. Attribute typ -> EffWebGL eff Unit
 vertexPointer (Attribute attrLoc) =
   runFn6 vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
 
+viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 viewport = runFn4 viewport_
 
 enableVertexAttribArray :: forall eff a . Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
@@ -480,6 +491,7 @@ modeToConst TRIANGLE_FAN = _TRIANGLE_FAN
 data BufferTarget = ARRAY_BUFFER
                     | ELEMENT_ARRAY_BUFFER
 
+bufferTargetToConst :: BufferTarget -> Int
 bufferTargetToConst ARRAY_BUFFER = _ARRAY_BUFFER
 bufferTargetToConst ELEMENT_ARRAY_BUFFER = _ELEMENT_ARRAY_BUFFER
 
