@@ -34,6 +34,12 @@ data AttachementPoint
   | DEPTH_STENCIL_ATTACHMENT
 ```
 
+#### `checkFramebufferStatus`
+
+``` purescript
+checkFramebufferStatus :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLenum
+```
+
 #### `createFramebuffer`
 
 ``` purescript

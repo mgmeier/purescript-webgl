@@ -113,6 +113,12 @@ data Shaders bindings
   = Shaders String String
 ```
 
+#### `requestAnimationFrame`
+
+``` purescript
+requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
+```
+
 #### `withShaders`
 
 ``` purescript
@@ -179,6 +185,12 @@ bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (w
 bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
 ```
 
+#### `blendColor`
+
+``` purescript
+blendColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+```
+
 #### `blendFunc`
 
 ``` purescript
@@ -207,6 +219,30 @@ blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> Eff (webg
 
 ``` purescript
 clear :: forall eff. Array Mask -> Eff (webgl :: WebGl | eff) Unit
+```
+
+#### `clearColor`
+
+``` purescript
+clearColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+```
+
+#### `clearDepth`
+
+``` purescript
+clearDepth :: forall eff. GLclampf -> Eff (webgl :: WebGl | eff) Unit
+```
+
+#### `clearStencil`
+
+``` purescript
+clearStencil :: forall eff. GLint -> Eff (webgl :: WebGl | eff) Unit
+```
+
+#### `colorMask`
+
+``` purescript
+colorMask :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 #### `Func`
@@ -244,13 +280,19 @@ drawArr :: forall a eff typ. Mode -> Buffer a -> Attribute typ -> EffWebGL eff U
 #### `drawElements`
 
 ``` purescript
-drawElements :: forall a eff. Mode -> Int -> EffWebGL eff Unit
+drawElements :: forall eff. Mode -> Int -> EffWebGL eff Unit
 ```
 
 #### `enable`
 
 ``` purescript
 enable :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Unit
+```
+
+#### `isContextLost`
+
+``` purescript
+isContextLost :: forall eff. Eff (webgl :: WebGl | eff) Boolean
 ```
 
 #### `isEnabled`
@@ -263,6 +305,12 @@ isEnabled :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Boolean
 
 ``` purescript
 vertexPointer :: forall eff typ. Attribute typ -> EffWebGL eff Unit
+```
+
+#### `viewport`
+
+``` purescript
+viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 #### `enableVertexAttribArray`
@@ -366,12 +414,6 @@ data BlendEquation
   | BLEND_EQUATION_ALPHA
   | FUNC_SUBTRACT
   | FUNC_REVERSE_SUBTRACT
-```
-
-#### `requestAnimationFrame`
-
-``` purescript
-requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 
