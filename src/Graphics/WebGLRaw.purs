@@ -4,7 +4,6 @@ module Graphics.WebGLRaw where
 import Control.Monad.Eff
 import Control.Monad.Eff.WebGL
 import Data.ArrayBuffer.Types
-import Data.TypedArray
 import Data.Function
 import Prelude
 

@@ -35,7 +35,6 @@ module Graphics.WebGLFramebuffer
 
 import Prelude
 import Control.Monad.Eff.WebGL
-import Graphics.WebGL
 import Graphics.WebGLRaw
 import Graphics.WebGLTexture
 import Control.Monad.Eff

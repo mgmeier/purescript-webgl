@@ -93,19 +93,14 @@ module Graphics.WebGL
 import Prelude
 import Control.Monad.Eff.WebGL
 import Graphics.WebGLRaw
-import qualified Data.Matrix as M
-import qualified Data.Vector as V
 import qualified Data.ArrayBuffer.Types as T
 import qualified Data.TypedArray as T
-import Data.TypeNat
 
 import Control.Monad.Eff
-import Control.Monad
 import Data.Foldable
 import Data.Maybe
-import Data.Maybe.Unsafe (fromJust)
-import Data.Array (reverse,length,(!!))
 import Data.Array.Unsafe (head)
+import Data.Array (length)
 import Data.Either
 import Data.Int.Bits ((.|.))
 import Data.Function
