@@ -27,9 +27,10 @@ import Graphics.WebGLTexture
 
 or
 ~~~
-import qualified Control.Monad.Eff.WebGL as GL
-import qualified Graphics.WebGL as GL
-import qualified Graphics.WebGLTexture as GL
+import Control.Monad.Eff.WebGL as GL
+import Graphics.WebGL as GL
+import Graphics.WebGLTexture as GL
+import Graphics.WebGLFramebuffer as GL
 ~~~
 
 
