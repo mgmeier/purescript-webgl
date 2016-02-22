@@ -1,5 +1,7 @@
 ## Module Graphics.WebGLFramebuffer
 
+Framebuffers for the WebGL binding for purescript
+
 #### `WebGLBuf`
 
 ``` purescript

@@ -1,5 +1,7 @@
 ## Module Control.Monad.Eff.WebGL
 
+WebGL binding for purescript
+
 #### `WebGl`
 
 ``` purescript

@@ -1,5 +1,7 @@
 ## Module Graphics.WebGL
 
+WebGL binding for purescript
+
 #### `WebGLContext`
 
 ``` purescript
@@ -23,6 +25,8 @@ defContextAttributes :: ContextAttributes
 ``` purescript
 runWebGLAttr :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 ```
+
+Returns either a continuation which takes a String in the error case,
 
 #### `runWebGL`
 

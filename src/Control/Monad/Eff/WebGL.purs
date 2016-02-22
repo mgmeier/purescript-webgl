@@ -14,7 +14,7 @@
 
 module Control.Monad.Eff.WebGL where
 
-import Control.Monad.Eff
+import Control.Monad.Eff (Eff)
 
 foreign import data WebGl :: !
 

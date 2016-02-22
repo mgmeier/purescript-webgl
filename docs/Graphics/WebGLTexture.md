@@ -1,5 +1,7 @@
 ## Module Graphics.WebGLTexture
 
+Textures for the WebGL binding for purescript
+
 #### `WebGLTex`
 
 ``` purescript

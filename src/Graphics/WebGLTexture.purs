@@ -36,16 +36,15 @@ module Graphics.WebGLTexture
 
 )where
 
-import Prelude
-import Control.Monad.Eff.WebGL
-import Graphics.WebGL
-import Graphics.WebGLRaw
-
+import Prelude (Unit, return, bind, otherwise, (+), (<), unit, (==), ($))
+import Control.Monad.Eff.WebGL (WebGl, EffWebGL)
+import Graphics.WebGL (Uniform(Uniform))
+import Graphics.WebGLRaw (GLenum, GLint, GLsizei, WebGLUniformLocation, WebGLTexture, uniform1i_, createTexture_, _TEXTURE0, activeTexture_, _MAX_COMBINED_TEXTURE_IMAGE_UNITS, bindTexture_, pixelStorei_, texParameteri_, _TEXTURE_2D, generateMipmap_, _CLAMP_TO_EDGE, _LINEAR_MIPMAP_NEAREST, _LINEAR, _NEAREST, _TEXTURE_WRAP_T, _TEXTURE_WRAP_S, _TEXTURE_MAG_FILTER, _TEXTURE_MIN_FILTER, _TEXTURE_CUBE_MAP, _UNPACK_COLORSPACE_CONVERSION_WEBGL, _UNPACK_PREMULTIPLY_ALPHA_WEBGL, _UNPACK_FLIP_Y_WEBGL, _UNPACK_ALIGNMENT, _PACK_ALIGNMENT, _UNSIGNED_SHORT_5_5_5_1, _UNSIGNED_SHORT_4_4_4_4, _UNSIGNED_SHORT_5_6_5, _FLOAT, _RGBA, _UNSIGNED_BYTE, _RGB, _LUMINANCE_ALPHA, _LUMINANCE, _ALPHA, _TEXTURE_CUBE_MAP_NEGATIVE_Z, _TEXTURE_CUBE_MAP_POSITIVE_Z, _TEXTURE_CUBE_MAP_NEGATIVE_Y, _TEXTURE_CUBE_MAP_POSITIVE_Y, _TEXTURE_CUBE_MAP_NEGATIVE_X, _TEXTURE_CUBE_MAP_POSITIVE_X)
 import Data.Int.Bits ((.&.),(.|.))
-import Control.Monad.Eff
+import Control.Monad.Eff (Eff)
 import Control.Monad (when)
 import Extensions (Image(), fail)
-import Data.Function
+import Data.Function (Fn1, Fn8, Fn6, Fn2, runFn2, runFn0, runFn1, runFn8, runFn6, runFn3)
 
 newtype WebGLTex = WebGLTex WebGLTexture
 

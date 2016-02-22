@@ -33,14 +33,14 @@ module Graphics.WebGLFramebuffer
 
 )where
 
-import Prelude
-import Control.Monad.Eff.WebGL
-import Graphics.WebGLRaw
-import Graphics.WebGLTexture
-import Control.Monad.Eff
-import Data.ArrayBuffer.Types
-import Data.TypedArray
-import Data.Function
+import Prelude (Unit, return, bind)
+import Control.Monad.Eff.WebGL (WebGl, EffWebGL)
+import Graphics.WebGLRaw (GLenum, GLsizei, GLint, WebGLRenderbuffer, WebGLFramebuffer, _UNSIGNED_BYTE, _RGBA, _FRAMEBUFFER, framebufferTexture2D_, _RENDERBUFFER, framebufferRenderbuffer_, renderbufferStorage_, bindRenderbuffer_, createRenderbuffer_, bindFramebuffer_, createFramebuffer_, checkFramebufferStatus_, _DEPTH_STENCIL_ATTACHMENT, _STENCIL_ATTACHMENT, _DEPTH_ATTACHMENT, _COLOR_ATTACHMENT0, _DEPTH_COMPONENT16, _RGB5_A1, _RGB565, _RGBA4)
+import Graphics.WebGLTexture (TargetType, WebGLTex(WebGLTex), targetTypeToConst)
+import Control.Monad.Eff (Eff)
+import Data.ArrayBuffer.Types (ArrayView, Uint8Array)
+import Data.TypedArray (asArray, asUint8Array)
+import Data.Function (Fn7, Fn1, runFn7, runFn5, runFn4, runFn1, runFn2, runFn0)
 
 newtype WebGLBuf = WebGLBuf WebGLFramebuffer
 
