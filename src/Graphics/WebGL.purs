@@ -48,6 +48,7 @@ module Graphics.WebGL
 
   , bindBufAndSetVertexAttr
   , bindBuf
+  , bindAttribLocation
   , vertexPointer
 
   , enableVertexAttribArray
@@ -92,23 +93,7 @@ module Graphics.WebGL
 
 import Prelude (class ModuloSemiring, Unit, return, bind, (<<<), (/), map, ($), otherwise, (==), unit, (++))
 import Control.Monad.Eff.WebGL (WebGl, EffWebGL, runWebGl_)
-import Graphics.WebGLRaw (GLintptr, GLenum, WebGLProgram, WebGLShader, GLsizei, GLint, GLboolean, GLclampf, WebGLBuffer,
-                            WebGLUniformLocation, _FUNC_REVERSE_SUBTRACT, _FUNC_SUBTRACT, _BLEND_EQUATION_ALPHA, _BLEND_EQUATION_RGB,
-                            _BLEND_EQUATION, _FUNC_ADD, _BLEND_SRC_ALPHA, _BLEND_DST_ALPHA, _BLEND_SRC_RGB, _BLEND_DST_RGB, _BLEND_COLOR,
-                            _SRC_ALPHA_SATURATE, _ONE_MINUS_CONSTANT_ALPHA, _CONSTANT_ALPHA, _ONE_MINUS_CONSTANT_COLOR, _CONSTANT_COLOR,
-                            _ONE_MINUS_DST_ALPHA, _DST_ALPHA, _ONE_MINUS_SRC_ALPHA, _SRC_ALPHA, _ONE_MINUS_DST_COLOR, _DST_COLOR,
-                            _ONE_MINUS_SRC_COLOR, _SRC_COLOR, _ONE, _ZERO, _ELEMENT_ARRAY_BUFFER, _ARRAY_BUFFER, _TRIANGLE_FAN,
-                            _TRIANGLE_STRIP, _TRIANGLES, _LINE_LOOP, _LINE_STRIP, _LINES, _POINTS, _COLOR_BUFFER_BIT, _STENCIL_BUFFER_BIT,
-                            _DEPTH_BUFFER_BIT, _SCISSOR_TEST, _POLYGON_OFFSET_FILL, _CULL_FACE, _DEPTH_TEST, _BLEND, useProgram_,
-                            _LINK_STATUS, getProgramParameter_, linkProgram_, attachShader_, createProgram_, getShaderInfoLog_, 
-                            _COMPILE_STATUS, getShaderParameter_, compileShader_, shaderSource_, createShader_, _VERTEX_SHADER,
-                            _FRAGMENT_SHADER, disableVertexAttribArray_, enableVertexAttribArray_, viewport_, _FLOAT, vertexAttribPointer_,
-                            isEnabled_, isContextLost_, enable_, _UNSIGNED_SHORT, drawElements_, drawArrays_, disable_, depthFunc_, _NOTEQUAL,
-                            _GEQUAL, _GREATER, _LEQUAL, _EQUAL, _LESS, _ALWAYS, _NEVER, colorMask_, clearStencil_, clearDepth_, clearColor_,
-                            clear_, blendEquationSeparate_, blendEquation_, blendFuncSeparate_, blendFunc_, blendColor_, bindBuffer_,
-                            uniform1i_, _BOOL, uniform2fv_, _FLOAT_VEC2, uniform3fv_, _FLOAT_VEC3, uniform4fv_, _FLOAT_VEC4, uniformMatrix2fv_,
-                            _FLOAT_MAT2, uniformMatrix3fv_, _FLOAT_MAT3, uniformMatrix4fv_, _FLOAT_MAT4, uniform1f_, bufferSubData_, createBuffer_,
-                            _DYNAMIC_DRAW, _STATIC_DRAW)
+import Graphics.WebGLRaw
 import Data.ArrayBuffer.Types (ArrayView, Float32Array, Float32) as T
 import Data.TypedArray (asFloat32Array) as T
 import Control.Monad.Eff (Eff)
@@ -222,6 +207,8 @@ withShaders (Shaders fragmetShaderSource vertexShaderSource) failure success = d
                   -- bindings2 <- checkBindings bindings1
                   success (withBindings{webGLProgram = WebGLProg p})
 
+bindAttribLocation :: forall eff. WebGLProg -> Int -> String -> Eff (webgl :: WebGl | eff) Unit
+bindAttribLocation (WebGLProg p) i s = runFn3 bindAttribLocation_ p i s
 
 type Buffer a = {
     webGLBuffer :: WebGLBuffer,
