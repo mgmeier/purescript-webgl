@@ -9,9 +9,9 @@
   "keywords": [
     "purescript"
   ],
-   "repository": {
-      "type": "git",
-      "url": "git://github.com/jutaro/purescript-webgl.git"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jutaro/purescript-webgl.git"
   },
   "license": "Apache-2.0",
   "ignore": [
@@ -26,12 +26,31 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-arraybuffer-types": "*",
+    "purescript-prelude": "^0.1.5",
+    "purescript-arraybuffer-types": "^0.2.0",
     "purescript-typedarray": "*",
     "purescript-vector": "*",
     "purescript-matrix": "*",
     "purescript-extensions": "*",
-    "purescript-integers": "*",
-    "purescript-functions": "*"
+    "purescript-integers": "^0.2.1",
+    "purescript-functions": "^0.1.0",
+    "purescript-foldable-traversable": "^0.4.0",
+    "purescript-eff": "^0.1.2",
+    "purescript-either": "^0.2.3",
+    "purescript-tuples": "^0.4.0",
+    "purescript-unfoldable": "^0.4.1"
+  },
+  "resolutions": {
+    "purescript-prelude": "^0.1.5",
+    "purescript-foldable-traversable": "^0.4.0",
+    "purescript-maybe": "^0.3.5",
+    "purescript-bifunctors": "^0.4.0",
+    "purescript-monoid": "^0.3.0",
+    "purescript-control": "^0.3.0",
+    "purescript-invariant": "^0.3.0",
+    "purescript-eff": "^0.1.2",
+    "purescript-tuples": "^0.4.0",
+    "purescript-unfoldable": "^0.4.1",
+    "purescript-st": "^0.1.0"
   }
 }
