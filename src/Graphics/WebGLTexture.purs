@@ -156,10 +156,13 @@ texture2DFor name filterSpec continuation = do
 handleLoad2D :: forall eff a. WebGLTex -> TexFilterSpec -> a -> EffWebGL eff Unit
 handleLoad2D texture filterSpec whatever = do
   bindTexture TEXTURE_2D texture
-  pixelStorei UNPACK_FLIP_Y_WEBGL 1
-  texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE whatever
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
+  texParameteri TTEXTURE_2D TEXTURE_WRAP_S _CLAMP_TO_EDGE
+  texParameteri TTEXTURE_2D TEXTURE_WRAP_T _CLAMP_TO_EDGE
+  pixelStorei UNPACK_FLIP_Y_WEBGL 1
+  pixelStorei UNPACK_PREMULTIPLY_ALPHA_WEBGL 0
+  texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE whatever
   case filterSpec of
     MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
     _ -> return unit
