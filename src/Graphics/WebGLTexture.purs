@@ -190,11 +190,13 @@ texParameteri target pname param = runFn3 texParameteri_ (texTargetToConst targe
 pixelStorei :: forall eff. SymbolicParameter -> Int -> EffWebGL eff Unit
 pixelStorei symbolicParameter num = runFn2 pixelStorei_ (symbolicParameterToConst symbolicParameter) num
 
-withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit
-withTexture2D texture index (Uniform sampler) pos = do
+withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit -> EffWebGL eff Unit
+withTexture2D texture index (Uniform sampler) pos continuation = do
   activeTexture index
   bindTexture TEXTURE_2D texture
   uniform1i sampler.uLocation pos
+  continuation
+  unbindTexture TEXTURE_2D
 
 bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
 bindTexture tt (WebGLTex texture) = runFn2 bindTexture_ (targetTypeToConst tt) texture
