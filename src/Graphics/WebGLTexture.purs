@@ -29,6 +29,7 @@ module Graphics.WebGLTexture
   , bindTexture
   , unbindTexture
   , handleLoad2D
+  , handleSubLoad2D
   , createTexture
   , newTexture
 
@@ -44,7 +45,7 @@ import Data.Int.Bits ((.&.),(.|.))
 import Control.Monad.Eff (Eff)
 import Control.Monad (when)
 import Extensions (Image(), fail)
-import Data.Function (Fn1, Fn8, Fn6, Fn2, runFn2, runFn0, runFn1, runFn8, runFn6, runFn3)
+import Data.Function (Fn1, Fn8, Fn6, Fn2, Fn7, runFn2, runFn0, runFn1, runFn8, runFn6, runFn3, runFn7)
 
 newtype WebGLTex = WebGLTex WebGLTexture
 
@@ -158,11 +159,22 @@ handleLoad2D texture filterSpec whatever = do
   bindTexture TEXTURE_2D texture
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
-  texParameteri TTEXTURE_2D TEXTURE_WRAP_S _CLAMP_TO_EDGE
-  texParameteri TTEXTURE_2D TEXTURE_WRAP_T _CLAMP_TO_EDGE
   pixelStorei UNPACK_FLIP_Y_WEBGL 1
   pixelStorei UNPACK_PREMULTIPLY_ALPHA_WEBGL 0
   texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE whatever
+  case filterSpec of
+    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
+    _ -> return unit
+  unbindTexture TEXTURE_2D
+
+handleSubLoad2D :: forall eff a. WebGLTex -> Int -> Int -> Int -> Int -> TexFilterSpec -> a -> EffWebGL eff Unit
+handleSubLoad2D texture x y w h filterSpec whatever = do
+  bindTexture TEXTURE_2D texture
+  texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
+  texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
+  pixelStorei UNPACK_FLIP_Y_WEBGL 1
+  pixelStorei UNPACK_PREMULTIPLY_ALPHA_WEBGL 0
+  texSubImage2D TEXTURE_2D 0 x y IF_RGBA UNSIGNED_BYTE whatever
   case filterSpec of
     MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
     _ -> return unit
@@ -210,6 +222,11 @@ texImage2D target level internalFormat format typ pixels =
   runFn6 texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     (internalFormatToConst format) (textureTypeToConst typ) pixels
 
+texSubImage2D :: forall eff a. TargetType -> GLint -> GLint -> GLint -> InternalFormat -> TextureType -> a
+                    -> EffWebGL eff Unit
+texSubImage2D target level x y format typ pixels =
+  runFn7 texSubImage2D__ (targetTypeToConst target) level x y (internalFormatToConst format) (textureTypeToConst typ) pixels
+
 texImage2DNull :: forall eff. TargetType -> GLint -> InternalFormat -> GLsizei -> GLsizei -> InternalFormat -> TextureType
                     -> EffWebGL eff Unit
 texImage2DNull target level internalFormat width height format typ =
@@ -239,6 +256,15 @@ foreign import texImage2D__ :: forall a eff. Fn6 GLenum
                    GLenum
                    a
                    (EffWebGL eff Unit)
+
+foreign import texSubImage2D__:: forall eff a. Fn7 GLenum
+                                                GLint
+                                                GLint
+                                                GLint
+                                                GLenum
+                                                GLenum
+                                                a
+                                                (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import texImage2DNull_ :: forall eff. Fn8 GLenum
                    GLint

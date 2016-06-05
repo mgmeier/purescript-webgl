@@ -23,3 +23,8 @@
     exports.bindTexture__ = function(target)
         {return function()
          {gl.bindTexture(target,null);};};
+
+    exports.texSubImage2D__ = function (target,level,xoffset,yoffset,format,type,pixels)
+    {return function ()
+   {gl.texSubImage2D(target,level,xoffset,yoffset,format,type,pixels);}
+   ;}
