@@ -32,21 +32,30 @@ module Graphics.WebGLTexture
   , handleSubLoad2D
   , createTexture
   , newTexture
+  , newTextureInit
 
   , targetTypeToConst
 
 )where
 
-import Prelude (Unit, return, bind, otherwise, (+), (<), unit, (==), ($))
+import Prelude
 import Control.Monad.Eff.WebGL (WebGl, EffWebGL)
 import Graphics.WebGL (Uniform(Uniform))
-import Graphics.WebGLRaw (GLenum, GLint, GLsizei, WebGLUniformLocation, WebGLTexture, uniform1i_, createTexture_, _TEXTURE0, activeTexture_, _MAX_COMBINED_TEXTURE_IMAGE_UNITS, bindTexture_, pixelStorei_, texParameteri_, _TEXTURE_2D, generateMipmap_, _CLAMP_TO_EDGE, _LINEAR_MIPMAP_NEAREST, _LINEAR, _NEAREST, _TEXTURE_WRAP_T, _TEXTURE_WRAP_S, _TEXTURE_MAG_FILTER, _TEXTURE_MIN_FILTER, _TEXTURE_CUBE_MAP, _UNPACK_COLORSPACE_CONVERSION_WEBGL, _UNPACK_PREMULTIPLY_ALPHA_WEBGL, _UNPACK_FLIP_Y_WEBGL, _UNPACK_ALIGNMENT, _PACK_ALIGNMENT, _UNSIGNED_SHORT_5_5_5_1, _UNSIGNED_SHORT_4_4_4_4, _UNSIGNED_SHORT_5_6_5, _FLOAT, _RGBA, _UNSIGNED_BYTE, _RGB, _LUMINANCE_ALPHA, _LUMINANCE, _ALPHA, _TEXTURE_CUBE_MAP_NEGATIVE_Z, _TEXTURE_CUBE_MAP_POSITIVE_Z, _TEXTURE_CUBE_MAP_NEGATIVE_Y, _TEXTURE_CUBE_MAP_POSITIVE_Y, _TEXTURE_CUBE_MAP_NEGATIVE_X, _TEXTURE_CUBE_MAP_POSITIVE_X)
+import Graphics.WebGLRaw (texImage2D_, GLenum, GLint, GLsizei, WebGLUniformLocation, WebGLTexture, uniform1i_, createTexture_,
+    _TEXTURE0, activeTexture_, _MAX_COMBINED_TEXTURE_IMAGE_UNITS, bindTexture_, pixelStorei_, texParameteri_, _TEXTURE_2D, generateMipmap_,
+    _CLAMP_TO_EDGE, _LINEAR_MIPMAP_NEAREST, _LINEAR, _NEAREST, _TEXTURE_WRAP_T, _TEXTURE_WRAP_S, _TEXTURE_MAG_FILTER, _TEXTURE_MIN_FILTER,
+    _TEXTURE_CUBE_MAP, _UNPACK_COLORSPACE_CONVERSION_WEBGL, _UNPACK_PREMULTIPLY_ALPHA_WEBGL, _UNPACK_FLIP_Y_WEBGL, _UNPACK_ALIGNMENT,
+    _PACK_ALIGNMENT, _UNSIGNED_SHORT_5_5_5_1, _UNSIGNED_SHORT_4_4_4_4, _UNSIGNED_SHORT_5_6_5, _FLOAT, _RGBA, _UNSIGNED_BYTE, _RGB, _LUMINANCE_ALPHA,
+    _LUMINANCE, _ALPHA, _TEXTURE_CUBE_MAP_NEGATIVE_Z, _TEXTURE_CUBE_MAP_POSITIVE_Z, _TEXTURE_CUBE_MAP_NEGATIVE_Y, _TEXTURE_CUBE_MAP_POSITIVE_Y,
+    _TEXTURE_CUBE_MAP_NEGATIVE_X, _TEXTURE_CUBE_MAP_POSITIVE_X, ArrayBufferView)
 import Data.Int.Bits ((.&.),(.|.))
 import Control.Monad.Eff (Eff)
 import Control.Monad (when)
 import Extensions (fail)
 import Graphics.Canvas(CanvasImageSource())
-import Data.Function (Fn1, Fn8, Fn7, Fn6, Fn2, runFn2, runFn0, runFn1, runFn8, runFn7, runFn6, runFn3)
+import Data.Function (Fn1, Fn8, Fn7, Fn6, Fn2, runFn2, runFn0, runFn1, runFn7, runFn9, runFn8, runFn6, runFn3)
+import Data.TypedArray (newInt8Array, newUint8Array)
+import Data.ArrayBuffer.Types (ArrayView)
 
 newtype WebGLTex = WebGLTex WebGLTexture
 
@@ -197,6 +206,23 @@ newTexture width height filterSpec = do
   unbindTexture TEXTURE_2D
   return texture
 
+newTextureInit :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
+newTextureInit width height filterSpec = do
+  texture <- createTexture
+  let pixels = newUint8Array (width * height * 4)
+  bindTexture TEXTURE_2D texture
+  texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
+  texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
+  when (((width .|. height) .&. 1) == 1) $ do
+    texParameteri TTEXTURE_2D TEXTURE_WRAP_S _CLAMP_TO_EDGE
+    texParameteri TTEXTURE_2D TEXTURE_WRAP_T _CLAMP_TO_EDGE
+  texImage2DPixels TEXTURE_2D 0 IF_RGBA width height IF_RGBA UNSIGNED_BYTE (asArrayBufferView_ pixels)
+  case filterSpec of
+    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
+    _ -> return unit
+  unbindTexture TEXTURE_2D
+  return texture
+
 texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
 texParameteri target pname param = runFn3 texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
 
@@ -223,16 +249,26 @@ texImage2D target level internalFormat format typ pixels =
   runFn6 texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     (internalFormatToConst format) (textureTypeToConst typ) pixels
 
-texSubImage2D :: forall eff a. TargetType -> GLint -> GLint -> GLint -> InternalFormat -> TextureType -> a
-                    -> EffWebGL eff Unit
-texSubImage2D target level x y format typ pixels =
-  runFn7 texSubImage2D__ (targetTypeToConst target) level x y (internalFormatToConst format) (textureTypeToConst typ) pixels
-
 texImage2DNull :: forall eff. TargetType -> GLint -> InternalFormat -> GLsizei -> GLsizei -> InternalFormat -> TextureType
                     -> EffWebGL eff Unit
 texImage2DNull target level internalFormat width height format typ =
   runFn8 texImage2DNull_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     width height 0 (internalFormatToConst format) (textureTypeToConst typ)
+
+texImage2DPixels :: forall eff. TargetType -> GLint -> InternalFormat -> GLsizei -> GLsizei -> InternalFormat -> TextureType -> ArrayBufferView
+                    -> EffWebGL eff Unit
+texImage2DPixels target level internalFormat width height format typ pixels =
+  runFn9 texImage2D_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+    width height 0 (internalFormatToConst format) (textureTypeToConst typ) pixels
+
+
+
+texSubImage2D :: forall eff a. TargetType -> GLint -> GLint -> GLint -> InternalFormat -> TextureType -> a
+                    -> EffWebGL eff Unit
+texSubImage2D target level x y format typ pixels =
+  runFn7 texSubImage2D__ (targetTypeToConst target) level x y (internalFormatToConst format) (textureTypeToConst typ) pixels
+
+
 
 activeTexture :: forall eff. Int -> Eff (webgl :: WebGl | eff) Unit
 activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = runFn1 activeTexture_ (_TEXTURE0 + n)
@@ -245,6 +281,8 @@ createTexture = do
 
 uniform1i :: forall eff. WebGLUniformLocation -> GLint -> Eff (webgl :: WebGl | eff) Unit
 uniform1i = runFn2 uniform1i_
+
+foreign import  asArrayBufferView_ :: forall a . ArrayView a -> ArrayBufferView
 
 foreign import loadImage_ :: forall a eff. Fn2 String
                      (CanvasImageSource -> EffWebGL eff a)
@@ -276,6 +314,7 @@ foreign import texImage2DNull_ :: forall eff. Fn8 GLenum
                    GLenum
                    GLenum
                    (Eff (webgl :: WebGl | eff) Unit)
+
 
 foreign import bindTexture__ :: forall eff. Fn1 GLenum
                    (Eff (webgl :: WebGl | eff) Unit)

@@ -5,6 +5,10 @@
 
     "use strict";
 
+    exports.asArrayBufferView_ = function (it) {
+        return (it);
+    };
+
     exports.loadImage_ = function(name,continuation)
        {return function()
         {var i = new Image();
