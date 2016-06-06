@@ -38,7 +38,8 @@
     "purescript-eff": "^0.1.2",
     "purescript-either": "^0.2.3",
     "purescript-tuples": "^0.4.0",
-    "purescript-unfoldable": "^0.4.1"
+    "purescript-unfoldable": "^0.4.1",
+    "purescript-canvas":"0.4.0"
   },
   "resolutions": {
     "purescript-prelude": "^0.1.5",

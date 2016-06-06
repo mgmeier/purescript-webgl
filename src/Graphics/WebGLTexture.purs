@@ -44,8 +44,9 @@ import Graphics.WebGLRaw (GLenum, GLint, GLsizei, WebGLUniformLocation, WebGLTex
 import Data.Int.Bits ((.&.),(.|.))
 import Control.Monad.Eff (Eff)
 import Control.Monad (when)
-import Extensions (Image(), fail)
-import Data.Function (Fn1, Fn8, Fn6, Fn2, Fn7, runFn2, runFn0, runFn1, runFn8, runFn6, runFn3, runFn7)
+import Extensions (fail)
+import Graphics.Canvas(CanvasImageSource())
+import Data.Function (Fn1, Fn8, Fn7, Fn6, Fn2, runFn2, runFn0, runFn1, runFn8, runFn7, runFn6, runFn3)
 
 newtype WebGLTex = WebGLTex WebGLTexture
 
@@ -159,7 +160,7 @@ handleLoad2D texture filterSpec whatever = do
   bindTexture TEXTURE_2D texture
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
-  pixelStorei UNPACK_FLIP_Y_WEBGL 1
+  pixelStorei UNPACK_FLIP_Y_WEBGL 0
   pixelStorei UNPACK_PREMULTIPLY_ALPHA_WEBGL 0
   texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE whatever
   case filterSpec of
@@ -172,7 +173,7 @@ handleSubLoad2D texture x y w h filterSpec whatever = do
   bindTexture TEXTURE_2D texture
   texParameteri TTEXTURE_2D TEXTURE_MAG_FILTER (texFilterSpecToMagConst filterSpec)
   texParameteri TTEXTURE_2D TEXTURE_MIN_FILTER (texFilterSpecToMinConst filterSpec)
-  pixelStorei UNPACK_FLIP_Y_WEBGL 1
+  pixelStorei UNPACK_FLIP_Y_WEBGL 0
   pixelStorei UNPACK_PREMULTIPLY_ALPHA_WEBGL 0
   texSubImage2D TEXTURE_2D 0 x y IF_RGBA UNSIGNED_BYTE whatever
   case filterSpec of
@@ -246,7 +247,7 @@ uniform1i :: forall eff. WebGLUniformLocation -> GLint -> Eff (webgl :: WebGl | 
 uniform1i = runFn2 uniform1i_
 
 foreign import loadImage_ :: forall a eff. Fn2 String
-                     (Image -> EffWebGL eff a)
+                     (CanvasImageSource -> EffWebGL eff a)
                      (EffWebGL eff Unit)
 
 foreign import texImage2D__ :: forall a eff. Fn6 GLenum
