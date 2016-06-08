@@ -54,7 +54,7 @@ import Control.Monad (when)
 import Extensions (fail)
 import Graphics.Canvas(CanvasImageSource())
 import Data.Function (Fn1, Fn8, Fn7, Fn6, Fn2, runFn2, runFn0, runFn1, runFn7, runFn9, runFn8, runFn6, runFn3)
-import Data.TypedArray (newInt8Array, newUint8Array)
+import Data.TypedArray (newUint8Array)
 import Data.ArrayBuffer.Types (ArrayView)
 
 newtype WebGLTex = WebGLTex WebGLTexture
