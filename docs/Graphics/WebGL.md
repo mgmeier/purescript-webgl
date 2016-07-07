@@ -26,7 +26,7 @@ defContextAttributes :: ContextAttributes
 runWebGLAttr :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 ```
 
-Returns either a continuation which takes a String in the error case,
+pures either a continuation which takes a String in the error case,
 
 #### `runWebGL`
 
@@ -126,7 +126,13 @@ requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webg
 #### `withShaders`
 
 ``` purescript
-withShaders :: forall bindings eff a. Shaders {  | bindings } -> (String -> EffWebGL eff a) -> ({ webGLProgram :: WebGLProg | bindings } -> EffWebGL eff a) -> EffWebGL eff a
+withShaders :: forall bindings eff a. Shaders ({  | bindings }) -> (String -> EffWebGL eff a) -> ({ webGLProgram :: WebGLProg | bindings } -> EffWebGL eff a) -> EffWebGL eff a
+```
+
+#### `bindAttribLocation`
+
+``` purescript
+bindAttribLocation :: forall eff. WebGLProg -> Int -> String -> Eff (webgl :: WebGl | eff) Unit
 ```
 
 #### `Buffer`
@@ -150,13 +156,13 @@ makeBufferFloatDyn :: forall eff. Array Number -> Eff (webgl :: WebGl | eff) (Bu
 #### `makeBuffer`
 
 ``` purescript
-makeBuffer :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
+makeBuffer :: forall a eff num. EuclideanRing num => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
 ```
 
 #### `makeBufferDyn`
 
 ``` purescript
-makeBufferDyn :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
+makeBufferDyn :: forall a eff num. EuclideanRing num => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
 ```
 
 #### `fillBuffer`
@@ -198,31 +204,31 @@ blendColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (w
 #### `blendFunc`
 
 ``` purescript
-blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> Eff (webgl :: WebGl | eff) Unit
+blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendFuncSeparate`
 
 ``` purescript
-blendFuncSeparate :: forall eff. BlendingFactor -> BlendingFactor -> BlendingFactor -> BlendingFactor -> Eff (webgl :: WebGl | eff) Unit
+blendFuncSeparate :: forall eff. BlendingFactor -> BlendingFactor -> BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendEquation`
 
 ``` purescript
-blendEquation :: forall eff. BlendEquation -> Eff (webgl :: WebGl | eff) Unit
+blendEquation :: forall eff. BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendEquationSeparate`
 
 ``` purescript
-blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> Eff (webgl :: WebGl | eff) Unit
+blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `clear`
 
 ``` purescript
-clear :: forall eff. Array Mask -> Eff (webgl :: WebGl | eff) Unit
+clear :: forall eff. Array Mask -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `clearColor`
@@ -272,7 +278,7 @@ depthFunc :: forall eff. Func -> Eff (webgl :: WebGl | eff) Unit
 #### `disable`
 
 ``` purescript
-disable :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Unit
+disable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `drawArr`
@@ -290,7 +296,7 @@ drawElements :: forall eff. Mode -> Int -> EffWebGL eff Unit
 #### `enable`
 
 ``` purescript
-enable :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Unit
+enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `isContextLost`
@@ -302,7 +308,7 @@ isContextLost :: forall eff. Eff (webgl :: WebGl | eff) Boolean
 #### `isEnabled`
 
 ``` purescript
-isEnabled :: forall eff. Capacity -> Eff (webgl :: WebGl | eff) Boolean
+isEnabled :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Boolean)
 ```
 
 #### `vertexPointer`
@@ -320,13 +326,13 @@ viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: We
 #### `enableVertexAttribArray`
 
 ``` purescript
-enableVertexAttribArray :: forall eff a. Attribute a -> Eff (webgl :: WebGl | eff) Unit
+enableVertexAttribArray :: forall eff a. Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `disableVertexAttribArray`
 
 ``` purescript
-disableVertexAttribArray :: forall eff a. Attribute a -> Eff (webgl :: WebGl | eff) Unit
+disableVertexAttribArray :: forall eff a. Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `getCanvasWidth`

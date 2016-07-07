@@ -1971,799 +1971,799 @@ _BROWSER_DEFAULT_WEBGL :: Int
 #### `getContextAttributes_`
 
 ``` purescript
-getContextAttributes_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) WebGLContextAttributes)
+getContextAttributes_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLContextAttributes)
 ```
 
 #### `isContextLost_`
 
 ``` purescript
-isContextLost_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) Boolean)
+isContextLost_ :: forall eff. (Eff (webgl :: WebGl | eff) Boolean)
 ```
 
 #### `getSupportedExtensions_`
 
 ``` purescript
-getSupportedExtensions_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) String)
+getSupportedExtensions_ :: forall eff. (Eff (webgl :: WebGl | eff) String)
 ```
 
 #### `getExtension_`
 
 ``` purescript
-getExtension_ :: forall eff ret. Fn1 String (Eff (webgl :: WebGl | eff) ret)
+getExtension_ :: forall eff ret. String -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `activeTexture_`
 
 ``` purescript
-activeTexture_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+activeTexture_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `attachShader_`
 
 ``` purescript
-attachShader_ :: forall eff. Fn2 WebGLProgram WebGLShader (Eff (webgl :: WebGl | eff) Unit)
+attachShader_ :: forall eff. WebGLProgram -> WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `bindAttribLocation_`
 
 ``` purescript
-bindAttribLocation_ :: forall eff. Fn3 WebGLProgram GLuint String (Eff (webgl :: WebGl | eff) Unit)
+bindAttribLocation_ :: forall eff. WebGLProgram -> GLuint -> String -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `bindBuffer_`
 
 ``` purescript
-bindBuffer_ :: forall eff. Fn2 GLenum WebGLBuffer (Eff (webgl :: WebGl | eff) Unit)
+bindBuffer_ :: forall eff. GLenum -> WebGLBuffer -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `bindFramebuffer_`
 
 ``` purescript
-bindFramebuffer_ :: forall eff. Fn2 GLenum WebGLFramebuffer (Eff (webgl :: WebGl | eff) Unit)
+bindFramebuffer_ :: forall eff. GLenum -> WebGLFramebuffer -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `bindRenderbuffer_`
 
 ``` purescript
-bindRenderbuffer_ :: forall eff. Fn2 GLenum WebGLRenderbuffer (Eff (webgl :: WebGl | eff) Unit)
+bindRenderbuffer_ :: forall eff. GLenum -> WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `bindTexture_`
 
 ``` purescript
-bindTexture_ :: forall eff. Fn2 GLenum WebGLTexture (Eff (webgl :: WebGl | eff) Unit)
+bindTexture_ :: forall eff. GLenum -> WebGLTexture -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendColor_`
 
 ``` purescript
-blendColor_ :: forall eff. Fn4 GLclampf GLclampf GLclampf GLclampf (Eff (webgl :: WebGl | eff) Unit)
+blendColor_ :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendEquation_`
 
 ``` purescript
-blendEquation_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+blendEquation_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendEquationSeparate_`
 
 ``` purescript
-blendEquationSeparate_ :: forall eff. Fn2 GLenum GLenum (Eff (webgl :: WebGl | eff) Unit)
+blendEquationSeparate_ :: forall eff. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendFunc_`
 
 ``` purescript
-blendFunc_ :: forall eff. Fn2 GLenum GLenum (Eff (webgl :: WebGl | eff) Unit)
+blendFunc_ :: forall eff. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `blendFuncSeparate_`
 
 ``` purescript
-blendFuncSeparate_ :: forall eff. Fn4 GLenum GLenum GLenum GLenum (Eff (webgl :: WebGl | eff) Unit)
+blendFuncSeparate_ :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `bufferData_`
 
 ``` purescript
-bufferData_ :: forall eff. Fn3 GLenum Float32Array GLenum (Eff (webgl :: WebGl | eff) Unit)
+bufferData_ :: forall eff. GLenum -> Float32Array -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `bufferSubData_`
 
 ``` purescript
-bufferSubData_ :: forall eff. Fn3 GLenum GLintptr Float32Array (Eff (webgl :: WebGl | eff) Unit)
+bufferSubData_ :: forall eff. GLenum -> GLintptr -> Float32Array -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `checkFramebufferStatus_`
 
 ``` purescript
-checkFramebufferStatus_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) GLenum)
+checkFramebufferStatus_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLenum)
 ```
 
 #### `clear_`
 
 ``` purescript
-clear_ :: forall eff. Fn1 GLbitfield (Eff (webgl :: WebGl | eff) Unit)
+clear_ :: forall eff. GLbitfield -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `clearColor_`
 
 ``` purescript
-clearColor_ :: forall eff. Fn4 GLclampf GLclampf GLclampf GLclampf (Eff (webgl :: WebGl | eff) Unit)
+clearColor_ :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `clearDepth_`
 
 ``` purescript
-clearDepth_ :: forall eff. Fn1 GLclampf (Eff (webgl :: WebGl | eff) Unit)
+clearDepth_ :: forall eff. GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `clearStencil_`
 
 ``` purescript
-clearStencil_ :: forall eff. Fn1 GLint (Eff (webgl :: WebGl | eff) Unit)
+clearStencil_ :: forall eff. GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `colorMask_`
 
 ``` purescript
-colorMask_ :: forall eff. Fn4 GLboolean GLboolean GLboolean GLboolean (Eff (webgl :: WebGl | eff) Unit)
+colorMask_ :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `compileShader_`
 
 ``` purescript
-compileShader_ :: forall eff. Fn1 WebGLShader (Eff (webgl :: WebGl | eff) Unit)
+compileShader_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `copyTexImage2D_`
 
 ``` purescript
-copyTexImage2D_ :: forall eff. Fn8 GLenum GLint GLenum GLint GLint GLsizei GLsizei GLint (Eff (webgl :: WebGl | eff) Unit)
+copyTexImage2D_ :: forall eff. GLenum -> GLint -> GLenum -> GLint -> GLint -> GLsizei -> GLsizei -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `copyTexSubImage2D_`
 
 ``` purescript
-copyTexSubImage2D_ :: forall eff. Fn8 GLenum GLint GLint GLint GLint GLint GLsizei GLsizei (Eff (webgl :: WebGl | eff) Unit)
+copyTexSubImage2D_ :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `createBuffer_`
 
 ``` purescript
-createBuffer_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) WebGLBuffer)
+createBuffer_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLBuffer)
 ```
 
 #### `createFramebuffer_`
 
 ``` purescript
-createFramebuffer_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) WebGLFramebuffer)
+createFramebuffer_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLFramebuffer)
 ```
 
 #### `createProgram_`
 
 ``` purescript
-createProgram_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) WebGLProgram)
+createProgram_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLProgram)
 ```
 
 #### `createRenderbuffer_`
 
 ``` purescript
-createRenderbuffer_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) WebGLRenderbuffer)
+createRenderbuffer_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLRenderbuffer)
 ```
 
 #### `createShader_`
 
 ``` purescript
-createShader_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) WebGLShader)
+createShader_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) WebGLShader)
 ```
 
 #### `createTexture_`
 
 ``` purescript
-createTexture_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) WebGLTexture)
+createTexture_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLTexture)
 ```
 
 #### `cullFace_`
 
 ``` purescript
-cullFace_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+cullFace_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `deleteBuffer_`
 
 ``` purescript
-deleteBuffer_ :: forall eff. Fn1 WebGLBuffer (Eff (webgl :: WebGl | eff) Unit)
+deleteBuffer_ :: forall eff. WebGLBuffer -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `deleteFramebuffer_`
 
 ``` purescript
-deleteFramebuffer_ :: forall eff. Fn1 WebGLFramebuffer (Eff (webgl :: WebGl | eff) Unit)
+deleteFramebuffer_ :: forall eff. WebGLFramebuffer -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `deleteProgram_`
 
 ``` purescript
-deleteProgram_ :: forall eff. Fn1 WebGLProgram (Eff (webgl :: WebGl | eff) Unit)
+deleteProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `deleteRenderbuffer_`
 
 ``` purescript
-deleteRenderbuffer_ :: forall eff. Fn1 WebGLRenderbuffer (Eff (webgl :: WebGl | eff) Unit)
+deleteRenderbuffer_ :: forall eff. WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `deleteShader_`
 
 ``` purescript
-deleteShader_ :: forall eff. Fn1 WebGLShader (Eff (webgl :: WebGl | eff) Unit)
+deleteShader_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `deleteTexture_`
 
 ``` purescript
-deleteTexture_ :: forall eff. Fn1 WebGLTexture (Eff (webgl :: WebGl | eff) Unit)
+deleteTexture_ :: forall eff. WebGLTexture -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `depthFunc_`
 
 ``` purescript
-depthFunc_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+depthFunc_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `depthMask_`
 
 ``` purescript
-depthMask_ :: forall eff. Fn1 GLboolean (Eff (webgl :: WebGl | eff) Unit)
+depthMask_ :: forall eff. GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `depthRange_`
 
 ``` purescript
-depthRange_ :: forall eff. Fn2 GLclampf GLclampf (Eff (webgl :: WebGl | eff) Unit)
+depthRange_ :: forall eff. GLclampf -> GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `detachShader_`
 
 ``` purescript
-detachShader_ :: forall eff. Fn2 WebGLProgram WebGLShader (Eff (webgl :: WebGl | eff) Unit)
+detachShader_ :: forall eff. WebGLProgram -> WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `disable_`
 
 ``` purescript
-disable_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+disable_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `disableVertexAttribArray_`
 
 ``` purescript
-disableVertexAttribArray_ :: forall eff. Fn1 GLuint (Eff (webgl :: WebGl | eff) Unit)
+disableVertexAttribArray_ :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `drawArrays_`
 
 ``` purescript
-drawArrays_ :: forall eff. Fn3 GLenum GLint GLsizei (Eff (webgl :: WebGl | eff) Unit)
+drawArrays_ :: forall eff. GLenum -> GLint -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `drawElements_`
 
 ``` purescript
-drawElements_ :: forall eff. Fn4 GLenum GLsizei GLenum GLintptr (Eff (webgl :: WebGl | eff) Unit)
+drawElements_ :: forall eff. GLenum -> GLsizei -> GLenum -> GLintptr -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `enable_`
 
 ``` purescript
-enable_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+enable_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `enableVertexAttribArray_`
 
 ``` purescript
-enableVertexAttribArray_ :: forall eff. Fn1 GLuint (Eff (webgl :: WebGl | eff) Unit)
+enableVertexAttribArray_ :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `finish_`
 
 ``` purescript
-finish_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) Unit)
+finish_ :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `flush_`
 
 ``` purescript
-flush_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) Unit)
+flush_ :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `framebufferRenderbuffer_`
 
 ``` purescript
-framebufferRenderbuffer_ :: forall eff. Fn4 GLenum GLenum GLenum WebGLRenderbuffer (Eff (webgl :: WebGl | eff) Unit)
+framebufferRenderbuffer_ :: forall eff. GLenum -> GLenum -> GLenum -> WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `framebufferTexture2D_`
 
 ``` purescript
-framebufferTexture2D_ :: forall eff. Fn5 GLenum GLenum GLenum WebGLTexture GLint (Eff (webgl :: WebGl | eff) Unit)
+framebufferTexture2D_ :: forall eff. GLenum -> GLenum -> GLenum -> WebGLTexture -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `frontFace_`
 
 ``` purescript
-frontFace_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+frontFace_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `generateMipmap_`
 
 ``` purescript
-generateMipmap_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) Unit)
+generateMipmap_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `getActiveAttrib_`
 
 ``` purescript
-getActiveAttrib_ :: forall eff. Fn2 WebGLProgram GLuint (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
+getActiveAttrib_ :: forall eff. WebGLProgram -> GLuint -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
 ```
 
 #### `getActiveUniform_`
 
 ``` purescript
-getActiveUniform_ :: forall eff. Fn2 WebGLProgram GLuint (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
+getActiveUniform_ :: forall eff. WebGLProgram -> GLuint -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
 ```
 
 #### `getAttachedShaders_`
 
 ``` purescript
-getAttachedShaders_ :: forall eff. Fn1 WebGLProgram (Eff (webgl :: WebGl | eff) WebGLShader)
+getAttachedShaders_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) WebGLShader)
 ```
 
 #### `getAttribLocation_`
 
 ``` purescript
-getAttribLocation_ :: forall eff. Fn2 WebGLProgram String (Eff (webgl :: WebGl | eff) GLint)
+getAttribLocation_ :: forall eff. WebGLProgram -> String -> (Eff (webgl :: WebGl | eff) GLint)
 ```
 
 #### `getParameter_`
 
 ``` purescript
-getParameter_ :: forall eff ret. Fn1 GLenum (Eff (webgl :: WebGl | eff) ret)
+getParameter_ :: forall eff ret. GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getBufferParameter_`
 
 ``` purescript
-getBufferParameter_ :: forall eff ret. Fn2 GLenum GLenum (Eff (webgl :: WebGl | eff) ret)
+getBufferParameter_ :: forall eff ret. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getError_`
 
 ``` purescript
-getError_ :: forall eff. Fn0 (Eff (webgl :: WebGl | eff) GLenum)
+getError_ :: forall eff. (Eff (webgl :: WebGl | eff) GLenum)
 ```
 
 #### `getFramebufferAttachmentParameter_`
 
 ``` purescript
-getFramebufferAttachmentParameter_ :: forall eff ret. Fn3 GLenum GLenum GLenum (Eff (webgl :: WebGl | eff) ret)
+getFramebufferAttachmentParameter_ :: forall eff ret. GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getProgramParameter_`
 
 ``` purescript
-getProgramParameter_ :: forall eff ret. Fn2 WebGLProgram GLenum (Eff (webgl :: WebGl | eff) ret)
+getProgramParameter_ :: forall eff ret. WebGLProgram -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getProgramInfoLog_`
 
 ``` purescript
-getProgramInfoLog_ :: forall eff. Fn1 WebGLProgram (Eff (webgl :: WebGl | eff) String)
+getProgramInfoLog_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) String)
 ```
 
 #### `getRenderbufferParameter_`
 
 ``` purescript
-getRenderbufferParameter_ :: forall eff ret. Fn2 GLenum GLenum (Eff (webgl :: WebGl | eff) ret)
+getRenderbufferParameter_ :: forall eff ret. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getShaderParameter_`
 
 ``` purescript
-getShaderParameter_ :: forall eff ret. Fn2 WebGLShader GLenum (Eff (webgl :: WebGl | eff) ret)
+getShaderParameter_ :: forall eff ret. WebGLShader -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getShaderInfoLog_`
 
 ``` purescript
-getShaderInfoLog_ :: forall eff. Fn1 WebGLShader (Eff (webgl :: WebGl | eff) String)
+getShaderInfoLog_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
 ```
 
 #### `getShaderSource_`
 
 ``` purescript
-getShaderSource_ :: forall eff. Fn1 WebGLShader (Eff (webgl :: WebGl | eff) String)
+getShaderSource_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
 ```
 
 #### `getTexParameter_`
 
 ``` purescript
-getTexParameter_ :: forall eff ret. Fn2 GLenum GLenum (Eff (webgl :: WebGl | eff) ret)
+getTexParameter_ :: forall eff ret. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getUniform_`
 
 ``` purescript
-getUniform_ :: forall eff ret. Fn2 WebGLProgram WebGLUniformLocation (Eff (webgl :: WebGl | eff) ret)
+getUniform_ :: forall eff ret. WebGLProgram -> WebGLUniformLocation -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getUniformLocation_`
 
 ``` purescript
-getUniformLocation_ :: forall eff. Fn2 WebGLProgram String (Eff (webgl :: WebGl | eff) WebGLUniformLocation)
+getUniformLocation_ :: forall eff. WebGLProgram -> String -> (Eff (webgl :: WebGl | eff) WebGLUniformLocation)
 ```
 
 #### `getVertexAttrib_`
 
 ``` purescript
-getVertexAttrib_ :: forall eff ret. Fn2 GLuint GLenum (Eff (webgl :: WebGl | eff) ret)
+getVertexAttrib_ :: forall eff ret. GLuint -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
 ```
 
 #### `getVertexAttribOffset_`
 
 ``` purescript
-getVertexAttribOffset_ :: forall eff. Fn2 GLuint GLenum (Eff (webgl :: WebGl | eff) GLsizeiptr)
+getVertexAttribOffset_ :: forall eff. GLuint -> GLenum -> (Eff (webgl :: WebGl | eff) GLsizeiptr)
 ```
 
 #### `hint_`
 
 ``` purescript
-hint_ :: forall eff. Fn2 GLenum GLenum (Eff (webgl :: WebGl | eff) Unit)
+hint_ :: forall eff. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `isBuffer_`
 
 ``` purescript
-isBuffer_ :: forall eff. Fn1 WebGLBuffer (Eff (webgl :: WebGl | eff) GLboolean)
+isBuffer_ :: forall eff. WebGLBuffer -> (Eff (webgl :: WebGl | eff) GLboolean)
 ```
 
 #### `isEnabled_`
 
 ``` purescript
-isEnabled_ :: forall eff. Fn1 GLenum (Eff (webgl :: WebGl | eff) GLboolean)
+isEnabled_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLboolean)
 ```
 
 #### `isFramebuffer_`
 
 ``` purescript
-isFramebuffer_ :: forall eff. Fn1 WebGLFramebuffer (Eff (webgl :: WebGl | eff) GLboolean)
+isFramebuffer_ :: forall eff. WebGLFramebuffer -> (Eff (webgl :: WebGl | eff) GLboolean)
 ```
 
 #### `isProgram_`
 
 ``` purescript
-isProgram_ :: forall eff. Fn1 WebGLProgram (Eff (webgl :: WebGl | eff) GLboolean)
+isProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) GLboolean)
 ```
 
 #### `isRenderbuffer_`
 
 ``` purescript
-isRenderbuffer_ :: forall eff. Fn1 WebGLRenderbuffer (Eff (webgl :: WebGl | eff) GLboolean)
+isRenderbuffer_ :: forall eff. WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) GLboolean)
 ```
 
 #### `isShader_`
 
 ``` purescript
-isShader_ :: forall eff. Fn1 WebGLShader (Eff (webgl :: WebGl | eff) GLboolean)
+isShader_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) GLboolean)
 ```
 
 #### `isTexture_`
 
 ``` purescript
-isTexture_ :: forall eff. Fn1 WebGLTexture (Eff (webgl :: WebGl | eff) GLboolean)
+isTexture_ :: forall eff. WebGLTexture -> (Eff (webgl :: WebGl | eff) GLboolean)
 ```
 
 #### `lineWidth_`
 
 ``` purescript
-lineWidth_ :: forall eff. Fn1 GLfloat (Eff (webgl :: WebGl | eff) Unit)
+lineWidth_ :: forall eff. GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `linkProgram_`
 
 ``` purescript
-linkProgram_ :: forall eff. Fn1 WebGLProgram (Eff (webgl :: WebGl | eff) Unit)
+linkProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `pixelStorei_`
 
 ``` purescript
-pixelStorei_ :: forall eff. Fn2 GLenum GLint (Eff (webgl :: WebGl | eff) Unit)
+pixelStorei_ :: forall eff. GLenum -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `polygonOffset_`
 
 ``` purescript
-polygonOffset_ :: forall eff. Fn2 GLfloat GLfloat (Eff (webgl :: WebGl | eff) Unit)
+polygonOffset_ :: forall eff. GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `readPixels_`
 
 ``` purescript
-readPixels_ :: forall eff. Fn7 GLint GLint GLsizei GLsizei GLenum GLenum ArrayBufferView (Eff (webgl :: WebGl | eff) Unit)
+readPixels_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `renderbufferStorage_`
 
 ``` purescript
-renderbufferStorage_ :: forall eff. Fn4 GLenum GLenum GLsizei GLsizei (Eff (webgl :: WebGl | eff) Unit)
+renderbufferStorage_ :: forall eff. GLenum -> GLenum -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `sampleCoverage_`
 
 ``` purescript
-sampleCoverage_ :: forall eff. Fn2 GLclampf GLboolean (Eff (webgl :: WebGl | eff) Unit)
+sampleCoverage_ :: forall eff. GLclampf -> GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `scissor_`
 
 ``` purescript
-scissor_ :: forall eff. Fn4 GLint GLint GLsizei GLsizei (Eff (webgl :: WebGl | eff) Unit)
+scissor_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `shaderSource_`
 
 ``` purescript
-shaderSource_ :: forall eff. Fn2 WebGLShader String (Eff (webgl :: WebGl | eff) Unit)
+shaderSource_ :: forall eff. WebGLShader -> String -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `stencilFunc_`
 
 ``` purescript
-stencilFunc_ :: forall eff. Fn3 GLenum GLint GLuint (Eff (webgl :: WebGl | eff) Unit)
+stencilFunc_ :: forall eff. GLenum -> GLint -> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `stencilFuncSeparate_`
 
 ``` purescript
-stencilFuncSeparate_ :: forall eff. Fn4 GLenum GLenum GLint GLuint (Eff (webgl :: WebGl | eff) Unit)
+stencilFuncSeparate_ :: forall eff. GLenum -> GLenum -> GLint -> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `stencilMask_`
 
 ``` purescript
-stencilMask_ :: forall eff. Fn1 GLuint (Eff (webgl :: WebGl | eff) Unit)
+stencilMask_ :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `stencilMaskSeparate_`
 
 ``` purescript
-stencilMaskSeparate_ :: forall eff. Fn2 GLenum GLuint (Eff (webgl :: WebGl | eff) Unit)
+stencilMaskSeparate_ :: forall eff. GLenum -> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `stencilOp_`
 
 ``` purescript
-stencilOp_ :: forall eff. Fn3 GLenum GLenum GLenum (Eff (webgl :: WebGl | eff) Unit)
+stencilOp_ :: forall eff. GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `stencilOpSeparate_`
 
 ``` purescript
-stencilOpSeparate_ :: forall eff. Fn4 GLenum GLenum GLenum GLenum (Eff (webgl :: WebGl | eff) Unit)
+stencilOpSeparate_ :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `texImage2D_`
 
 ``` purescript
-texImage2D_ :: forall eff. Fn9 GLenum GLint GLenum GLsizei GLsizei GLint GLenum GLenum ArrayBufferView (Eff (webgl :: WebGl | eff) Unit)
+texImage2D_ :: forall eff. GLenum -> GLint -> GLenum -> GLsizei -> GLsizei -> GLint -> GLenum -> GLenum -> ArrayBufferView -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `texParameterf_`
 
 ``` purescript
-texParameterf_ :: forall eff. Fn3 GLenum GLenum GLfloat (Eff (webgl :: WebGl | eff) Unit)
+texParameterf_ :: forall eff. GLenum -> GLenum -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `texParameteri_`
 
 ``` purescript
-texParameteri_ :: forall eff. Fn3 GLenum GLenum GLint (Eff (webgl :: WebGl | eff) Unit)
+texParameteri_ :: forall eff. GLenum -> GLenum -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `texSubImage2D_`
 
 ``` purescript
-texSubImage2D_ :: forall eff. Fn9 GLenum GLint GLint GLint GLsizei GLsizei GLenum GLenum ArrayBufferView (Eff (webgl :: WebGl | eff) Unit)
+texSubImage2D_ :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform1f_`
 
 ``` purescript
-uniform1f_ :: forall eff. Fn2 WebGLUniformLocation GLfloat (Eff (webgl :: WebGl | eff) Unit)
+uniform1f_ :: forall eff. WebGLUniformLocation -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform1fv_`
 
 ``` purescript
-uniform1fv_ :: forall eff. Fn2 WebGLUniformLocation FloatArray (Eff (webgl :: WebGl | eff) Unit)
+uniform1fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform1i_`
 
 ``` purescript
-uniform1i_ :: forall eff. Fn2 WebGLUniformLocation GLint (Eff (webgl :: WebGl | eff) Unit)
+uniform1i_ :: forall eff. WebGLUniformLocation -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform1iv_`
 
 ``` purescript
-uniform1iv_ :: forall eff. Fn2 WebGLUniformLocation Int32Array (Eff (webgl :: WebGl | eff) Unit)
+uniform1iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform2f_`
 
 ``` purescript
-uniform2f_ :: forall eff. Fn3 WebGLUniformLocation GLfloat GLfloat (Eff (webgl :: WebGl | eff) Unit)
+uniform2f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform2fv_`
 
 ``` purescript
-uniform2fv_ :: forall eff. Fn2 WebGLUniformLocation FloatArray (Eff (webgl :: WebGl | eff) Unit)
+uniform2fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform2i_`
 
 ``` purescript
-uniform2i_ :: forall eff. Fn3 WebGLUniformLocation GLint GLint (Eff (webgl :: WebGl | eff) Unit)
+uniform2i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform2iv_`
 
 ``` purescript
-uniform2iv_ :: forall eff. Fn2 WebGLUniformLocation Int32Array (Eff (webgl :: WebGl | eff) Unit)
+uniform2iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform3f_`
 
 ``` purescript
-uniform3f_ :: forall eff. Fn4 WebGLUniformLocation GLfloat GLfloat GLfloat (Eff (webgl :: WebGl | eff) Unit)
+uniform3f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform3fv_`
 
 ``` purescript
-uniform3fv_ :: forall eff. Fn2 WebGLUniformLocation FloatArray (Eff (webgl :: WebGl | eff) Unit)
+uniform3fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform3i_`
 
 ``` purescript
-uniform3i_ :: forall eff. Fn4 WebGLUniformLocation GLint GLint GLint (Eff (webgl :: WebGl | eff) Unit)
+uniform3i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform3iv_`
 
 ``` purescript
-uniform3iv_ :: forall eff. Fn2 WebGLUniformLocation Int32Array (Eff (webgl :: WebGl | eff) Unit)
+uniform3iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform4f_`
 
 ``` purescript
-uniform4f_ :: forall eff. Fn5 WebGLUniformLocation GLfloat GLfloat GLfloat GLfloat (Eff (webgl :: WebGl | eff) Unit)
+uniform4f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform4fv_`
 
 ``` purescript
-uniform4fv_ :: forall eff. Fn2 WebGLUniformLocation FloatArray (Eff (webgl :: WebGl | eff) Unit)
+uniform4fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform4i_`
 
 ``` purescript
-uniform4i_ :: forall eff. Fn5 WebGLUniformLocation GLint GLint GLint GLint (Eff (webgl :: WebGl | eff) Unit)
+uniform4i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniform4iv_`
 
 ``` purescript
-uniform4iv_ :: forall eff. Fn2 WebGLUniformLocation Int32Array (Eff (webgl :: WebGl | eff) Unit)
+uniform4iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniformMatrix2fv_`
 
 ``` purescript
-uniformMatrix2fv_ :: forall eff. Fn3 WebGLUniformLocation GLboolean FloatArray (Eff (webgl :: WebGl | eff) Unit)
+uniformMatrix2fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniformMatrix3fv_`
 
 ``` purescript
-uniformMatrix3fv_ :: forall eff. Fn3 WebGLUniformLocation GLboolean FloatArray (Eff (webgl :: WebGl | eff) Unit)
+uniformMatrix3fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `uniformMatrix4fv_`
 
 ``` purescript
-uniformMatrix4fv_ :: forall eff. Fn3 WebGLUniformLocation GLboolean FloatArray (Eff (webgl :: WebGl | eff) Unit)
+uniformMatrix4fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `useProgram_`
 
 ``` purescript
-useProgram_ :: forall eff. Fn1 WebGLProgram (Eff (webgl :: WebGl | eff) Unit)
+useProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `validateProgram_`
 
 ``` purescript
-validateProgram_ :: forall eff. Fn1 WebGLProgram (Eff (webgl :: WebGl | eff) Unit)
+validateProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib1f_`
 
 ``` purescript
-vertexAttrib1f_ :: forall eff. Fn2 GLuint GLfloat (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib1f_ :: forall eff. GLuint -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib1fv_`
 
 ``` purescript
-vertexAttrib1fv_ :: forall eff. Fn2 GLuint FloatArray (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib1fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib2f_`
 
 ``` purescript
-vertexAttrib2f_ :: forall eff. Fn3 GLuint GLfloat GLfloat (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib2f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib2fv_`
 
 ``` purescript
-vertexAttrib2fv_ :: forall eff. Fn2 GLuint FloatArray (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib2fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib3f_`
 
 ``` purescript
-vertexAttrib3f_ :: forall eff. Fn4 GLuint GLfloat GLfloat GLfloat (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib3f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib3fv_`
 
 ``` purescript
-vertexAttrib3fv_ :: forall eff. Fn2 GLuint FloatArray (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib3fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib4f_`
 
 ``` purescript
-vertexAttrib4f_ :: forall eff. Fn5 GLuint GLfloat GLfloat GLfloat GLfloat (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib4f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttrib4fv_`
 
 ``` purescript
-vertexAttrib4fv_ :: forall eff. Fn2 GLuint FloatArray (Eff (webgl :: WebGl | eff) Unit)
+vertexAttrib4fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `vertexAttribPointer_`
 
 ``` purescript
-vertexAttribPointer_ :: forall eff. Fn6 GLuint GLint GLenum GLboolean GLsizei GLintptr (Eff (webgl :: WebGl | eff) Unit)
+vertexAttribPointer_ :: forall eff. GLuint -> GLint -> GLenum -> GLboolean -> GLsizei -> GLintptr -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 #### `viewport_`
 
 ``` purescript
-viewport_ :: forall eff. Fn4 GLint GLint GLsizei GLsizei (Eff (webgl :: WebGl | eff) Unit)
+viewport_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
 ```
 
 

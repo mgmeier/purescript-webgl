@@ -101,16 +101,28 @@ texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL e
 handleLoad2D :: forall eff a. WebGLTex -> TexFilterSpec -> a -> EffWebGL eff Unit
 ```
 
+#### `handleSubLoad2D`
+
+``` purescript
+handleSubLoad2D :: forall eff a. WebGLTex -> Int -> Int -> Int -> Int -> TexFilterSpec -> a -> EffWebGL eff Unit
+```
+
 #### `newTexture`
 
 ``` purescript
 newTexture :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
 ```
 
+#### `newTextureInit`
+
+``` purescript
+newTextureInit :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
+```
+
 #### `withTexture2D`
 
 ``` purescript
-withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit
+withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit -> EffWebGL eff Unit
 ```
 
 #### `bindTexture`

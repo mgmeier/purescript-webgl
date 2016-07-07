@@ -36,6 +36,23 @@ data AttachementPoint
   | DEPTH_STENCIL_ATTACHMENT
 ```
 
+#### `FrameBufferCode`
+
+``` purescript
+data FrameBufferCode
+  = FRAMEBUFFER_COMPLETE
+  | FRAMEBUFFER_INCOMPLETE_ATTACHMENT
+  | FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT
+  | FRAMEBUFFER_INCOMPLETE_DIMENSIONS
+  | FRAMEBUFFER_UNSUPPORTED
+```
+
+#### `frameBufferCodeToConst`
+
+``` purescript
+frameBufferCodeToConst :: FrameBufferCode -> GLenum
+```
+
 #### `checkFramebufferStatus`
 
 ``` purescript
