@@ -39,6 +39,10 @@ module Graphics.WebGLTexture
 )where
 
 import Prelude
+import Control.Monad.Eff (Eff)
+import Data.Int.Bits ((.&.),(.|.))
+import Graphics.Canvas(CanvasImageSource())
+
 import Control.Monad.Eff.WebGL (WebGl, EffWebGL)
 import Graphics.WebGL (Uniform(Uniform))
 import Graphics.WebGLRaw (texImage2D_, GLenum, GLint, GLsizei, WebGLUniformLocation, WebGLTexture, uniform1i_, createTexture_,
@@ -48,12 +52,7 @@ import Graphics.WebGLRaw (texImage2D_, GLenum, GLint, GLsizei, WebGLUniformLocat
     _PACK_ALIGNMENT, _UNSIGNED_SHORT_5_5_5_1, _UNSIGNED_SHORT_4_4_4_4, _UNSIGNED_SHORT_5_6_5, _FLOAT, _RGBA, _UNSIGNED_BYTE, _RGB, _LUMINANCE_ALPHA,
     _LUMINANCE, _ALPHA, _TEXTURE_CUBE_MAP_NEGATIVE_Z, _TEXTURE_CUBE_MAP_POSITIVE_Z, _TEXTURE_CUBE_MAP_NEGATIVE_Y, _TEXTURE_CUBE_MAP_POSITIVE_Y,
     _TEXTURE_CUBE_MAP_NEGATIVE_X, _TEXTURE_CUBE_MAP_POSITIVE_X, ArrayBufferView)
-import Data.Int.Bits ((.&.),(.|.))
-import Control.Monad.Eff (Eff)
-import Control.Monad (when)
 import Extensions (fail)
-import Graphics.Canvas(CanvasImageSource())
-import Data.Function (Fn1, Fn8, Fn7, Fn6, Fn2, runFn2, runFn0, runFn1, runFn7, runFn9, runFn8, runFn6, runFn3)
 import Data.TypedArray (newUint8Array)
 import Data.ArrayBuffer.Types (ArrayView)
 
@@ -160,7 +159,7 @@ texFilterSpecToMinConst MIPMAP = _LINEAR_MIPMAP_NEAREST
 texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
 texture2DFor name filterSpec continuation = do
   texture <- createTexture
-  runFn2 loadImage_ name \image -> do
+  loadImage_ name \image -> do
     handleLoad2D texture filterSpec image
     continuation texture
 
@@ -173,8 +172,8 @@ handleLoad2D texture filterSpec whatever = do
   pixelStorei UNPACK_PREMULTIPLY_ALPHA_WEBGL 0
   texImage2D TEXTURE_2D 0 IF_RGBA IF_RGBA UNSIGNED_BYTE whatever
   case filterSpec of
-    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
-    _ -> return unit
+    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    _ -> pure unit
   unbindTexture TEXTURE_2D
 
 handleSubLoad2D :: forall eff a. WebGLTex -> Int -> Int -> Int -> Int -> TexFilterSpec -> a -> EffWebGL eff Unit
@@ -186,8 +185,8 @@ handleSubLoad2D texture x y w h filterSpec whatever = do
   pixelStorei UNPACK_PREMULTIPLY_ALPHA_WEBGL 0
   texSubImage2D TEXTURE_2D 0 x y IF_RGBA UNSIGNED_BYTE whatever
   case filterSpec of
-    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
-    _ -> return unit
+    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    _ -> pure unit
   unbindTexture TEXTURE_2D
 
 newTexture :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
@@ -201,10 +200,10 @@ newTexture width height filterSpec = do
     texParameteri TTEXTURE_2D TEXTURE_WRAP_T _CLAMP_TO_EDGE
   texImage2DNull TEXTURE_2D 0 IF_RGBA width height IF_RGBA UNSIGNED_BYTE
   case filterSpec of
-    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
-    _ -> return unit
+    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    _ -> pure unit
   unbindTexture TEXTURE_2D
-  return texture
+  pure texture
 
 newTextureInit :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
 newTextureInit width height filterSpec = do
@@ -218,16 +217,16 @@ newTextureInit width height filterSpec = do
     texParameteri TTEXTURE_2D TEXTURE_WRAP_T _CLAMP_TO_EDGE
   texImage2DPixels TEXTURE_2D 0 IF_RGBA width height IF_RGBA UNSIGNED_BYTE (asArrayBufferView_ pixels)
   case filterSpec of
-    MIPMAP -> runFn1 generateMipmap_ _TEXTURE_2D
-    _ -> return unit
+    MIPMAP -> generateMipmap_ _TEXTURE_2D
+    _ -> pure unit
   unbindTexture TEXTURE_2D
-  return texture
+  pure texture
 
 texParameteri :: forall eff. TexTarget -> TexParName -> GLint -> EffWebGL eff Unit
-texParameteri target pname param = runFn3 texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
+texParameteri target pname param = texParameteri_ (texTargetToConst target) (texParNameToConst pname) param
 
 pixelStorei :: forall eff. SymbolicParameter -> Int -> EffWebGL eff Unit
-pixelStorei symbolicParameter num = runFn2 pixelStorei_ (symbolicParameterToConst symbolicParameter) num
+pixelStorei symbolicParameter num = pixelStorei_ (symbolicParameterToConst symbolicParameter) num
 
 withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit -> EffWebGL eff Unit
 withTexture2D texture index (Uniform sampler) pos continuation = do
@@ -238,83 +237,79 @@ withTexture2D texture index (Uniform sampler) pos continuation = do
   unbindTexture TEXTURE_2D
 
 bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
-bindTexture tt (WebGLTex texture) = runFn2 bindTexture_ (targetTypeToConst tt) texture
+bindTexture tt (WebGLTex texture) = bindTexture_ (targetTypeToConst tt) texture
 
 unbindTexture :: forall eff. TargetType -> EffWebGL eff Unit
-unbindTexture tt = runFn1 bindTexture__ (targetTypeToConst tt)
+unbindTexture tt = bindTexture__ (targetTypeToConst tt)
 
 texImage2D :: forall eff a. TargetType -> GLint -> InternalFormat -> InternalFormat -> TextureType -> a
                     -> EffWebGL eff Unit
 texImage2D target level internalFormat format typ pixels =
-  runFn6 texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+  texImage2D__ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     (internalFormatToConst format) (textureTypeToConst typ) pixels
 
 texImage2DNull :: forall eff. TargetType -> GLint -> InternalFormat -> GLsizei -> GLsizei -> InternalFormat -> TextureType
                     -> EffWebGL eff Unit
 texImage2DNull target level internalFormat width height format typ =
-  runFn8 texImage2DNull_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+  texImage2DNull_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     width height 0 (internalFormatToConst format) (textureTypeToConst typ)
 
 texImage2DPixels :: forall eff. TargetType -> GLint -> InternalFormat -> GLsizei -> GLsizei -> InternalFormat -> TextureType -> ArrayBufferView
                     -> EffWebGL eff Unit
 texImage2DPixels target level internalFormat width height format typ pixels =
-  runFn9 texImage2D_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
+  texImage2D_ (targetTypeToConst target) level (internalFormatToConst internalFormat)
     width height 0 (internalFormatToConst format) (textureTypeToConst typ) pixels
-
-
 
 texSubImage2D :: forall eff a. TargetType -> GLint -> GLint -> GLint -> InternalFormat -> TextureType -> a
                     -> EffWebGL eff Unit
 texSubImage2D target level x y format typ pixels =
-  runFn7 texSubImage2D__ (targetTypeToConst target) level x y (internalFormatToConst format) (textureTypeToConst typ) pixels
-
-
+  texSubImage2D__ (targetTypeToConst target) level x y (internalFormatToConst format) (textureTypeToConst typ) pixels
 
 activeTexture :: forall eff. Int -> Eff (webgl :: WebGl | eff) Unit
-activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = runFn1 activeTexture_ (_TEXTURE0 + n)
+activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
                 | otherwise                             = fail "WebGLTexture>>activeTexture: wrong argument!"
 
 createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
 createTexture = do
-          texture <- runFn0 createTexture_
-          return (WebGLTex texture)
+          texture <- createTexture_
+          pure (WebGLTex texture)
 
 uniform1i :: forall eff. WebGLUniformLocation -> GLint -> Eff (webgl :: WebGl | eff) Unit
-uniform1i = runFn2 uniform1i_
+uniform1i = uniform1i_
 
 foreign import  asArrayBufferView_ :: forall a . ArrayView a -> ArrayBufferView
 
-foreign import loadImage_ :: forall a eff. Fn2 String
-                     (CanvasImageSource -> EffWebGL eff a)
-                     (EffWebGL eff Unit)
+foreign import loadImage_ :: forall a eff. String
+                     -> (CanvasImageSource -> EffWebGL eff a)
+                     -> EffWebGL eff Unit
 
-foreign import texImage2D__ :: forall a eff. Fn6 GLenum
-                   GLint
-                   GLenum
-                   GLenum
-                   GLenum
-                   a
-                   (EffWebGL eff Unit)
+foreign import texImage2D__ :: forall a eff. GLenum
+                   -> GLint
+                   -> GLenum
+                   -> GLenum
+                   -> GLenum
+                   -> a
+                   -> EffWebGL eff Unit
 
-foreign import texSubImage2D__:: forall eff a. Fn7 GLenum
-                                                GLint
-                                                GLint
-                                                GLint
-                                                GLenum
-                                                GLenum
-                                                a
-                                                (Eff (webgl :: WebGl | eff) Unit)
+foreign import texSubImage2D__:: forall eff a. GLenum
+                                                -> GLint
+                                                -> GLint
+                                                -> GLint
+                                                -> GLenum
+                                                -> GLenum
+                                                -> a
+                                                -> Eff (webgl :: WebGl | eff) Unit
 
-foreign import texImage2DNull_ :: forall eff. Fn8 GLenum
-                   GLint
-                   GLenum
-                   GLsizei
-                   GLsizei
-                   GLint
-                   GLenum
-                   GLenum
-                   (Eff (webgl :: WebGl | eff) Unit)
+foreign import texImage2DNull_ :: forall eff. GLenum
+                   -> GLint
+                   -> GLenum
+                   -> GLsizei
+                   -> GLsizei
+                   -> GLint
+                   -> GLenum
+                   -> GLenum
+                   -> Eff (webgl :: WebGl | eff) Unit
 
 
-foreign import bindTexture__ :: forall eff. Fn1 GLenum
-                   (Eff (webgl :: WebGl | eff) Unit)
+foreign import bindTexture__ :: forall eff. GLenum
+                   -> Eff (webgl :: WebGl | eff) Unit

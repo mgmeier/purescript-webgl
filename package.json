@@ -1,7 +1,7 @@
 {
   "private": true,
   "devDependencies": {
-    "pulp": "^4.0.2",
+    "pulp": "^9.0.1",
     "browserify": "*",
     "benchmark": "~1.0.0",
     "microtime": "~1.2.0"

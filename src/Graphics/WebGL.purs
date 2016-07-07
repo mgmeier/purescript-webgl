@@ -91,19 +91,32 @@ module Graphics.WebGL
 
   ) where
 
-import Prelude (class ModuloSemiring, Unit, return, bind, (<<<), (/), map, ($), otherwise, (==), unit, (++))
-import Control.Monad.Eff.WebGL (WebGl, EffWebGL, runWebGl_)
-import Graphics.WebGLRaw
-import Data.ArrayBuffer.Types (ArrayView, Float32Array, Float32) as T
-import Data.TypedArray (asFloat32Array) as T
+import Prelude
 import Control.Monad.Eff (Eff)
 import Data.Foldable (foldl)
 import Data.Maybe (Maybe(Nothing, Just))
-import Data.Array.Unsafe (head)
+import Data.Array.Partial (head)
 import Data.Array (length)
 import Data.Either (Either(Right, Left))
 import Data.Int.Bits ((.|.))
-import Data.Function (Fn3, Fn1, Fn2, runFn1, runFn2, runFn0, runFn4, runFn6, runFn3)
+import Partial.Unsafe (unsafePartial)
+
+import Control.Monad.Eff.WebGL (WebGl, EffWebGL, runWebGl_)
+import Graphics.WebGLRaw (GLintptr, GLenum, WebGLProgram, WebGLShader, GLsizei, GLint, GLboolean, GLclampf, WebGLBuffer, WebGLUniformLocation,
+     _FUNC_REVERSE_SUBTRACT, _FUNC_SUBTRACT, _BLEND_EQUATION_ALPHA, _BLEND_EQUATION_RGB, _BLEND_EQUATION, _FUNC_ADD, _BLEND_SRC_ALPHA, _BLEND_DST_ALPHA,
+     _BLEND_SRC_RGB, _BLEND_DST_RGB, _BLEND_COLOR, _SRC_ALPHA_SATURATE, _ONE_MINUS_CONSTANT_ALPHA, _CONSTANT_ALPHA, _ONE_MINUS_CONSTANT_COLOR, _CONSTANT_COLOR,
+     _ONE_MINUS_DST_ALPHA, _DST_ALPHA, _ONE_MINUS_SRC_ALPHA, _SRC_ALPHA, _ONE_MINUS_DST_COLOR, _DST_COLOR, _ONE_MINUS_SRC_COLOR, _SRC_COLOR, _ONE, _ZERO,
+     _ELEMENT_ARRAY_BUFFER, _ARRAY_BUFFER, _TRIANGLE_FAN, _TRIANGLE_STRIP, _TRIANGLES, _LINE_LOOP, _LINE_STRIP, _LINES, _POINTS, _COLOR_BUFFER_BIT,
+     _STENCIL_BUFFER_BIT, _DEPTH_BUFFER_BIT, _SCISSOR_TEST, _POLYGON_OFFSET_FILL, _CULL_FACE, _DEPTH_TEST, _BLEND, useProgram_, _LINK_STATUS,
+     getProgramParameter_, linkProgram_, attachShader_, createProgram_, getShaderInfoLog_, _COMPILE_STATUS, getShaderParameter_, compileShader_,
+     shaderSource_, createShader_, _VERTEX_SHADER, _FRAGMENT_SHADER, disableVertexAttribArray_, enableVertexAttribArray_, viewport_, _FLOAT,
+     vertexAttribPointer_, isEnabled_, isContextLost_, enable_, _UNSIGNED_SHORT, drawElements_, drawArrays_, disable_, depthFunc_, _NOTEQUAL,
+     _GEQUAL, _GREATER, _LEQUAL, _EQUAL, _LESS, _ALWAYS, _NEVER, colorMask_, clearStencil_, clearDepth_, clearColor_, clear_, blendEquationSeparate_,
+     blendEquation_, blendFuncSeparate_, blendFunc_, blendColor_, bindBuffer_, uniform1i_, _BOOL, uniform2fv_, _FLOAT_VEC2, uniform3fv_, _FLOAT_VEC3,
+     uniform4fv_, _FLOAT_VEC4, uniformMatrix2fv_, _FLOAT_MAT2, uniformMatrix3fv_, _FLOAT_MAT3, uniformMatrix4fv_, _FLOAT_MAT4, uniform1f_,
+     createBuffer_, _DYNAMIC_DRAW, _STATIC_DRAW, bindAttribLocation_)
+import Data.ArrayBuffer.Types (ArrayView, Float32Array, Float32) as T
+import Data.TypedArray (asFloat32Array) as T
 import Extensions (fail)
 
 type WebGLContext = {
@@ -131,12 +144,12 @@ defContextAttributes = { alpha : true
                        , failIfMajorPerformanceCaveat : false
                        }
 
--- | Returns either a continuation which takes a String in the error case,
+-- | pures either a continuation which takes a String in the error case,
 --   which happens when WebGL is not present, or a (Right) continuation with the WebGL
 --   effect.
 runWebGLAttr :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 runWebGLAttr canvasId attr failure success = do
-  res <- runFn2 initGL_ canvasId attr
+  res <- initGL_ canvasId attr
   if res
     then runWebGl_ (success makeContext)
     else failure "Unable to initialize WebGL. Your browser may not support it."
@@ -148,7 +161,7 @@ runWebGLAttr canvasId attr failure success = do
 -- | Same as runWebGLAttr but uses default attributes (defContextAttributes)
 runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
 runWebGL canvasId failure success = do
-  res <- runFn2 initGL_ canvasId defContextAttributes
+  res <- initGL_ canvasId defContextAttributes
   if res
     then runWebGl_ (success makeContext)
     else failure "Unable to initialize WebGL. Your browser may not support it."
@@ -185,30 +198,30 @@ newtype WebGLProg = WebGLProg WebGLProgram
 data Shaders bindings = Shaders String String
 
 requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
-requestAnimationFrame = runFn1 requestAnimationFrame_
+requestAnimationFrame = requestAnimationFrame_
 
-withShaders :: forall bindings eff a. Shaders (Object bindings) -> (String -> EffWebGL eff a) ->
+withShaders :: forall bindings eff a. Shaders (Record bindings) -> (String -> EffWebGL eff a) ->
                 ({webGLProgram :: WebGLProg | bindings} -> EffWebGL eff a) -> EffWebGL eff a
 withShaders (Shaders fragmetShaderSource vertexShaderSource) failure success = do
   condFShader <- makeShader FragmentShader fragmetShaderSource
   case condFShader of
-    Right str -> failure ("Can't compile fragment shader: " ++ str)
+    Right str -> failure ("Can't compile fragment shader: " <> str)
     Left fshader -> do
       condVShader <- makeShader VertexShader vertexShaderSource
       case condVShader of
-        Right str -> failure ("Can't compile vertex shader: " ++ str)
+        Right str -> failure ("Can't compile vertex shader: " <> str)
         Left vshader -> do
             condProg <- initShaders fshader vshader
             case condProg of
                 Nothing ->
                   failure "Can't init shaders"
                 Just p -> do
-                  withBindings <- runFn1 shaderBindings_ p
+                  withBindings <- shaderBindings_ p
                   -- bindings2 <- checkBindings bindings1
                   success (withBindings{webGLProgram = WebGLProg p})
 
 bindAttribLocation :: forall eff. WebGLProg -> Int -> String -> Eff (webgl :: WebGl | eff) Unit
-bindAttribLocation (WebGLProg p) i s = runFn3 bindAttribLocation_ p i s
+bindAttribLocation (WebGLProg p) i s = bindAttribLocation_ p i s
 
 type Buffer a = {
     webGLBuffer :: WebGLBuffer,
@@ -224,33 +237,33 @@ makeBufferFloatDyn vertices = makeBufferFloat' vertices _DYNAMIC_DRAW
 
 makeBufferFloat' :: forall eff. Array Number ->  Int -> Eff (webgl :: WebGl | eff) (Buffer T.Float32)
 makeBufferFloat' vertices flag = do
-  buffer <- runFn0 createBuffer_
-  runFn2 bindBuffer_ _ARRAY_BUFFER buffer
+  buffer <- createBuffer_
+  bindBuffer_ _ARRAY_BUFFER buffer
   let typedArray = T.asFloat32Array vertices
-  runFn3 bufferData__ _ARRAY_BUFFER typedArray flag
-  return {
+  bufferData__ _ARRAY_BUFFER typedArray flag
+  pure {
       webGLBuffer : buffer,
       bufferType  : _ARRAY_BUFFER,
       bufferSize  : length vertices
     }
 
-makeBuffer :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
+makeBuffer :: forall a eff num. (EuclideanRing num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBuffer bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _STATIC_DRAW
 
-makeBufferDyn :: forall a eff num. (ModuloSemiring num) =>  BufferTarget -> (Array num -> T.ArrayView a) -> Array num
+makeBufferDyn :: forall a eff num. (EuclideanRing num) =>  BufferTarget -> (Array num -> T.ArrayView a) -> Array num
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferDyn bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _DYNAMIC_DRAW
 
-makeBuffer' :: forall a eff num. (ModuloSemiring num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
+makeBuffer' :: forall a eff num. (EuclideanRing num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
                   ->  Int -> Eff (webgl :: WebGl | eff) (Buffer a)
 makeBuffer' bufferTarget conversion vertices flag = do
   let targetConst = bufferTargetToConst bufferTarget
-  buffer <- runFn0 createBuffer_
-  runFn2 bindBuffer_ targetConst buffer
+  buffer <- createBuffer_
+  bindBuffer_ targetConst buffer
   let typedArray = conversion vertices
-  runFn3 bufferData__ targetConst typedArray flag
-  return {
+  bufferData__ targetConst typedArray flag
+  pure {
       webGLBuffer : buffer,
       bufferType  : targetConst,
       bufferSize  : length vertices
@@ -258,26 +271,26 @@ makeBuffer' bufferTarget conversion vertices flag = do
 
 fillBuffer :: forall a eff. Buffer a -> Int -> Array Number -> Eff (webgl :: WebGl | eff) Unit
 fillBuffer buffer offset vertices = do
-    runFn2 bindBuffer_ buffer.bufferType buffer.webGLBuffer
+    bindBuffer_ buffer.bufferType buffer.webGLBuffer
     let typedArray = T.asFloat32Array vertices
-    runFn3 bufferSubData_ buffer.bufferType offset typedArray
-    return unit
+    bufferSubData__ buffer.bufferType offset typedArray
+    pure unit
 
 
 setUniformFloats :: forall eff typ. Uniform typ -> Array Number -> EffWebGL eff Unit
 setUniformFloats (Uniform uni) value
-  | uni.uType == _FLOAT         = runFn2 uniform1f_ uni.uLocation (head value)
-  | uni.uType == _FLOAT_MAT4    = runFn3 uniformMatrix4fv_ uni.uLocation false (asArrayBuffer value)
-  | uni.uType == _FLOAT_MAT3    = runFn3 uniformMatrix3fv_ uni.uLocation false (asArrayBuffer value)
-  | uni.uType == _FLOAT_MAT2    = runFn3 uniformMatrix2fv_ uni.uLocation false (asArrayBuffer value)
-  | uni.uType == _FLOAT_VEC4    = runFn2 uniform4fv_ uni.uLocation (asArrayBuffer value)
-  | uni.uType == _FLOAT_VEC3    = runFn2 uniform3fv_ uni.uLocation (asArrayBuffer value)
-  | uni.uType == _FLOAT_VEC2    = runFn2 uniform2fv_ uni.uLocation (asArrayBuffer value)
+  | uni.uType == _FLOAT         = uniform1f_ uni.uLocation (unsafePartial $ head value)
+  | uni.uType == _FLOAT_MAT4    = uniformMatrix4fv_ uni.uLocation false (asArrayBuffer value)
+  | uni.uType == _FLOAT_MAT3    = uniformMatrix3fv_ uni.uLocation false (asArrayBuffer value)
+  | uni.uType == _FLOAT_MAT2    = uniformMatrix2fv_ uni.uLocation false (asArrayBuffer value)
+  | uni.uType == _FLOAT_VEC4    = uniform4fv_ uni.uLocation (asArrayBuffer value)
+  | uni.uType == _FLOAT_VEC3    = uniform3fv_ uni.uLocation (asArrayBuffer value)
+  | uni.uType == _FLOAT_VEC2    = uniform2fv_ uni.uLocation (asArrayBuffer value)
   | otherwise                   = fail "WebGL>>setUniformFloats: Called for non float uniform!"
 
 setUniformBoolean :: forall eff typ. Uniform typ -> Boolean -> EffWebGL eff Unit
 setUniformBoolean (Uniform uni) value
-  | uni.uType == _BOOL         = runFn2 uniform1i_ uni.uLocation (toNumber value)
+  | uni.uType == _BOOL         = uniform1i_ uni.uLocation (toNumber value)
     where
       toNumber true = 1
       toNumber false = 0
@@ -285,18 +298,18 @@ setUniformBoolean (Uniform uni) value
 
 bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
 bindBufAndSetVertexAttr buffer attr = do
-    runFn2 bindBuffer_ buffer.bufferType buffer.webGLBuffer
+    bindBuffer_ buffer.bufferType buffer.webGLBuffer
     vertexPointer attr
 
 
 bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
-bindBuf buffer = runFn2 bindBuffer_ buffer.bufferType buffer.webGLBuffer
+bindBuf buffer = bindBuffer_ buffer.bufferType buffer.webGLBuffer
 
 blendColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
-blendColor = runFn4 blendColor_
+blendColor = blendColor_
 
 blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
-blendFunc a b = runFn2 blendFunc_ (blendingFactorToConst a) (blendingFactorToConst b)
+blendFunc a b = blendFunc_ (blendingFactorToConst a) (blendingFactorToConst b)
 
 blendFuncSeparate :: forall eff. BlendingFactor
     -> BlendingFactor
@@ -309,28 +322,28 @@ blendFuncSeparate a b c d =
         b' = blendingFactorToConst b
         c' = blendingFactorToConst c
         d' = blendingFactorToConst d
-    in runFn4 blendFuncSeparate_ a' b' c' d'
+    in blendFuncSeparate_ a' b' c' d'
 
 blendEquation :: forall eff. BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
-blendEquation = runFn1 blendEquation_ <<< blendEquationToConst
+blendEquation = blendEquation_ <<< blendEquationToConst
 
 blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
-blendEquationSeparate a b = runFn2 blendEquationSeparate_ (blendEquationToConst a) (blendEquationToConst b)
+blendEquationSeparate a b = blendEquationSeparate_ (blendEquationToConst a) (blendEquationToConst b)
 
 clear :: forall eff. Array Mask -> (Eff (webgl :: WebGl | eff) Unit)
-clear masks = runFn1 clear_ $ foldl (.|.) 0 (map maskToConst masks)
+clear masks = clear_ $ foldl (.|.) 0 (map maskToConst masks)
 
 clearColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
-clearColor = runFn4 clearColor_
+clearColor = clearColor_
 
 clearDepth :: forall eff. GLclampf -> Eff (webgl :: WebGl | eff) Unit
-clearDepth = runFn1 clearDepth_
+clearDepth = clearDepth_
 
 clearStencil :: forall eff. GLint -> Eff (webgl :: WebGl | eff) Unit
-clearStencil = runFn1 clearStencil_
+clearStencil = clearStencil_
 
 colorMask :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
-colorMask = runFn4 colorMask_
+colorMask = colorMask_
 
 data Func = NEVER | ALWAYS | LESS | EQUAL | LEQUAL | GREATER | GEQUAL | NOTEQUAL
 
@@ -345,40 +358,40 @@ funcToConst GEQUAL  = _GEQUAL
 funcToConst NOTEQUAL = _NOTEQUAL
 
 depthFunc :: forall eff. Func -> Eff (webgl :: WebGl | eff) Unit
-depthFunc = runFn1 depthFunc_ <<< funcToConst
+depthFunc = depthFunc_ <<< funcToConst
 
 disable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
-disable = runFn1 disable_ <<< capacityToConst
+disable = disable_ <<< capacityToConst
 
 drawArr :: forall a eff typ. Mode -> Buffer a -> Attribute typ -> EffWebGL eff Unit
 drawArr mode buffer a@(Attribute attrLoc) = do
   bindBufAndSetVertexAttr buffer a
-  runFn3 drawArrays_ (modeToConst mode) 0 (buffer.bufferSize / attrLoc.aItemSize)
+  drawArrays_ (modeToConst mode) 0 (buffer.bufferSize / attrLoc.aItemSize)
 
 drawElements :: forall eff. Mode -> Int -> EffWebGL eff Unit
-drawElements mode count = runFn4 drawElements_ (modeToConst mode) count _UNSIGNED_SHORT 0
+drawElements mode count = drawElements_ (modeToConst mode) count _UNSIGNED_SHORT 0
 
 enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
-enable = runFn1 enable_ <<< capacityToConst
+enable = enable_ <<< capacityToConst
 
 isContextLost :: forall eff. Eff (webgl :: WebGl | eff) Boolean
-isContextLost = runFn0 isContextLost_
+isContextLost = isContextLost_
 
 isEnabled :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Boolean)
-isEnabled = runFn1 isEnabled_ <<< capacityToConst
+isEnabled = isEnabled_ <<< capacityToConst
 
 vertexPointer ::  forall eff typ. Attribute typ -> EffWebGL eff Unit
 vertexPointer (Attribute attrLoc) =
-  runFn6 vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
+  vertexAttribPointer_ attrLoc.aLocation attrLoc.aItemSize _FLOAT false 0 0
 
 viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
-viewport = runFn4 viewport_
+viewport = viewport_
 
 enableVertexAttribArray :: forall eff a . Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
-enableVertexAttribArray (Attribute att)  = runFn1 enableVertexAttribArray_ att.aLocation
+enableVertexAttribArray (Attribute att)  = enableVertexAttribArray_ att.aLocation
 
 disableVertexAttribArray :: forall eff a . Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
-disableVertexAttribArray (Attribute att) = runFn1 disableVertexAttribArray_ att.aLocation
+disableVertexAttribArray (Attribute att) = disableVertexAttribArray_ att.aLocation
 
 
 
@@ -391,38 +404,38 @@ asArrayBuffer ::Array Number -> T.Float32Array
 asArrayBuffer = T.asFloat32Array
 
 getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
-getCanvasWidth context = runFn1 getCanvasWidth_ context.canvasName
+getCanvasWidth context = getCanvasWidth_ context.canvasName
 
 getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
-getCanvasHeight context = runFn1 getCanvasHeight_ context.canvasName
+getCanvasHeight context = getCanvasHeight_ context.canvasName
 
 makeShader :: forall eff. ShaderType -> String -> Eff (webgl :: WebGl | eff) (Either WebGLShader String)
 makeShader shaderType shaderSrc = do
   let shaderTypeConst = case shaderType of
                           FragmentShader -> _FRAGMENT_SHADER
                           VertexShader -> _VERTEX_SHADER
-  shader <- runFn1 createShader_ shaderTypeConst
-  runFn2 shaderSource_ shader shaderSrc
-  runFn1 compileShader_ shader
-  res <- runFn2 getShaderParameter_ shader _COMPILE_STATUS
+  shader <- createShader_ shaderTypeConst
+  shaderSource_ shader shaderSrc
+  compileShader_ shader
+  res <- getShaderParameter_ shader _COMPILE_STATUS
   if res
-      then return (Left shader)
+      then pure (Left shader)
       else do
-        str <- runFn1 getShaderInfoLog_ shader
-        return (Right str)
+        str <- getShaderInfoLog_ shader
+        pure (Right str)
 
 initShaders :: forall eff. WebGLShader -> WebGLShader -> Eff (webgl :: WebGl | eff) (Maybe WebGLProgram)
 initShaders fragmentShader vertexShader = do
-  shaderProgram <- runFn0 createProgram_
-  runFn2 attachShader_ shaderProgram vertexShader
-  runFn2 attachShader_ shaderProgram fragmentShader
-  runFn1 linkProgram_ shaderProgram
-  res <- runFn2 getProgramParameter_ shaderProgram _LINK_STATUS
+  shaderProgram <- createProgram_
+  attachShader_ shaderProgram vertexShader
+  attachShader_ shaderProgram fragmentShader
+  linkProgram_ shaderProgram
+  res <- getProgramParameter_ shaderProgram _LINK_STATUS
   if res
     then do
-        runFn1 useProgram_ shaderProgram
-        return (Just shaderProgram)
-    else return Nothing
+        useProgram_ shaderProgram
+        pure (Just shaderProgram)
+    else pure Nothing
 
 
 
@@ -559,22 +572,22 @@ blendEquationToConst FUNC_REVERSE_SUBTRACT = _FUNC_REVERSE_SUBTRACT
 -- * Some hand written foreign functions
 
 
-foreign import shaderBindings_ :: forall eff bindings. Fn1 WebGLProgram (Eff eff bindings)
+foreign import shaderBindings_ :: forall eff bindings. WebGLProgram -> Eff eff bindings
 
-foreign import initGL_ :: forall eff. Fn2 String ContextAttributes (Eff (eff) Boolean)
+foreign import initGL_ :: forall eff. String -> ContextAttributes -> Eff (eff) Boolean
 
-foreign import getCanvasWidth_ ::  forall eff. Fn1 String (Eff (webgl :: WebGl | eff) Int)
+foreign import getCanvasWidth_ ::  forall eff. String -> Eff (webgl :: WebGl | eff) Int
 
-foreign import getCanvasHeight_ :: forall eff. Fn1 String (Eff (webgl :: WebGl | eff) Int)
+foreign import getCanvasHeight_ :: forall eff. String -> Eff (webgl :: WebGl | eff) Int
 
-foreign import requestAnimationFrame_ :: forall a eff. Fn1 (Eff (webgl :: WebGl | eff) a) (Eff (webgl :: WebGl | eff) Unit)
+foreign import requestAnimationFrame_ :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
 
-foreign import bufferData__ :: forall a eff. Fn3 GLenum
-                   (T.ArrayView a)
-                   GLenum
-                   (Eff (webgl :: WebGl | eff) Unit)
+foreign import bufferData__ :: forall a eff. GLenum
+                   -> T.ArrayView a
+                   -> GLenum
+                   -> Eff (webgl :: WebGl | eff) Unit
 
-foreign import bufferSubData__ :: forall a eff. Fn3 GLenum
-                   GLintptr
-                   (T.ArrayView a)
-                   (Eff (webgl :: WebGl | eff) Unit)
+foreign import bufferSubData__ :: forall a eff. GLenum
+                   -> GLintptr
+                   -> T.ArrayView a
+                   -> Eff (webgl :: WebGl | eff) Unit

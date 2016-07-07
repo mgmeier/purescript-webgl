@@ -47,21 +47,23 @@
         };};
 
 
-    exports.initGL_ = function (canvasId, attr) {
-            return function() {
-              var canvas = document.getElementById(canvasId);
-              try {
-                gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
-              }
-              catch(e) {return false;}
-              if (!gl)
-              {
-                gl = null;
-                return false;
-              }
-              return true;
+    exports.initGL_ = function (canvasId) {
+            return function(attr) {
+                return function() {
+                  var canvas = document.getElementById(canvasId);
+                  try {
+                    gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
+                  }
+                  catch(e) {return false;}
+                  if (!gl)
+                  {
+                    gl = null;
+                    return false;
+                  }
+                  return true;
           };
       };
+  };
 
         exports.getCanvasWidth_ = function(canvasId) {
           return function() {
@@ -93,10 +95,20 @@
             };
         };
 
-      exports.bufferData__ = function(target,data,usage)
-         {return function()
-          {gl.bufferData(target,data,usage);};};
+      exports.bufferData__ = function(target) {
+          return function(data) {
+              return function(usage) {
+                  return function()
+                    {gl.bufferData(target,data,usage);};
+                };
+            };
+        };
 
-      exports.bufferSubData__ = function(target,offset,data)
-         {return function()
-          {gl.bufferSubData(target,offset,data);};};
+      exports.bufferSubData__ = function(target) {
+          return function(offset) {
+              return function(data) {
+                  return function()
+                    {gl.bufferSubData(target,offset,data);};
+                };
+            };
+        };

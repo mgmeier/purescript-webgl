@@ -2,37 +2,14 @@
 
 Binding to WebGL for purescript.
 
-## Module documentation
-
-- [Control.Monad.Eff.WegGL](docs/Control/Monad/Eff/WebGL.md)
-- [Graphics.WebGL](docs/Graphics/WebGL.md)
-- [Graphics.WebGLFramebuffer](docs/Graphics/WebGLFramebuffer.md)
-- [Graphics.WebGLTexture](docs/Graphics/WebGLTexture.md)
-- [Graphics.WebGLRaw](docs/Graphics/WebGLRaw.md)
-
-
-## Build with:
-~~~
-npm install
-pulp dep install
-pulp build
-~~~
 
 This modules should be imported like:
-~~~
-import Control.Monad.Eff.WebGL
-import Graphics.WebGL
-import Graphics.WebGLTexture
-~~~
-
-or
 ~~~
 import Control.Monad.Eff.WebGL as GL
 import Graphics.WebGL as GL
 import Graphics.WebGLTexture as GL
 import Graphics.WebGLFramebuffer as GL
 ~~~
-
 
 I started with generating the raw interface by parsing the Kronos IDL and generating
 a low level binding to Graphics.WebGLRaw. This can be found in the package
