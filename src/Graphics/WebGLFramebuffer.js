@@ -12,7 +12,7 @@ exports.unbindFramebuffer_ = function(target)
 {return function()
  {gl.bindFramebuffer(target,null);};};
 
-    exports.readPixels_ = function (x)
+    exports.readPixels__ = function (x)
     {return function(y)
      {return function(width)
       {return function(height)
