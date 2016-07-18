@@ -52,7 +52,7 @@
                 return function() {
                   var canvas = document.getElementById(canvasId);
                   try {
-                    gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
+                    window.gl = canvas.getContext("webgl", attr) || canvas.getContext("experimental-webgl", attr);
                   }
                   catch(e) {return false;}
                   if (!gl)
