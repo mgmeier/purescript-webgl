@@ -41,6 +41,8 @@ module Graphics.WebGL
   , makeBufferDyn
   , makeBufferFloat
   , makeBufferFloatDyn
+  , makeBufferPrim
+  , makeBufferPrimDyn
   , fillBuffer
 
   , setUniformFloats
@@ -97,6 +99,7 @@ import Data.Foldable (foldl)
 import Data.Maybe (Maybe(Nothing, Just))
 import Data.Array.Partial (head)
 import Data.Array (length)
+import Data.TypedArray (length) as AW
 import Data.Either (Either(Right, Left))
 import Data.Int.Bits ((.|.))
 import Partial.Unsafe (unsafePartial)
@@ -254,6 +257,30 @@ makeBuffer bufferTarget conversion vertices = makeBuffer' bufferTarget conversio
 makeBufferDyn :: forall a eff num. (EuclideanRing num) =>  BufferTarget -> (Array num -> T.ArrayView a) -> Array num
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferDyn bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _DYNAMIC_DRAW
+
+makeBufferPrim :: forall a eff num. (EuclideanRing num) => BufferTarget -> T.ArrayView a ->  Eff (webgl :: WebGl | eff) (Buffer a)
+makeBufferPrim bufferTarget typedArray = do
+  let targetConst = bufferTargetToConst bufferTarget
+  buffer <- createBuffer_
+  bindBuffer_ targetConst buffer
+  bufferData__ targetConst typedArray _STATIC_DRAW
+  pure {
+      webGLBuffer : buffer,
+      bufferType  : targetConst,
+      bufferSize  : AW.length typedArray
+    }
+
+makeBufferPrimDyn :: forall a eff num. (EuclideanRing num) => BufferTarget -> T.ArrayView a ->  Eff (webgl :: WebGl | eff) (Buffer a)
+makeBufferPrimDyn bufferTarget typedArray = do
+  let targetConst = bufferTargetToConst bufferTarget
+  buffer <- createBuffer_
+  bindBuffer_ targetConst buffer
+  bufferData__ targetConst typedArray _DYNAMIC_DRAW
+  pure {
+      webGLBuffer : buffer,
+      bufferType  : targetConst,
+      bufferSize  : AW.length typedArray
+    }
 
 makeBuffer' :: forall a eff num. (EuclideanRing num) => BufferTarget -> (Array num -> T.ArrayView a) -> Array num
                   ->  Int -> Eff (webgl :: WebGl | eff) (Buffer a)
