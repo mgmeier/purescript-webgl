@@ -258,7 +258,7 @@ makeBufferDyn :: forall a eff num. (EuclideanRing num) =>  BufferTarget -> (Arra
                   ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferDyn bufferTarget conversion vertices = makeBuffer' bufferTarget conversion vertices _DYNAMIC_DRAW
 
-makeBufferPrim :: forall a eff num. (EuclideanRing num) => BufferTarget -> T.ArrayView a ->  Eff (webgl :: WebGl | eff) (Buffer a)
+makeBufferPrim :: forall a eff.BufferTarget -> T.ArrayView a ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferPrim bufferTarget typedArray = do
   let targetConst = bufferTargetToConst bufferTarget
   buffer <- createBuffer_
@@ -270,7 +270,7 @@ makeBufferPrim bufferTarget typedArray = do
       bufferSize  : AW.length typedArray
     }
 
-makeBufferPrimDyn :: forall a eff num. (EuclideanRing num) => BufferTarget -> T.ArrayView a ->  Eff (webgl :: WebGl | eff) (Buffer a)
+makeBufferPrimDyn :: forall a eff. BufferTarget -> T.ArrayView a ->  Eff (webgl :: WebGl | eff) (Buffer a)
 makeBufferPrimDyn bufferTarget typedArray = do
   let targetConst = bufferTargetToConst bufferTarget
   buffer <- createBuffer_
