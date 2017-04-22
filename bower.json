@@ -33,7 +33,7 @@
     "purescript-maybe": "^3.0.0",
     "purescript-functions": "^3.0.0",
     "purescript-arraybuffer-types": "^2.0.0",
-    "purescript-typedarray": "^2.0.0",
+    "purescript-typedarray": "^1.0.0",
     "purescript-vector": "^2.0.0",
     "purescript-matrix": "^2.0.0",
     "purescript-extensions": "^2.0.0",
