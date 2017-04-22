@@ -4,7 +4,7 @@ module Graphics.WebGLRaw where
 import Prelude
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.WebGL (WebGl)
-import Data.ArrayBuffer.Types (Int32Array, Float32Array)
+import Data.ArrayBuffer.Types (Int32Array, Float32Array, kind ArrayViewType, ArrayView)
 
 
 type GLenum = Int
@@ -22,21 +22,21 @@ type GLuint = Int
 type GLfloat = Number
 type GLclampf = Number
 type FloatArray = Float32Array
+type WebGLBuffer a = ArrayView a
 
 -- *TypeDecls
-foreign import data WebGLContextAttributes :: *
-foreign import data WebGLProgram :: *
-foreign import data WebGLShader :: *
-foreign import data WebGLBuffer :: *
-foreign import data WebGLFramebuffer :: *
-foreign import data WebGLRenderbuffer :: *
-foreign import data WebGLTexture :: *
-foreign import data WebGLActiveInfo :: *
-foreign import data WebGLUniformLocation :: *
-foreign import data ArrayBufferView :: *
-foreign import data ImageData :: *
-foreign import data HTMLImageElement :: *
-foreign import data HTMLVideoElement :: *
+foreign import data WebGLContextAttributes :: Type
+foreign import data WebGLProgram :: Type
+foreign import data WebGLShader :: Type
+foreign import data WebGLFramebuffer :: Type
+foreign import data WebGLRenderbuffer :: Type
+foreign import data WebGLTexture :: Type
+foreign import data WebGLActiveInfo :: Type
+foreign import data WebGLUniformLocation :: Type
+foreign import data ArrayBufferView :: Type
+foreign import data ImageData :: Type
+foreign import data HTMLImageElement :: Type
+foreign import data HTMLVideoElement :: Type
 
 -- *Constants
 _DEPTH_BUFFER_BIT :: Int
@@ -962,8 +962,8 @@ foreign import bindAttribLocation_:: forall eff. WebGLProgram->
                                                  String
                                                  -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import bindBuffer_:: forall eff. GLenum->
-                                         WebGLBuffer
+foreign import bindBuffer_:: forall a eff. GLenum->
+                                         WebGLBuffer a
                                          -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import bindFramebuffer_:: forall eff. GLenum->
@@ -1058,7 +1058,7 @@ foreign import copyTexSubImage2D_:: forall eff. GLenum->
                                                 GLsizei
                                                 -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import createBuffer_:: forall eff. (Eff (webgl :: WebGl | eff) WebGLBuffer)
+foreign import createBuffer_:: forall a eff. Eff (webgl :: WebGl | eff) (WebGLBuffer a)
 
 foreign import createFramebuffer_:: forall eff. (Eff (webgl :: WebGl | eff) WebGLFramebuffer)
 
@@ -1074,7 +1074,7 @@ foreign import createTexture_:: forall eff. (Eff (webgl :: WebGl | eff) WebGLTex
 foreign import cullFace_:: forall eff. GLenum
                                        -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import deleteBuffer_:: forall eff. WebGLBuffer
+foreign import deleteBuffer_:: forall a eff. WebGLBuffer a
                                            -> (Eff (webgl :: WebGl | eff) Unit)
 
 foreign import deleteFramebuffer_:: forall eff. WebGLFramebuffer
@@ -1226,7 +1226,7 @@ foreign import hint_:: forall eff. GLenum->
                                    GLenum
                                    -> (Eff (webgl :: WebGl | eff) Unit)
 
-foreign import isBuffer_:: forall eff. WebGLBuffer
+foreign import isBuffer_:: forall a eff. WebGLBuffer a
                                        -> (Eff (webgl :: WebGl | eff) GLboolean)
 
 foreign import isEnabled_:: forall eff. GLenum

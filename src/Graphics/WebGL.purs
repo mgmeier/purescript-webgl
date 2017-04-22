@@ -227,7 +227,7 @@ bindAttribLocation :: forall eff. WebGLProg -> Int -> String -> Eff (webgl :: We
 bindAttribLocation (WebGLProg p) i s = bindAttribLocation_ p i s
 
 type Buffer a = {
-    webGLBuffer :: WebGLBuffer,
+    webGLBuffer :: WebGLBuffer a,
     bufferType  :: Int,
     bufferSize  :: Int
   }
