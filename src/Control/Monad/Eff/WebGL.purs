@@ -14,9 +14,9 @@
 
 module Control.Monad.Eff.WebGL where
 
-import Control.Monad.Eff (Eff)
+import Control.Monad.Eff (kind Effect, Eff)
 
-foreign import data WebGl :: !
+foreign import data WebGl :: Effect
 
 type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
 
