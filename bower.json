@@ -26,26 +26,27 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-prelude": "^3.0.0",
-    "purescript-monoid": "^3.0.0",
-    "purescript-control": "^3.0.0",
+    "purescript-prelude": "^3.1.0",
+    "purescript-monoid": "^3.1.0",
+    "purescript-control": "^3.3.1",
     "purescript-invariant": "^3.0.0",
     "purescript-maybe": "^3.0.0",
     "purescript-functions": "^3.0.0",
     "purescript-arraybuffer-types": "^2.0.0",
-    "purescript-typedarray": "^2.0.0",
+    "purescript-typedarray": "^2.1.0",
     "purescript-vector": "^2.0.0",
-    "purescript-matrix": "^2.0.0",
-    "purescript-extensions": "^2.0.0",
-    "purescript-integers": "^3.0.0",
-    "purescript-foldable-traversable": "^3.0.0",
-    "purescript-eff": "^3.0.0",
-    "purescript-either": "^3.0.0",
-    "purescript-tuples": "^4.0.0",
+    "purescript-matrix": "^2.1.0",
+    "purescript-extensions": "^2.2.0",
+    "purescript-integers": "^3.1.0",
+    "purescript-foldable-traversable": "^3.6.1",
+    "purescript-eff": "^3.1.0",
+    "purescript-either": "^3.1.0",
+    "purescript-tuples": "^4.1.0",
     "purescript-unfoldable": "^3.0.0",
-    "purescript-canvas": "^3.0.0"
+    "purescript-canvas": "^3.1.0"
   },
   "resolutions": {
-    "purescript-arraybuffer-types": "^2.0.0"
+    "purescript-arraybuffer-types": "^2.0.0",
+    "purescript-extensions": "^2.2.0"
   }
 }
