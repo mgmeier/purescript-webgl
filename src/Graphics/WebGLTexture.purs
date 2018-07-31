@@ -52,7 +52,7 @@ import Graphics.WebGLRaw (texImage2D_, GLenum, GLint, GLsizei, WebGLUniformLocat
     _PACK_ALIGNMENT, _UNSIGNED_SHORT_5_5_5_1, _UNSIGNED_SHORT_4_4_4_4, _UNSIGNED_SHORT_5_6_5, _FLOAT, _RGBA, _UNSIGNED_BYTE, _RGB, _LUMINANCE_ALPHA,
     _LUMINANCE, _ALPHA, _TEXTURE_CUBE_MAP_NEGATIVE_Z, _TEXTURE_CUBE_MAP_POSITIVE_Z, _TEXTURE_CUBE_MAP_NEGATIVE_Y, _TEXTURE_CUBE_MAP_POSITIVE_Y,
     _TEXTURE_CUBE_MAP_NEGATIVE_X, _TEXTURE_CUBE_MAP_POSITIVE_X, ArrayBufferView)
-import Extensions (fail)
+import Partial.Unsafe (unsafeCrashWith)
 import Data.TypedArray (newUint8Array)
 import Data.ArrayBuffer.Types (ArrayView)
 
@@ -267,7 +267,7 @@ texSubImage2D target level x y format typ pixels =
 
 activeTexture :: forall eff. Int -> Eff (webgl :: WebGl | eff) Unit
 activeTexture n | n < _MAX_COMBINED_TEXTURE_IMAGE_UNITS = activeTexture_ (_TEXTURE0 + n)
-                | otherwise                             = fail "WebGLTexture>>activeTexture: wrong argument!"
+                | otherwise                             = unsafeCrashWith "WebGLTexture>>activeTexture: wrong argument!"
 
 createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
 createTexture = do

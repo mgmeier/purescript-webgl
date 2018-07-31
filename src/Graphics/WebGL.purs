@@ -102,7 +102,7 @@ import Data.Array (length)
 import Data.TypedArray (length) as AW
 import Data.Either (Either(Right, Left))
 import Data.Int.Bits ((.|.))
-import Partial.Unsafe (unsafePartial)
+import Partial.Unsafe (unsafePartial, unsafeCrashWith)
 
 import Control.Monad.Eff.WebGL (WebGl, EffWebGL, runWebGl_)
 import Graphics.WebGLRaw (GLintptr, GLenum, WebGLProgram, WebGLShader, GLsizei, GLint, GLboolean, GLclampf, WebGLBuffer, WebGLUniformLocation,
@@ -313,7 +313,7 @@ setUniformFloats (Uniform uni) value
   | uni.uType == _FLOAT_VEC4    = uniform4fv_ uni.uLocation (asArrayBuffer value)
   | uni.uType == _FLOAT_VEC3    = uniform3fv_ uni.uLocation (asArrayBuffer value)
   | uni.uType == _FLOAT_VEC2    = uniform2fv_ uni.uLocation (asArrayBuffer value)
-  | otherwise                   = fail "WebGL>>setUniformFloats: Called for non float uniform!"
+  | otherwise                   = unsafeCrashWith "WebGL>>setUniformFloats: Called for non float uniform!"
 
 setUniformBoolean :: forall eff typ. Uniform typ -> Boolean -> EffWebGL eff Unit
 setUniformBoolean (Uniform uni) value
@@ -321,7 +321,7 @@ setUniformBoolean (Uniform uni) value
     where
       toNumber true = 1
       toNumber false = 0
-  | otherwise                   = fail "WebGL>>setUniformBoolean: Called for not boolean uniform!"
+  | otherwise                   = unsafeCrashWith "WebGL>>setUniformBoolean: Called for not boolean uniform!"
 
 bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
 bindBufAndSetVertexAttr buffer attr = do
