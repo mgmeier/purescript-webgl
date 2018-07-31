@@ -4,260 +4,260 @@ WebGL binding for purescript
 
 #### `WebGLContext`
 
-``` purescript
+```purescript
 type WebGLContext = { canvasName :: String }
 ```
 
 #### `ContextAttributes`
 
-``` purescript
+```purescript
 type ContextAttributes = { alpha :: Boolean, depth :: Boolean, stencil :: Boolean, antialias :: Boolean, premultipliedAlpha :: Boolean, preserveDrawingBuffer :: Boolean, preferLowPowerToHighPerformance :: Boolean, failIfMajorPerformanceCaveat :: Boolean }
 ```
 
 #### `defContextAttributes`
 
-``` purescript
+```purescript
 defContextAttributes :: ContextAttributes
 ```
 
 #### `runWebGLAttr`
 
-``` purescript
-runWebGLAttr :: forall a eff. String -> ContextAttributes -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
+```purescript
+runWebGLAttr :: forall a.  String -> ContextAttributes -> (String -> Effect a) -> (WebGLContext -> Effect a) -> Effect a
 ```
 
 pures either a continuation which takes a String in the error case,
 
 #### `runWebGL`
 
-``` purescript
-runWebGL :: forall a eff. String -> (String -> Eff eff a) -> (WebGLContext -> EffWebGL eff a) -> Eff eff a
+```purescript
+runWebGL :: forall a.  String -> (String -> Effect a) -> (WebGLContext -> Effect a) -> Effect a
 ```
 
 Same as runWebGLAttr but uses default attributes (defContextAttributes)
 
 #### `Uniform`
 
-``` purescript
+```purescript
 newtype Uniform typ
   = Uniform { uLocation :: WebGLUniformLocation, uName :: String, uType :: Int }
 ```
 
 #### `Attribute`
 
-``` purescript
+```purescript
 newtype Attribute typ
   = Attribute { aLocation :: GLint, aName :: String, aItemType :: Int, aItemSize :: Int }
 ```
 
 #### `Vec2`
 
-``` purescript
+```purescript
 data Vec2
 ```
 
 #### `Vec3`
 
-``` purescript
+```purescript
 data Vec3
 ```
 
 #### `Vec4`
 
-``` purescript
+```purescript
 data Vec4
 ```
 
 #### `Mat2`
 
-``` purescript
+```purescript
 data Mat2
 ```
 
 #### `Mat3`
 
-``` purescript
+```purescript
 data Mat3
 ```
 
 #### `Mat4`
 
-``` purescript
+```purescript
 data Mat4
 ```
 
 #### `Sampler2D`
 
-``` purescript
+```purescript
 data Sampler2D
 ```
 
 #### `Bool`
 
-``` purescript
+```purescript
 data Bool
 ```
 
 #### `Float`
 
-``` purescript
+```purescript
 data Float
 ```
 
 #### `WebGLProg`
 
-``` purescript
+```purescript
 newtype WebGLProg
 ```
 
 #### `Shaders`
 
-``` purescript
+```purescript
 data Shaders bindings
   = Shaders String String
 ```
 
 #### `requestAnimationFrame`
 
-``` purescript
-requestAnimationFrame :: forall a eff. Eff (webgl :: WebGl | eff) a -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+requestAnimationFrame :: forall a.  Effect a -> Effect Unit
 ```
 
 #### `withShaders`
 
-``` purescript
-withShaders :: forall bindings eff a. Shaders ({  | bindings }) -> (String -> EffWebGL eff a) -> ({ webGLProgram :: WebGLProg | bindings } -> EffWebGL eff a) -> EffWebGL eff a
+```purescript
+withShaders :: forall bindings a. Shaders ({  | bindings }) -> (String -> Effect a) -> ({ webGLProgram :: WebGLProg | bindings } -> Effect a) -> Effect a
 ```
 
 #### `bindAttribLocation`
 
-``` purescript
-bindAttribLocation :: forall eff. WebGLProg -> Int -> String -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+bindAttribLocation :: WebGLProg -> Int -> String -> Effect Unit
 ```
 
 #### `Buffer`
 
-``` purescript
+```purescript
 type Buffer a = { webGLBuffer :: WebGLBuffer, bufferType :: Int, bufferSize :: Int }
 ```
 
 #### `makeBufferFloat`
 
-``` purescript
-makeBufferFloat :: forall eff. Array Number -> Eff (webgl :: WebGl | eff) (Buffer Float32)
+```purescript
+makeBufferFloat :: Array Number -> Effect (Buffer Float32)
 ```
 
 #### `makeBufferFloatDyn`
 
-``` purescript
-makeBufferFloatDyn :: forall eff. Array Number -> Eff (webgl :: WebGl | eff) (Buffer Float32)
+```purescript
+makeBufferFloatDyn :: Array Number -> Effect (Buffer Float32)
 ```
 
 #### `makeBuffer`
 
-``` purescript
-makeBuffer :: forall a eff num. EuclideanRing num => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
+```purescript
+makeBuffer :: forall a num. EuclideanRing num => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Effect (Buffer a)
 ```
 
 #### `makeBufferDyn`
 
-``` purescript
-makeBufferDyn :: forall a eff num. EuclideanRing num => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Eff (webgl :: WebGl | eff) (Buffer a)
+```purescript
+makeBufferDyn :: forall a num. EuclideanRing num => BufferTarget -> (Array num -> ArrayView a) -> Array num -> Effect (Buffer a)
 ```
 
 #### `fillBuffer`
 
-``` purescript
-fillBuffer :: forall a eff. Buffer a -> Int -> Array Number -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+fillBuffer :: forall a.  Buffer a -> Int -> Array Number -> Effect Unit
 ```
 
 #### `setUniformFloats`
 
-``` purescript
-setUniformFloats :: forall eff typ. Uniform typ -> Array Number -> EffWebGL eff Unit
+```purescript
+setUniformFloats :: forall typ. Uniform typ -> Array Number -> Effect Unit
 ```
 
 #### `setUniformBoolean`
 
-``` purescript
-setUniformBoolean :: forall eff typ. Uniform typ -> Boolean -> EffWebGL eff Unit
+```purescript
+setUniformBoolean :: forall typ. Uniform typ -> Boolean -> Effect Unit
 ```
 
 #### `bindBufAndSetVertexAttr`
 
-``` purescript
-bindBufAndSetVertexAttr :: forall a eff typ. Buffer a -> Attribute typ -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+bindBufAndSetVertexAttr :: forall a typ. Buffer a -> Attribute typ -> Effect Unit
 ```
 
 #### `bindBuf`
 
-``` purescript
-bindBuf :: forall a eff. Buffer a -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+bindBuf :: forall a.  Buffer a -> Effect Unit
 ```
 
 #### `blendColor`
 
-``` purescript
-blendColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+blendColor :: GLclampf -> GLclampf -> GLclampf -> GLclampf -> Effect Unit
 ```
 
 #### `blendFunc`
 
-``` purescript
-blendFunc :: forall eff. BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendFunc :: BlendingFactor -> BlendingFactor -> (Effect Unit)
 ```
 
 #### `blendFuncSeparate`
 
-``` purescript
-blendFuncSeparate :: forall eff. BlendingFactor -> BlendingFactor -> BlendingFactor -> BlendingFactor -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendFuncSeparate :: BlendingFactor -> BlendingFactor -> BlendingFactor -> BlendingFactor -> (Effect Unit)
 ```
 
 #### `blendEquation`
 
-``` purescript
-blendEquation :: forall eff. BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendEquation :: BlendEquation -> (Effect Unit)
 ```
 
 #### `blendEquationSeparate`
 
-``` purescript
-blendEquationSeparate :: forall eff. BlendEquation -> BlendEquation -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendEquationSeparate :: BlendEquation -> BlendEquation -> (Effect Unit)
 ```
 
 #### `clear`
 
-``` purescript
-clear :: forall eff. Array Mask -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+clear :: Array Mask -> (Effect Unit)
 ```
 
 #### `clearColor`
 
-``` purescript
-clearColor :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+clearColor :: GLclampf -> GLclampf -> GLclampf -> GLclampf -> Effect Unit
 ```
 
 #### `clearDepth`
 
-``` purescript
-clearDepth :: forall eff. GLclampf -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+clearDepth :: GLclampf -> Effect Unit
 ```
 
 #### `clearStencil`
 
-``` purescript
-clearStencil :: forall eff. GLint -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+clearStencil :: GLint -> Effect Unit
 ```
 
 #### `colorMask`
 
-``` purescript
-colorMask :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+colorMask :: GLboolean -> GLboolean -> GLboolean -> GLboolean -> Effect Unit
 ```
 
 #### `Func`
 
-``` purescript
+```purescript
 data Func
   = NEVER
   | ALWAYS
@@ -271,85 +271,85 @@ data Func
 
 #### `depthFunc`
 
-``` purescript
-depthFunc :: forall eff. Func -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+depthFunc :: Func -> Effect Unit
 ```
 
 #### `disable`
 
-``` purescript
-disable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+disable :: Capacity -> (Effect Unit)
 ```
 
 #### `drawArr`
 
-``` purescript
-drawArr :: forall a eff typ. Mode -> Buffer a -> Attribute typ -> EffWebGL eff Unit
+```purescript
+drawArr :: forall a typ. Mode -> Buffer a -> Attribute typ -> Effect Unit
 ```
 
 #### `drawElements`
 
-``` purescript
-drawElements :: forall eff. Mode -> Int -> EffWebGL eff Unit
+```purescript
+drawElements :: Mode -> Int -> Effect Unit
 ```
 
 #### `enable`
 
-``` purescript
-enable :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+enable :: Capacity -> (Effect Unit)
 ```
 
 #### `isContextLost`
 
-``` purescript
-isContextLost :: forall eff. Eff (webgl :: WebGl | eff) Boolean
+```purescript
+isContextLost :: Effect Boolean
 ```
 
 #### `isEnabled`
 
-``` purescript
-isEnabled :: forall eff. Capacity -> (Eff (webgl :: WebGl | eff) Boolean)
+```purescript
+isEnabled :: Capacity -> (Effect Boolean)
 ```
 
 #### `vertexPointer`
 
-``` purescript
-vertexPointer :: forall eff typ. Attribute typ -> EffWebGL eff Unit
+```purescript
+vertexPointer :: forall typ. Attribute typ -> Effect Unit
 ```
 
 #### `viewport`
 
-``` purescript
-viewport :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+viewport :: GLint -> GLint -> GLsizei -> GLsizei -> Effect Unit
 ```
 
 #### `enableVertexAttribArray`
 
-``` purescript
-enableVertexAttribArray :: forall eff a. Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+enableVertexAttribArray :: forall a. Attribute a -> (Effect Unit)
 ```
 
 #### `disableVertexAttribArray`
 
-``` purescript
-disableVertexAttribArray :: forall eff a. Attribute a -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+disableVertexAttribArray :: forall a. Attribute a -> (Effect Unit)
 ```
 
 #### `getCanvasWidth`
 
-``` purescript
-getCanvasWidth :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
+```purescript
+getCanvasWidth :: WebGLContext -> Effect Int
 ```
 
 #### `getCanvasHeight`
 
-``` purescript
-getCanvasHeight :: forall eff. WebGLContext -> Eff (webgl :: WebGl | eff) Int
+```purescript
+getCanvasHeight :: WebGLContext -> Effect Int
 ```
 
 #### `Capacity`
 
-``` purescript
+```purescript
 data Capacity
   = BLEND
   | DEPTH_TEST
@@ -360,7 +360,7 @@ data Capacity
 
 #### `Mask`
 
-``` purescript
+```purescript
 data Mask
   = DEPTH_BUFFER_BIT
   | STENCIL_BUFFER_BIT
@@ -369,7 +369,7 @@ data Mask
 
 #### `Mode`
 
-``` purescript
+```purescript
 data Mode
   = POINTS
   | LINES
@@ -382,7 +382,7 @@ data Mode
 
 #### `BufferTarget`
 
-``` purescript
+```purescript
 data BufferTarget
   = ARRAY_BUFFER
   | ELEMENT_ARRAY_BUFFER
@@ -390,7 +390,7 @@ data BufferTarget
 
 #### `BlendingFactor`
 
-``` purescript
+```purescript
 data BlendingFactor
   = ZERO
   | ONE
@@ -416,7 +416,7 @@ data BlendingFactor
 
 #### `BlendEquation`
 
-``` purescript
+```purescript
 data BlendEquation
   = FUNC_ADD
   | BLEND_EQUATION
@@ -425,5 +425,3 @@ data BlendEquation
   | FUNC_SUBTRACT
   | FUNC_REVERSE_SUBTRACT
 ```
-
-

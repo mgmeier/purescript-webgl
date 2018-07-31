@@ -22,4 +22,4 @@ module Graphics.WebGLAll (
 import Graphics.WebGL as X1
 import Graphics.WebGLFramebuffer as X2
 import Graphics.WebGLTexture as X3
-import Control.Monad.Eff.WebGL as X4
+import Effect.WebGL as X4
