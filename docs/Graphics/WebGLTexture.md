@@ -4,14 +4,14 @@ Textures for the WebGL binding for purescript
 
 #### `WebGLTex`
 
-``` purescript
+```purescript
 newtype WebGLTex
   = WebGLTex WebGLTexture
 ```
 
 #### `TargetType`
 
-``` purescript
+```purescript
 data TargetType
   = TEXTURE_2D
   | TEXTURE_CUBE_MAP_POSITIVE_X
@@ -24,13 +24,13 @@ data TargetType
 
 #### `targetTypeToConst`
 
-``` purescript
+```purescript
 targetTypeToConst :: TargetType -> GLenum
 ```
 
 #### `InternalFormat`
 
-``` purescript
+```purescript
 data InternalFormat
   = IF_ALPHA
   | IF_LUMINANCE
@@ -41,7 +41,7 @@ data InternalFormat
 
 #### `TextureType`
 
-``` purescript
+```purescript
 data TextureType
   = UNSIGNED_BYTE
   | RGBA
@@ -53,7 +53,7 @@ data TextureType
 
 #### `SymbolicParameter`
 
-``` purescript
+```purescript
 data SymbolicParameter
   = PACK_ALIGNMENT
   | UNPACK_ALIGNMENT
@@ -64,7 +64,7 @@ data SymbolicParameter
 
 #### `TexTarget`
 
-``` purescript
+```purescript
 data TexTarget
   = TTEXTURE_2D
   | TTEXTURE_CUBE_MAP
@@ -72,7 +72,7 @@ data TexTarget
 
 #### `TexParName`
 
-``` purescript
+```purescript
 data TexParName
   = TEXTURE_MIN_FILTER
   | TEXTURE_MAG_FILTER
@@ -82,7 +82,7 @@ data TexParName
 
 #### `TexFilterSpec`
 
-``` purescript
+```purescript
 data TexFilterSpec
   = NEAREST
   | LINEAR
@@ -91,62 +91,60 @@ data TexFilterSpec
 
 #### `texture2DFor`
 
-``` purescript
-texture2DFor :: forall a eff. String -> TexFilterSpec -> (WebGLTex -> EffWebGL eff a) -> EffWebGL eff Unit
+```purescript
+texture2DFor :: forall a. String -> TexFilterSpec -> (WebGLTex -> Effect a) -> Effect Unit
 ```
 
 #### `handleLoad2D`
 
-``` purescript
-handleLoad2D :: forall eff a. WebGLTex -> TexFilterSpec -> a -> EffWebGL eff Unit
+```purescript
+handleLoad2D :: forall a. WebGLTex -> TexFilterSpec -> a -> Effect Unit
 ```
 
 #### `handleSubLoad2D`
 
-``` purescript
-handleSubLoad2D :: forall eff a. WebGLTex -> Int -> Int -> Int -> Int -> TexFilterSpec -> a -> EffWebGL eff Unit
+```purescript
+handleSubLoad2D :: forall a. WebGLTex -> Int -> Int -> Int -> Int -> TexFilterSpec -> a -> Effect Unit
 ```
 
 #### `newTexture`
 
-``` purescript
-newTexture :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
+```purescript
+newTexture :: Int -> Int -> TexFilterSpec -> Effect WebGLTex
 ```
 
 #### `newTextureInit`
 
-``` purescript
-newTextureInit :: forall eff. Int -> Int -> TexFilterSpec -> EffWebGL eff WebGLTex
+```purescript
+newTextureInit :: Int -> Int -> TexFilterSpec -> Effect WebGLTex
 ```
 
 #### `withTexture2D`
 
-``` purescript
-withTexture2D :: forall eff typ. WebGLTex -> Int -> Uniform typ -> Int -> EffWebGL eff Unit -> EffWebGL eff Unit
+```purescript
+withTexture2D :: forall typ. WebGLTex -> Int -> Uniform typ -> Int -> Effect Unit -> Effect Unit
 ```
 
 #### `bindTexture`
 
-``` purescript
-bindTexture :: forall eff. TargetType -> WebGLTex -> EffWebGL eff Unit
+```purescript
+bindTexture :: TargetType -> WebGLTex -> Effect Unit
 ```
 
 #### `unbindTexture`
 
-``` purescript
-unbindTexture :: forall eff. TargetType -> EffWebGL eff Unit
+```purescript
+unbindTexture :: TargetType -> Effect Unit
 ```
 
 #### `activeTexture`
 
-``` purescript
-activeTexture :: forall eff. Int -> Eff (webgl :: WebGl | eff) Unit
+```purescript
+activeTexture :: Int -> Effect Unit
 ```
 
 #### `createTexture`
 
-``` purescript
-createTexture :: forall eff. Eff (webgl :: WebGl | eff) WebGLTex
+```purescript
+createTexture :: Effect WebGLTex
 ```
-
-

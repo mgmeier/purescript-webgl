@@ -6,9 +6,7 @@
     "Michael Karg <michael.karg@symbolian.net>"
   ],
   "description": "WebGL binding for purescript",
-  "keywords": [
-    "purescript"
-  ],
+  "keywords": ["purescript"],
   "repository": {
     "type": "git",
     "url": "git://github.com/jutaro/purescript-webgl.git"
@@ -26,27 +24,20 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-prelude": "^3.1.0",
-    "purescript-monoid": "^3.1.0",
-    "purescript-control": "^3.3.1",
-    "purescript-invariant": "^3.0.0",
-    "purescript-maybe": "^3.0.0",
-    "purescript-functions": "^3.0.0",
+    "purescript-prelude": "^4.0.0",
+    "purescript-control": "^4.1.0",
+    "purescript-invariant": "^4.0.0",
+    "purescript-maybe": "^4.0.0",
+    "purescript-functions": "^4.0.0",
     "purescript-arraybuffer-types": "^2.0.0",
-    "purescript-typedarray": "^2.1.0",
-    "purescript-vector": "^2.0.0",
-    "purescript-matrix": "^2.1.0",
-    "purescript-extensions": "^2.2.0",
-    "purescript-integers": "^3.1.0",
-    "purescript-foldable-traversable": "^3.6.1",
-    "purescript-eff": "^3.1.0",
-    "purescript-either": "^3.1.0",
-    "purescript-tuples": "^4.1.0",
-    "purescript-unfoldable": "^3.0.0",
-    "purescript-canvas": "^3.1.0"
-  },
-  "resolutions": {
-    "purescript-arraybuffer-types": "^2.0.0",
-    "purescript-extensions": "^2.2.0"
+    "purescript-typedarray": "mgmeier/purescript-typedarray#master",
+    "purescript-vector": "AlexMouton/purescript-vector#compiler-0.12",
+    "purescript-matrix": "AlexMouton/purescript-matrix#compiler-0.12",
+    "purescript-integers": "^4.0.0",
+    "purescript-foldable-traversable": "^4.0.0",
+    "purescript-either": "^4.0.0",
+    "purescript-tuples": "^5.0.0",
+    "purescript-unfoldable": "^4.0.0",
+    "purescript-canvas": "^4.0.0"
   }
 }

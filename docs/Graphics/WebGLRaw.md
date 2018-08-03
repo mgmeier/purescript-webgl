@@ -2,2768 +2,2766 @@
 
 #### `GLenum`
 
-``` purescript
+```purescript
 type GLenum = Int
 ```
 
 #### `GLboolean`
 
-``` purescript
+```purescript
 type GLboolean = Boolean
 ```
 
 #### `GLbitfield`
 
-``` purescript
+```purescript
 type GLbitfield = Int
 ```
 
 #### `GLbyte`
 
-``` purescript
+```purescript
 type GLbyte = Int
 ```
 
 #### `GLshort`
 
-``` purescript
+```purescript
 type GLshort = Int
 ```
 
 #### `GLint`
 
-``` purescript
+```purescript
 type GLint = Int
 ```
 
 #### `GLsizei`
 
-``` purescript
+```purescript
 type GLsizei = Int
 ```
 
 #### `GLintptr`
 
-``` purescript
+```purescript
 type GLintptr = Int
 ```
 
 #### `GLsizeiptr`
 
-``` purescript
+```purescript
 type GLsizeiptr = Int
 ```
 
 #### `GLubyte`
 
-``` purescript
+```purescript
 type GLubyte = Int
 ```
 
 #### `GLushort`
 
-``` purescript
+```purescript
 type GLushort = Int
 ```
 
 #### `GLuint`
 
-``` purescript
+```purescript
 type GLuint = Int
 ```
 
 #### `GLfloat`
 
-``` purescript
+```purescript
 type GLfloat = Number
 ```
 
 #### `GLclampf`
 
-``` purescript
+```purescript
 type GLclampf = Number
 ```
 
 #### `FloatArray`
 
-``` purescript
+```purescript
 type FloatArray = Float32Array
 ```
 
 #### `WebGLContextAttributes`
 
-``` purescript
+```purescript
 data WebGLContextAttributes :: *
 ```
 
 #### `WebGLProgram`
 
-``` purescript
+```purescript
 data WebGLProgram :: *
 ```
 
 #### `WebGLShader`
 
-``` purescript
+```purescript
 data WebGLShader :: *
 ```
 
 #### `WebGLBuffer`
 
-``` purescript
+```purescript
 data WebGLBuffer :: *
 ```
 
 #### `WebGLFramebuffer`
 
-``` purescript
+```purescript
 data WebGLFramebuffer :: *
 ```
 
 #### `WebGLRenderbuffer`
 
-``` purescript
+```purescript
 data WebGLRenderbuffer :: *
 ```
 
 #### `WebGLTexture`
 
-``` purescript
+```purescript
 data WebGLTexture :: *
 ```
 
 #### `WebGLActiveInfo`
 
-``` purescript
+```purescript
 data WebGLActiveInfo :: *
 ```
 
 #### `WebGLUniformLocation`
 
-``` purescript
+```purescript
 data WebGLUniformLocation :: *
 ```
 
 #### `ArrayBufferView`
 
-``` purescript
+```purescript
 data ArrayBufferView :: *
 ```
 
 #### `ImageData`
 
-``` purescript
+```purescript
 data ImageData :: *
 ```
 
 #### `HTMLImageElement`
 
-``` purescript
+```purescript
 data HTMLImageElement :: *
 ```
 
 #### `HTMLVideoElement`
 
-``` purescript
+```purescript
 data HTMLVideoElement :: *
 ```
 
 #### `_DEPTH_BUFFER_BIT`
 
-``` purescript
+```purescript
 _DEPTH_BUFFER_BIT :: Int
 ```
 
 #### `_STENCIL_BUFFER_BIT`
 
-``` purescript
+```purescript
 _STENCIL_BUFFER_BIT :: Int
 ```
 
 #### `_COLOR_BUFFER_BIT`
 
-``` purescript
+```purescript
 _COLOR_BUFFER_BIT :: Int
 ```
 
 #### `_POINTS`
 
-``` purescript
+```purescript
 _POINTS :: Int
 ```
 
 #### `_LINES`
 
-``` purescript
+```purescript
 _LINES :: Int
 ```
 
 #### `_LINE_LOOP`
 
-``` purescript
+```purescript
 _LINE_LOOP :: Int
 ```
 
 #### `_LINE_STRIP`
 
-``` purescript
+```purescript
 _LINE_STRIP :: Int
 ```
 
 #### `_TRIANGLES`
 
-``` purescript
+```purescript
 _TRIANGLES :: Int
 ```
 
 #### `_TRIANGLE_STRIP`
 
-``` purescript
+```purescript
 _TRIANGLE_STRIP :: Int
 ```
 
 #### `_TRIANGLE_FAN`
 
-``` purescript
+```purescript
 _TRIANGLE_FAN :: Int
 ```
 
 #### `_ZERO`
 
-``` purescript
+```purescript
 _ZERO :: Int
 ```
 
 #### `_ONE`
 
-``` purescript
+```purescript
 _ONE :: Int
 ```
 
 #### `_SRC_COLOR`
 
-``` purescript
+```purescript
 _SRC_COLOR :: Int
 ```
 
 #### `_ONE_MINUS_SRC_COLOR`
 
-``` purescript
+```purescript
 _ONE_MINUS_SRC_COLOR :: Int
 ```
 
 #### `_SRC_ALPHA`
 
-``` purescript
+```purescript
 _SRC_ALPHA :: Int
 ```
 
 #### `_ONE_MINUS_SRC_ALPHA`
 
-``` purescript
+```purescript
 _ONE_MINUS_SRC_ALPHA :: Int
 ```
 
 #### `_DST_ALPHA`
 
-``` purescript
+```purescript
 _DST_ALPHA :: Int
 ```
 
 #### `_ONE_MINUS_DST_ALPHA`
 
-``` purescript
+```purescript
 _ONE_MINUS_DST_ALPHA :: Int
 ```
 
 #### `_DST_COLOR`
 
-``` purescript
+```purescript
 _DST_COLOR :: Int
 ```
 
 #### `_ONE_MINUS_DST_COLOR`
 
-``` purescript
+```purescript
 _ONE_MINUS_DST_COLOR :: Int
 ```
 
 #### `_SRC_ALPHA_SATURATE`
 
-``` purescript
+```purescript
 _SRC_ALPHA_SATURATE :: Int
 ```
 
 #### `_FUNC_ADD`
 
-``` purescript
+```purescript
 _FUNC_ADD :: Int
 ```
 
 #### `_BLEND_EQUATION`
 
-``` purescript
+```purescript
 _BLEND_EQUATION :: Int
 ```
 
 #### `_BLEND_EQUATION_RGB`
 
-``` purescript
+```purescript
 _BLEND_EQUATION_RGB :: Int
 ```
 
 #### `_BLEND_EQUATION_ALPHA`
 
-``` purescript
+```purescript
 _BLEND_EQUATION_ALPHA :: Int
 ```
 
 #### `_FUNC_SUBTRACT`
 
-``` purescript
+```purescript
 _FUNC_SUBTRACT :: Int
 ```
 
 #### `_FUNC_REVERSE_SUBTRACT`
 
-``` purescript
+```purescript
 _FUNC_REVERSE_SUBTRACT :: Int
 ```
 
 #### `_BLEND_DST_RGB`
 
-``` purescript
+```purescript
 _BLEND_DST_RGB :: Int
 ```
 
 #### `_BLEND_SRC_RGB`
 
-``` purescript
+```purescript
 _BLEND_SRC_RGB :: Int
 ```
 
 #### `_BLEND_DST_ALPHA`
 
-``` purescript
+```purescript
 _BLEND_DST_ALPHA :: Int
 ```
 
 #### `_BLEND_SRC_ALPHA`
 
-``` purescript
+```purescript
 _BLEND_SRC_ALPHA :: Int
 ```
 
 #### `_CONSTANT_COLOR`
 
-``` purescript
+```purescript
 _CONSTANT_COLOR :: Int
 ```
 
 #### `_ONE_MINUS_CONSTANT_COLOR`
 
-``` purescript
+```purescript
 _ONE_MINUS_CONSTANT_COLOR :: Int
 ```
 
 #### `_CONSTANT_ALPHA`
 
-``` purescript
+```purescript
 _CONSTANT_ALPHA :: Int
 ```
 
 #### `_ONE_MINUS_CONSTANT_ALPHA`
 
-``` purescript
+```purescript
 _ONE_MINUS_CONSTANT_ALPHA :: Int
 ```
 
 #### `_BLEND_COLOR`
 
-``` purescript
+```purescript
 _BLEND_COLOR :: Int
 ```
 
 #### `_ARRAY_BUFFER`
 
-``` purescript
+```purescript
 _ARRAY_BUFFER :: Int
 ```
 
 #### `_ELEMENT_ARRAY_BUFFER`
 
-``` purescript
+```purescript
 _ELEMENT_ARRAY_BUFFER :: Int
 ```
 
 #### `_ARRAY_BUFFER_BINDING`
 
-``` purescript
+```purescript
 _ARRAY_BUFFER_BINDING :: Int
 ```
 
 #### `_ELEMENT_ARRAY_BUFFER_BINDING`
 
-``` purescript
+```purescript
 _ELEMENT_ARRAY_BUFFER_BINDING :: Int
 ```
 
 #### `_STREAM_DRAW`
 
-``` purescript
+```purescript
 _STREAM_DRAW :: Int
 ```
 
 #### `_STATIC_DRAW`
 
-``` purescript
+```purescript
 _STATIC_DRAW :: Int
 ```
 
 #### `_DYNAMIC_DRAW`
 
-``` purescript
+```purescript
 _DYNAMIC_DRAW :: Int
 ```
 
 #### `_BUFFER_SIZE`
 
-``` purescript
+```purescript
 _BUFFER_SIZE :: Int
 ```
 
 #### `_BUFFER_USAGE`
 
-``` purescript
+```purescript
 _BUFFER_USAGE :: Int
 ```
 
 #### `_CURRENT_VERTEX_ATTRIB`
 
-``` purescript
+```purescript
 _CURRENT_VERTEX_ATTRIB :: Int
 ```
 
 #### `_FRONT`
 
-``` purescript
+```purescript
 _FRONT :: Int
 ```
 
 #### `_BACK`
 
-``` purescript
+```purescript
 _BACK :: Int
 ```
 
 #### `_FRONT_AND_BACK`
 
-``` purescript
+```purescript
 _FRONT_AND_BACK :: Int
 ```
 
 #### `_TEXTURE_2D`
 
-``` purescript
+```purescript
 _TEXTURE_2D :: Int
 ```
 
 #### `_CULL_FACE`
 
-``` purescript
+```purescript
 _CULL_FACE :: Int
 ```
 
 #### `_BLEND`
 
-``` purescript
+```purescript
 _BLEND :: Int
 ```
 
 #### `_DITHER`
 
-``` purescript
+```purescript
 _DITHER :: Int
 ```
 
 #### `_STENCIL_TEST`
 
-``` purescript
+```purescript
 _STENCIL_TEST :: Int
 ```
 
 #### `_DEPTH_TEST`
 
-``` purescript
+```purescript
 _DEPTH_TEST :: Int
 ```
 
 #### `_SCISSOR_TEST`
 
-``` purescript
+```purescript
 _SCISSOR_TEST :: Int
 ```
 
 #### `_POLYGON_OFFSET_FILL`
 
-``` purescript
+```purescript
 _POLYGON_OFFSET_FILL :: Int
 ```
 
 #### `_SAMPLE_ALPHA_TO_COVERAGE`
 
-``` purescript
+```purescript
 _SAMPLE_ALPHA_TO_COVERAGE :: Int
 ```
 
 #### `_SAMPLE_COVERAGE`
 
-``` purescript
+```purescript
 _SAMPLE_COVERAGE :: Int
 ```
 
 #### `_NO_ERROR`
 
-``` purescript
+```purescript
 _NO_ERROR :: Int
 ```
 
 #### `_INVALID_ENUM`
 
-``` purescript
+```purescript
 _INVALID_ENUM :: Int
 ```
 
 #### `_INVALID_VALUE`
 
-``` purescript
+```purescript
 _INVALID_VALUE :: Int
 ```
 
 #### `_INVALID_OPERATION`
 
-``` purescript
+```purescript
 _INVALID_OPERATION :: Int
 ```
 
 #### `_OUT_OF_MEMORY`
 
-``` purescript
+```purescript
 _OUT_OF_MEMORY :: Int
 ```
 
 #### `_CW`
 
-``` purescript
+```purescript
 _CW :: Int
 ```
 
 #### `_CCW`
 
-``` purescript
+```purescript
 _CCW :: Int
 ```
 
 #### `_LINE_WIDTH`
 
-``` purescript
+```purescript
 _LINE_WIDTH :: Int
 ```
 
 #### `_ALIASED_POINT_SIZE_RANGE`
 
-``` purescript
+```purescript
 _ALIASED_POINT_SIZE_RANGE :: Int
 ```
 
 #### `_ALIASED_LINE_WIDTH_RANGE`
 
-``` purescript
+```purescript
 _ALIASED_LINE_WIDTH_RANGE :: Int
 ```
 
 #### `_CULL_FACE_MODE`
 
-``` purescript
+```purescript
 _CULL_FACE_MODE :: Int
 ```
 
 #### `_FRONT_FACE`
 
-``` purescript
+```purescript
 _FRONT_FACE :: Int
 ```
 
 #### `_DEPTH_RANGE`
 
-``` purescript
+```purescript
 _DEPTH_RANGE :: Int
 ```
 
 #### `_DEPTH_WRITEMASK`
 
-``` purescript
+```purescript
 _DEPTH_WRITEMASK :: Int
 ```
 
 #### `_DEPTH_CLEAR_VALUE`
 
-``` purescript
+```purescript
 _DEPTH_CLEAR_VALUE :: Int
 ```
 
 #### `_DEPTH_FUNC`
 
-``` purescript
+```purescript
 _DEPTH_FUNC :: Int
 ```
 
 #### `_STENCIL_CLEAR_VALUE`
 
-``` purescript
+```purescript
 _STENCIL_CLEAR_VALUE :: Int
 ```
 
 #### `_STENCIL_FUNC`
 
-``` purescript
+```purescript
 _STENCIL_FUNC :: Int
 ```
 
 #### `_STENCIL_FAIL`
 
-``` purescript
+```purescript
 _STENCIL_FAIL :: Int
 ```
 
 #### `_STENCIL_PASS_DEPTH_FAIL`
 
-``` purescript
+```purescript
 _STENCIL_PASS_DEPTH_FAIL :: Int
 ```
 
 #### `_STENCIL_PASS_DEPTH_PASS`
 
-``` purescript
+```purescript
 _STENCIL_PASS_DEPTH_PASS :: Int
 ```
 
 #### `_STENCIL_REF`
 
-``` purescript
+```purescript
 _STENCIL_REF :: Int
 ```
 
 #### `_STENCIL_VALUE_MASK`
 
-``` purescript
+```purescript
 _STENCIL_VALUE_MASK :: Int
 ```
 
 #### `_STENCIL_WRITEMASK`
 
-``` purescript
+```purescript
 _STENCIL_WRITEMASK :: Int
 ```
 
 #### `_STENCIL_BACK_FUNC`
 
-``` purescript
+```purescript
 _STENCIL_BACK_FUNC :: Int
 ```
 
 #### `_STENCIL_BACK_FAIL`
 
-``` purescript
+```purescript
 _STENCIL_BACK_FAIL :: Int
 ```
 
 #### `_STENCIL_BACK_PASS_DEPTH_FAIL`
 
-``` purescript
+```purescript
 _STENCIL_BACK_PASS_DEPTH_FAIL :: Int
 ```
 
 #### `_STENCIL_BACK_PASS_DEPTH_PASS`
 
-``` purescript
+```purescript
 _STENCIL_BACK_PASS_DEPTH_PASS :: Int
 ```
 
 #### `_STENCIL_BACK_REF`
 
-``` purescript
+```purescript
 _STENCIL_BACK_REF :: Int
 ```
 
 #### `_STENCIL_BACK_VALUE_MASK`
 
-``` purescript
+```purescript
 _STENCIL_BACK_VALUE_MASK :: Int
 ```
 
 #### `_STENCIL_BACK_WRITEMASK`
 
-``` purescript
+```purescript
 _STENCIL_BACK_WRITEMASK :: Int
 ```
 
 #### `_VIEWPORT`
 
-``` purescript
+```purescript
 _VIEWPORT :: Int
 ```
 
 #### `_SCISSOR_BOX`
 
-``` purescript
+```purescript
 _SCISSOR_BOX :: Int
 ```
 
 #### `_COLOR_CLEAR_VALUE`
 
-``` purescript
+```purescript
 _COLOR_CLEAR_VALUE :: Int
 ```
 
 #### `_COLOR_WRITEMASK`
 
-``` purescript
+```purescript
 _COLOR_WRITEMASK :: Int
 ```
 
 #### `_UNPACK_ALIGNMENT`
 
-``` purescript
+```purescript
 _UNPACK_ALIGNMENT :: Int
 ```
 
 #### `_PACK_ALIGNMENT`
 
-``` purescript
+```purescript
 _PACK_ALIGNMENT :: Int
 ```
 
 #### `_MAX_TEXTURE_SIZE`
 
-``` purescript
+```purescript
 _MAX_TEXTURE_SIZE :: Int
 ```
 
 #### `_MAX_VIEWPORT_DIMS`
 
-``` purescript
+```purescript
 _MAX_VIEWPORT_DIMS :: Int
 ```
 
 #### `_SUBPIXEL_BITS`
 
-``` purescript
+```purescript
 _SUBPIXEL_BITS :: Int
 ```
 
 #### `_RED_BITS`
 
-``` purescript
+```purescript
 _RED_BITS :: Int
 ```
 
 #### `_GREEN_BITS`
 
-``` purescript
+```purescript
 _GREEN_BITS :: Int
 ```
 
 #### `_BLUE_BITS`
 
-``` purescript
+```purescript
 _BLUE_BITS :: Int
 ```
 
 #### `_ALPHA_BITS`
 
-``` purescript
+```purescript
 _ALPHA_BITS :: Int
 ```
 
 #### `_DEPTH_BITS`
 
-``` purescript
+```purescript
 _DEPTH_BITS :: Int
 ```
 
 #### `_STENCIL_BITS`
 
-``` purescript
+```purescript
 _STENCIL_BITS :: Int
 ```
 
 #### `_POLYGON_OFFSET_UNITS`
 
-``` purescript
+```purescript
 _POLYGON_OFFSET_UNITS :: Int
 ```
 
 #### `_POLYGON_OFFSET_FACTOR`
 
-``` purescript
+```purescript
 _POLYGON_OFFSET_FACTOR :: Int
 ```
 
 #### `_TEXTURE_BINDING_2D`
 
-``` purescript
+```purescript
 _TEXTURE_BINDING_2D :: Int
 ```
 
 #### `_SAMPLE_BUFFERS`
 
-``` purescript
+```purescript
 _SAMPLE_BUFFERS :: Int
 ```
 
 #### `_SAMPLES`
 
-``` purescript
+```purescript
 _SAMPLES :: Int
 ```
 
 #### `_SAMPLE_COVERAGE_VALUE`
 
-``` purescript
+```purescript
 _SAMPLE_COVERAGE_VALUE :: Int
 ```
 
 #### `_SAMPLE_COVERAGE_INVERT`
 
-``` purescript
+```purescript
 _SAMPLE_COVERAGE_INVERT :: Int
 ```
 
 #### `_NUM_COMPRESSED_TEXTURE_FORMATS`
 
-``` purescript
+```purescript
 _NUM_COMPRESSED_TEXTURE_FORMATS :: Int
 ```
 
 #### `_COMPRESSED_TEXTURE_FORMATS`
 
-``` purescript
+```purescript
 _COMPRESSED_TEXTURE_FORMATS :: Int
 ```
 
 #### `_DONT_CARE`
 
-``` purescript
+```purescript
 _DONT_CARE :: Int
 ```
 
 #### `_FASTEST`
 
-``` purescript
+```purescript
 _FASTEST :: Int
 ```
 
 #### `_NICEST`
 
-``` purescript
+```purescript
 _NICEST :: Int
 ```
 
 #### `_GENERATE_MIPMAP_HINT`
 
-``` purescript
+```purescript
 _GENERATE_MIPMAP_HINT :: Int
 ```
 
 #### `_BYTE`
 
-``` purescript
+```purescript
 _BYTE :: Int
 ```
 
 #### `_UNSIGNED_BYTE`
 
-``` purescript
+```purescript
 _UNSIGNED_BYTE :: Int
 ```
 
 #### `_SHORT`
 
-``` purescript
+```purescript
 _SHORT :: Int
 ```
 
 #### `_UNSIGNED_SHORT`
 
-``` purescript
+```purescript
 _UNSIGNED_SHORT :: Int
 ```
 
 #### `_INT`
 
-``` purescript
+```purescript
 _INT :: Int
 ```
 
 #### `_UNSIGNED_INT`
 
-``` purescript
+```purescript
 _UNSIGNED_INT :: Int
 ```
 
 #### `_FLOAT`
 
-``` purescript
+```purescript
 _FLOAT :: Int
 ```
 
 #### `_DEPTH_COMPONENT`
 
-``` purescript
+```purescript
 _DEPTH_COMPONENT :: Int
 ```
 
 #### `_ALPHA`
 
-``` purescript
+```purescript
 _ALPHA :: Int
 ```
 
 #### `_RGB`
 
-``` purescript
+```purescript
 _RGB :: Int
 ```
 
 #### `_RGBA`
 
-``` purescript
+```purescript
 _RGBA :: Int
 ```
 
 #### `_LUMINANCE`
 
-``` purescript
+```purescript
 _LUMINANCE :: Int
 ```
 
 #### `_LUMINANCE_ALPHA`
 
-``` purescript
+```purescript
 _LUMINANCE_ALPHA :: Int
 ```
 
 #### `_UNSIGNED_SHORT_4_4_4_4`
 
-``` purescript
+```purescript
 _UNSIGNED_SHORT_4_4_4_4 :: Int
 ```
 
 #### `_UNSIGNED_SHORT_5_5_5_1`
 
-``` purescript
+```purescript
 _UNSIGNED_SHORT_5_5_5_1 :: Int
 ```
 
 #### `_UNSIGNED_SHORT_5_6_5`
 
-``` purescript
+```purescript
 _UNSIGNED_SHORT_5_6_5 :: Int
 ```
 
 #### `_FRAGMENT_SHADER`
 
-``` purescript
+```purescript
 _FRAGMENT_SHADER :: Int
 ```
 
 #### `_VERTEX_SHADER`
 
-``` purescript
+```purescript
 _VERTEX_SHADER :: Int
 ```
 
 #### `_MAX_VERTEX_ATTRIBS`
 
-``` purescript
+```purescript
 _MAX_VERTEX_ATTRIBS :: Int
 ```
 
 #### `_MAX_VERTEX_UNIFORM_VECTORS`
 
-``` purescript
+```purescript
 _MAX_VERTEX_UNIFORM_VECTORS :: Int
 ```
 
 #### `_MAX_VARYING_VECTORS`
 
-``` purescript
+```purescript
 _MAX_VARYING_VECTORS :: Int
 ```
 
 #### `_MAX_COMBINED_TEXTURE_IMAGE_UNITS`
 
-``` purescript
+```purescript
 _MAX_COMBINED_TEXTURE_IMAGE_UNITS :: Int
 ```
 
 #### `_MAX_VERTEX_TEXTURE_IMAGE_UNITS`
 
-``` purescript
+```purescript
 _MAX_VERTEX_TEXTURE_IMAGE_UNITS :: Int
 ```
 
 #### `_MAX_TEXTURE_IMAGE_UNITS`
 
-``` purescript
+```purescript
 _MAX_TEXTURE_IMAGE_UNITS :: Int
 ```
 
 #### `_MAX_FRAGMENT_UNIFORM_VECTORS`
 
-``` purescript
+```purescript
 _MAX_FRAGMENT_UNIFORM_VECTORS :: Int
 ```
 
 #### `_SHADER_TYPE`
 
-``` purescript
+```purescript
 _SHADER_TYPE :: Int
 ```
 
 #### `_DELETE_STATUS`
 
-``` purescript
+```purescript
 _DELETE_STATUS :: Int
 ```
 
 #### `_LINK_STATUS`
 
-``` purescript
+```purescript
 _LINK_STATUS :: Int
 ```
 
 #### `_VALIDATE_STATUS`
 
-``` purescript
+```purescript
 _VALIDATE_STATUS :: Int
 ```
 
 #### `_ATTACHED_SHADERS`
 
-``` purescript
+```purescript
 _ATTACHED_SHADERS :: Int
 ```
 
 #### `_ACTIVE_UNIFORMS`
 
-``` purescript
+```purescript
 _ACTIVE_UNIFORMS :: Int
 ```
 
 #### `_ACTIVE_UNIFORM_MAX_LENGTH`
 
-``` purescript
+```purescript
 _ACTIVE_UNIFORM_MAX_LENGTH :: Int
 ```
 
 #### `_ACTIVE_ATTRIBUTES`
 
-``` purescript
+```purescript
 _ACTIVE_ATTRIBUTES :: Int
 ```
 
 #### `_ACTIVE_ATTRIBUTE_MAX_LENGTH`
 
-``` purescript
+```purescript
 _ACTIVE_ATTRIBUTE_MAX_LENGTH :: Int
 ```
 
 #### `_SHADING_LANGUAGE_VERSION`
 
-``` purescript
+```purescript
 _SHADING_LANGUAGE_VERSION :: Int
 ```
 
 #### `_CURRENT_PROGRAM`
 
-``` purescript
+```purescript
 _CURRENT_PROGRAM :: Int
 ```
 
 #### `_NEVER`
 
-``` purescript
+```purescript
 _NEVER :: Int
 ```
 
 #### `_LESS`
 
-``` purescript
+```purescript
 _LESS :: Int
 ```
 
 #### `_EQUAL`
 
-``` purescript
+```purescript
 _EQUAL :: Int
 ```
 
 #### `_LEQUAL`
 
-``` purescript
+```purescript
 _LEQUAL :: Int
 ```
 
 #### `_GREATER`
 
-``` purescript
+```purescript
 _GREATER :: Int
 ```
 
 #### `_NOTEQUAL`
 
-``` purescript
+```purescript
 _NOTEQUAL :: Int
 ```
 
 #### `_GEQUAL`
 
-``` purescript
+```purescript
 _GEQUAL :: Int
 ```
 
 #### `_ALWAYS`
 
-``` purescript
+```purescript
 _ALWAYS :: Int
 ```
 
 #### `_KEEP`
 
-``` purescript
+```purescript
 _KEEP :: Int
 ```
 
 #### `_REPLACE`
 
-``` purescript
+```purescript
 _REPLACE :: Int
 ```
 
 #### `_INCR`
 
-``` purescript
+```purescript
 _INCR :: Int
 ```
 
 #### `_DECR`
 
-``` purescript
+```purescript
 _DECR :: Int
 ```
 
 #### `_INVERT`
 
-``` purescript
+```purescript
 _INVERT :: Int
 ```
 
 #### `_INCR_WRAP`
 
-``` purescript
+```purescript
 _INCR_WRAP :: Int
 ```
 
 #### `_DECR_WRAP`
 
-``` purescript
+```purescript
 _DECR_WRAP :: Int
 ```
 
 #### `_VENDOR`
 
-``` purescript
+```purescript
 _VENDOR :: Int
 ```
 
 #### `_RENDERER`
 
-``` purescript
+```purescript
 _RENDERER :: Int
 ```
 
 #### `_VERSION`
 
-``` purescript
+```purescript
 _VERSION :: Int
 ```
 
 #### `_NEAREST`
 
-``` purescript
+```purescript
 _NEAREST :: Int
 ```
 
 #### `_LINEAR`
 
-``` purescript
+```purescript
 _LINEAR :: Int
 ```
 
 #### `_NEAREST_MIPMAP_NEAREST`
 
-``` purescript
+```purescript
 _NEAREST_MIPMAP_NEAREST :: Int
 ```
 
 #### `_LINEAR_MIPMAP_NEAREST`
 
-``` purescript
+```purescript
 _LINEAR_MIPMAP_NEAREST :: Int
 ```
 
 #### `_NEAREST_MIPMAP_LINEAR`
 
-``` purescript
+```purescript
 _NEAREST_MIPMAP_LINEAR :: Int
 ```
 
 #### `_LINEAR_MIPMAP_LINEAR`
 
-``` purescript
+```purescript
 _LINEAR_MIPMAP_LINEAR :: Int
 ```
 
 #### `_TEXTURE_MAG_FILTER`
 
-``` purescript
+```purescript
 _TEXTURE_MAG_FILTER :: Int
 ```
 
 #### `_TEXTURE_MIN_FILTER`
 
-``` purescript
+```purescript
 _TEXTURE_MIN_FILTER :: Int
 ```
 
 #### `_TEXTURE_WRAP_S`
 
-``` purescript
+```purescript
 _TEXTURE_WRAP_S :: Int
 ```
 
 #### `_TEXTURE_WRAP_T`
 
-``` purescript
+```purescript
 _TEXTURE_WRAP_T :: Int
 ```
 
 #### `_TEXTURE`
 
-``` purescript
+```purescript
 _TEXTURE :: Int
 ```
 
 #### `_TEXTURE_CUBE_MAP`
 
-``` purescript
+```purescript
 _TEXTURE_CUBE_MAP :: Int
 ```
 
 #### `_TEXTURE_BINDING_CUBE_MAP`
 
-``` purescript
+```purescript
 _TEXTURE_BINDING_CUBE_MAP :: Int
 ```
 
 #### `_TEXTURE_CUBE_MAP_POSITIVE_X`
 
-``` purescript
+```purescript
 _TEXTURE_CUBE_MAP_POSITIVE_X :: Int
 ```
 
 #### `_TEXTURE_CUBE_MAP_NEGATIVE_X`
 
-``` purescript
+```purescript
 _TEXTURE_CUBE_MAP_NEGATIVE_X :: Int
 ```
 
 #### `_TEXTURE_CUBE_MAP_POSITIVE_Y`
 
-``` purescript
+```purescript
 _TEXTURE_CUBE_MAP_POSITIVE_Y :: Int
 ```
 
 #### `_TEXTURE_CUBE_MAP_NEGATIVE_Y`
 
-``` purescript
+```purescript
 _TEXTURE_CUBE_MAP_NEGATIVE_Y :: Int
 ```
 
 #### `_TEXTURE_CUBE_MAP_POSITIVE_Z`
 
-``` purescript
+```purescript
 _TEXTURE_CUBE_MAP_POSITIVE_Z :: Int
 ```
 
 #### `_TEXTURE_CUBE_MAP_NEGATIVE_Z`
 
-``` purescript
+```purescript
 _TEXTURE_CUBE_MAP_NEGATIVE_Z :: Int
 ```
 
 #### `_MAX_CUBE_MAP_TEXTURE_SIZE`
 
-``` purescript
+```purescript
 _MAX_CUBE_MAP_TEXTURE_SIZE :: Int
 ```
 
 #### `_TEXTURE0`
 
-``` purescript
+```purescript
 _TEXTURE0 :: Int
 ```
 
 #### `_TEXTURE1`
 
-``` purescript
+```purescript
 _TEXTURE1 :: Int
 ```
 
 #### `_TEXTURE2`
 
-``` purescript
+```purescript
 _TEXTURE2 :: Int
 ```
 
 #### `_TEXTURE3`
 
-``` purescript
+```purescript
 _TEXTURE3 :: Int
 ```
 
 #### `_TEXTURE4`
 
-``` purescript
+```purescript
 _TEXTURE4 :: Int
 ```
 
 #### `_TEXTURE5`
 
-``` purescript
+```purescript
 _TEXTURE5 :: Int
 ```
 
 #### `_TEXTURE6`
 
-``` purescript
+```purescript
 _TEXTURE6 :: Int
 ```
 
 #### `_TEXTURE7`
 
-``` purescript
+```purescript
 _TEXTURE7 :: Int
 ```
 
 #### `_TEXTURE8`
 
-``` purescript
+```purescript
 _TEXTURE8 :: Int
 ```
 
 #### `_TEXTURE9`
 
-``` purescript
+```purescript
 _TEXTURE9 :: Int
 ```
 
 #### `_TEXTURE10`
 
-``` purescript
+```purescript
 _TEXTURE10 :: Int
 ```
 
 #### `_TEXTURE11`
 
-``` purescript
+```purescript
 _TEXTURE11 :: Int
 ```
 
 #### `_TEXTURE12`
 
-``` purescript
+```purescript
 _TEXTURE12 :: Int
 ```
 
 #### `_TEXTURE13`
 
-``` purescript
+```purescript
 _TEXTURE13 :: Int
 ```
 
 #### `_TEXTURE14`
 
-``` purescript
+```purescript
 _TEXTURE14 :: Int
 ```
 
 #### `_TEXTURE15`
 
-``` purescript
+```purescript
 _TEXTURE15 :: Int
 ```
 
 #### `_TEXTURE16`
 
-``` purescript
+```purescript
 _TEXTURE16 :: Int
 ```
 
 #### `_TEXTURE17`
 
-``` purescript
+```purescript
 _TEXTURE17 :: Int
 ```
 
 #### `_TEXTURE18`
 
-``` purescript
+```purescript
 _TEXTURE18 :: Int
 ```
 
 #### `_TEXTURE19`
 
-``` purescript
+```purescript
 _TEXTURE19 :: Int
 ```
 
 #### `_TEXTURE20`
 
-``` purescript
+```purescript
 _TEXTURE20 :: Int
 ```
 
 #### `_TEXTURE21`
 
-``` purescript
+```purescript
 _TEXTURE21 :: Int
 ```
 
 #### `_TEXTURE22`
 
-``` purescript
+```purescript
 _TEXTURE22 :: Int
 ```
 
 #### `_TEXTURE23`
 
-``` purescript
+```purescript
 _TEXTURE23 :: Int
 ```
 
 #### `_TEXTURE24`
 
-``` purescript
+```purescript
 _TEXTURE24 :: Int
 ```
 
 #### `_TEXTURE25`
 
-``` purescript
+```purescript
 _TEXTURE25 :: Int
 ```
 
 #### `_TEXTURE26`
 
-``` purescript
+```purescript
 _TEXTURE26 :: Int
 ```
 
 #### `_TEXTURE27`
 
-``` purescript
+```purescript
 _TEXTURE27 :: Int
 ```
 
 #### `_TEXTURE28`
 
-``` purescript
+```purescript
 _TEXTURE28 :: Int
 ```
 
 #### `_TEXTURE29`
 
-``` purescript
+```purescript
 _TEXTURE29 :: Int
 ```
 
 #### `_TEXTURE30`
 
-``` purescript
+```purescript
 _TEXTURE30 :: Int
 ```
 
 #### `_TEXTURE31`
 
-``` purescript
+```purescript
 _TEXTURE31 :: Int
 ```
 
 #### `_ACTIVE_TEXTURE`
 
-``` purescript
+```purescript
 _ACTIVE_TEXTURE :: Int
 ```
 
 #### `_REPEAT`
 
-``` purescript
+```purescript
 _REPEAT :: Int
 ```
 
 #### `_CLAMP_TO_EDGE`
 
-``` purescript
+```purescript
 _CLAMP_TO_EDGE :: Int
 ```
 
 #### `_MIRRORED_REPEAT`
 
-``` purescript
+```purescript
 _MIRRORED_REPEAT :: Int
 ```
 
 #### `_FLOAT_VEC2`
 
-``` purescript
+```purescript
 _FLOAT_VEC2 :: Int
 ```
 
 #### `_FLOAT_VEC3`
 
-``` purescript
+```purescript
 _FLOAT_VEC3 :: Int
 ```
 
 #### `_FLOAT_VEC4`
 
-``` purescript
+```purescript
 _FLOAT_VEC4 :: Int
 ```
 
 #### `_INT_VEC2`
 
-``` purescript
+```purescript
 _INT_VEC2 :: Int
 ```
 
 #### `_INT_VEC3`
 
-``` purescript
+```purescript
 _INT_VEC3 :: Int
 ```
 
 #### `_INT_VEC4`
 
-``` purescript
+```purescript
 _INT_VEC4 :: Int
 ```
 
 #### `_BOOL`
 
-``` purescript
+```purescript
 _BOOL :: Int
 ```
 
 #### `_BOOL_VEC2`
 
-``` purescript
+```purescript
 _BOOL_VEC2 :: Int
 ```
 
 #### `_BOOL_VEC3`
 
-``` purescript
+```purescript
 _BOOL_VEC3 :: Int
 ```
 
 #### `_BOOL_VEC4`
 
-``` purescript
+```purescript
 _BOOL_VEC4 :: Int
 ```
 
 #### `_FLOAT_MAT2`
 
-``` purescript
+```purescript
 _FLOAT_MAT2 :: Int
 ```
 
 #### `_FLOAT_MAT3`
 
-``` purescript
+```purescript
 _FLOAT_MAT3 :: Int
 ```
 
 #### `_FLOAT_MAT4`
 
-``` purescript
+```purescript
 _FLOAT_MAT4 :: Int
 ```
 
 #### `_SAMPLER_2D`
 
-``` purescript
+```purescript
 _SAMPLER_2D :: Int
 ```
 
 #### `_SAMPLER_CUBE`
 
-``` purescript
+```purescript
 _SAMPLER_CUBE :: Int
 ```
 
 #### `_VERTEX_ATTRIB_ARRAY_ENABLED`
 
-``` purescript
+```purescript
 _VERTEX_ATTRIB_ARRAY_ENABLED :: Int
 ```
 
 #### `_VERTEX_ATTRIB_ARRAY_SIZE`
 
-``` purescript
+```purescript
 _VERTEX_ATTRIB_ARRAY_SIZE :: Int
 ```
 
 #### `_VERTEX_ATTRIB_ARRAY_STRIDE`
 
-``` purescript
+```purescript
 _VERTEX_ATTRIB_ARRAY_STRIDE :: Int
 ```
 
 #### `_VERTEX_ATTRIB_ARRAY_TYPE`
 
-``` purescript
+```purescript
 _VERTEX_ATTRIB_ARRAY_TYPE :: Int
 ```
 
 #### `_VERTEX_ATTRIB_ARRAY_NORMALIZED`
 
-``` purescript
+```purescript
 _VERTEX_ATTRIB_ARRAY_NORMALIZED :: Int
 ```
 
 #### `_VERTEX_ATTRIB_ARRAY_POINTER`
 
-``` purescript
+```purescript
 _VERTEX_ATTRIB_ARRAY_POINTER :: Int
 ```
 
 #### `_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING`
 
-``` purescript
+```purescript
 _VERTEX_ATTRIB_ARRAY_BUFFER_BINDING :: Int
 ```
 
 #### `_COMPILE_STATUS`
 
-``` purescript
+```purescript
 _COMPILE_STATUS :: Int
 ```
 
 #### `_INFO_LOG_LENGTH`
 
-``` purescript
+```purescript
 _INFO_LOG_LENGTH :: Int
 ```
 
 #### `_SHADER_SOURCE_LENGTH`
 
-``` purescript
+```purescript
 _SHADER_SOURCE_LENGTH :: Int
 ```
 
 #### `_LOW_FLOAT`
 
-``` purescript
+```purescript
 _LOW_FLOAT :: Int
 ```
 
 #### `_MEDIUM_FLOAT`
 
-``` purescript
+```purescript
 _MEDIUM_FLOAT :: Int
 ```
 
 #### `_HIGH_FLOAT`
 
-``` purescript
+```purescript
 _HIGH_FLOAT :: Int
 ```
 
 #### `_LOW_INT`
 
-``` purescript
+```purescript
 _LOW_INT :: Int
 ```
 
 #### `_MEDIUM_INT`
 
-``` purescript
+```purescript
 _MEDIUM_INT :: Int
 ```
 
 #### `_HIGH_INT`
 
-``` purescript
+```purescript
 _HIGH_INT :: Int
 ```
 
 #### `_FRAMEBUFFER`
 
-``` purescript
+```purescript
 _FRAMEBUFFER :: Int
 ```
 
 #### `_RENDERBUFFER`
 
-``` purescript
+```purescript
 _RENDERBUFFER :: Int
 ```
 
 #### `_RGBA4`
 
-``` purescript
+```purescript
 _RGBA4 :: Int
 ```
 
 #### `_RGB5_A1`
 
-``` purescript
+```purescript
 _RGB5_A1 :: Int
 ```
 
 #### `_RGB565`
 
-``` purescript
+```purescript
 _RGB565 :: Int
 ```
 
 #### `_DEPTH_COMPONENT16`
 
-``` purescript
+```purescript
 _DEPTH_COMPONENT16 :: Int
 ```
 
 #### `_STENCIL_INDEX`
 
-``` purescript
+```purescript
 _STENCIL_INDEX :: Int
 ```
 
 #### `_STENCIL_INDEX8`
 
-``` purescript
+```purescript
 _STENCIL_INDEX8 :: Int
 ```
 
 #### `_DEPTH_STENCIL`
 
-``` purescript
+```purescript
 _DEPTH_STENCIL :: Int
 ```
 
 #### `_RENDERBUFFER_WIDTH`
 
-``` purescript
+```purescript
 _RENDERBUFFER_WIDTH :: Int
 ```
 
 #### `_RENDERBUFFER_HEIGHT`
 
-``` purescript
+```purescript
 _RENDERBUFFER_HEIGHT :: Int
 ```
 
 #### `_RENDERBUFFER_INTERNAL_FORMAT`
 
-``` purescript
+```purescript
 _RENDERBUFFER_INTERNAL_FORMAT :: Int
 ```
 
 #### `_RENDERBUFFER_RED_SIZE`
 
-``` purescript
+```purescript
 _RENDERBUFFER_RED_SIZE :: Int
 ```
 
 #### `_RENDERBUFFER_GREEN_SIZE`
 
-``` purescript
+```purescript
 _RENDERBUFFER_GREEN_SIZE :: Int
 ```
 
 #### `_RENDERBUFFER_BLUE_SIZE`
 
-``` purescript
+```purescript
 _RENDERBUFFER_BLUE_SIZE :: Int
 ```
 
 #### `_RENDERBUFFER_ALPHA_SIZE`
 
-``` purescript
+```purescript
 _RENDERBUFFER_ALPHA_SIZE :: Int
 ```
 
 #### `_RENDERBUFFER_DEPTH_SIZE`
 
-``` purescript
+```purescript
 _RENDERBUFFER_DEPTH_SIZE :: Int
 ```
 
 #### `_RENDERBUFFER_STENCIL_SIZE`
 
-``` purescript
+```purescript
 _RENDERBUFFER_STENCIL_SIZE :: Int
 ```
 
 #### `_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE :: Int
 ```
 
 #### `_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_ATTACHMENT_OBJECT_NAME :: Int
 ```
 
 #### `_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL :: Int
 ```
 
 #### `_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE :: Int
 ```
 
 #### `_COLOR_ATTACHMENT0`
 
-``` purescript
+```purescript
 _COLOR_ATTACHMENT0 :: Int
 ```
 
 #### `_DEPTH_ATTACHMENT`
 
-``` purescript
+```purescript
 _DEPTH_ATTACHMENT :: Int
 ```
 
 #### `_STENCIL_ATTACHMENT`
 
-``` purescript
+```purescript
 _STENCIL_ATTACHMENT :: Int
 ```
 
 #### `_DEPTH_STENCIL_ATTACHMENT`
 
-``` purescript
+```purescript
 _DEPTH_STENCIL_ATTACHMENT :: Int
 ```
 
 #### `_NONE`
 
-``` purescript
+```purescript
 _NONE :: Int
 ```
 
 #### `_FRAMEBUFFER_COMPLETE`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_COMPLETE :: Int
 ```
 
 #### `_FRAMEBUFFER_INCOMPLETE_ATTACHMENT`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_INCOMPLETE_ATTACHMENT :: Int
 ```
 
 #### `_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT :: Int
 ```
 
 #### `_FRAMEBUFFER_INCOMPLETE_DIMENSIONS`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_INCOMPLETE_DIMENSIONS :: Int
 ```
 
 #### `_FRAMEBUFFER_UNSUPPORTED`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_UNSUPPORTED :: Int
 ```
 
 #### `_FRAMEBUFFER_BINDING`
 
-``` purescript
+```purescript
 _FRAMEBUFFER_BINDING :: Int
 ```
 
 #### `_RENDERBUFFER_BINDING`
 
-``` purescript
+```purescript
 _RENDERBUFFER_BINDING :: Int
 ```
 
 #### `_MAX_RENDERBUFFER_SIZE`
 
-``` purescript
+```purescript
 _MAX_RENDERBUFFER_SIZE :: Int
 ```
 
 #### `_INVALID_FRAMEBUFFER_OPERATION`
 
-``` purescript
+```purescript
 _INVALID_FRAMEBUFFER_OPERATION :: Int
 ```
 
 #### `_UNPACK_FLIP_Y_WEBGL`
 
-``` purescript
+```purescript
 _UNPACK_FLIP_Y_WEBGL :: Int
 ```
 
 #### `_UNPACK_PREMULTIPLY_ALPHA_WEBGL`
 
-``` purescript
+```purescript
 _UNPACK_PREMULTIPLY_ALPHA_WEBGL :: Int
 ```
 
 #### `_CONTEXT_LOST_WEBGL`
 
-``` purescript
+```purescript
 _CONTEXT_LOST_WEBGL :: Int
 ```
 
 #### `_UNPACK_COLORSPACE_CONVERSION_WEBGL`
 
-``` purescript
+```purescript
 _UNPACK_COLORSPACE_CONVERSION_WEBGL :: Int
 ```
 
 #### `_BROWSER_DEFAULT_WEBGL`
 
-``` purescript
+```purescript
 _BROWSER_DEFAULT_WEBGL :: Int
 ```
 
 #### `getContextAttributes_`
 
-``` purescript
-getContextAttributes_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLContextAttributes)
+```purescript
+getContextAttributes_ :: (Effect WebGLContextAttributes)
 ```
 
 #### `isContextLost_`
 
-``` purescript
-isContextLost_ :: forall eff. (Eff (webgl :: WebGl | eff) Boolean)
+```purescript
+isContextLost_ :: (Effect Boolean)
 ```
 
 #### `getSupportedExtensions_`
 
-``` purescript
-getSupportedExtensions_ :: forall eff. (Eff (webgl :: WebGl | eff) String)
+```purescript
+getSupportedExtensions_ :: (Effect String)
 ```
 
 #### `getExtension_`
 
-``` purescript
-getExtension_ :: forall eff ret. String -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getExtension_ :: forall ret. String -> (Effect ret)
 ```
 
 #### `activeTexture_`
 
-``` purescript
-activeTexture_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+activeTexture_ :: GLenum -> (Effect Unit)
 ```
 
 #### `attachShader_`
 
-``` purescript
-attachShader_ :: forall eff. WebGLProgram -> WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+attachShader_ :: WebGLProgram -> WebGLShader -> (Effect Unit)
 ```
 
 #### `bindAttribLocation_`
 
-``` purescript
-bindAttribLocation_ :: forall eff. WebGLProgram -> GLuint -> String -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+bindAttribLocation_ :: WebGLProgram -> GLuint -> String -> (Effect Unit)
 ```
 
 #### `bindBuffer_`
 
-``` purescript
-bindBuffer_ :: forall eff. GLenum -> WebGLBuffer -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+bindBuffer_ :: GLenum -> WebGLBuffer -> (Effect Unit)
 ```
 
 #### `bindFramebuffer_`
 
-``` purescript
-bindFramebuffer_ :: forall eff. GLenum -> WebGLFramebuffer -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+bindFramebuffer_ :: GLenum -> WebGLFramebuffer -> (Effect Unit)
 ```
 
 #### `bindRenderbuffer_`
 
-``` purescript
-bindRenderbuffer_ :: forall eff. GLenum -> WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+bindRenderbuffer_ :: GLenum -> WebGLRenderbuffer -> (Effect Unit)
 ```
 
 #### `bindTexture_`
 
-``` purescript
-bindTexture_ :: forall eff. GLenum -> WebGLTexture -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+bindTexture_ :: GLenum -> WebGLTexture -> (Effect Unit)
 ```
 
 #### `blendColor_`
 
-``` purescript
-blendColor_ :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendColor_ :: GLclampf -> GLclampf -> GLclampf -> GLclampf -> (Effect Unit)
 ```
 
 #### `blendEquation_`
 
-``` purescript
-blendEquation_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendEquation_ :: GLenum -> (Effect Unit)
 ```
 
 #### `blendEquationSeparate_`
 
-``` purescript
-blendEquationSeparate_ :: forall eff. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendEquationSeparate_ :: GLenum -> GLenum -> (Effect Unit)
 ```
 
 #### `blendFunc_`
 
-``` purescript
-blendFunc_ :: forall eff. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendFunc_ :: GLenum -> GLenum -> (Effect Unit)
 ```
 
 #### `blendFuncSeparate_`
 
-``` purescript
-blendFuncSeparate_ :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+blendFuncSeparate_ :: GLenum -> GLenum -> GLenum -> GLenum -> (Effect Unit)
 ```
 
 #### `bufferData_`
 
-``` purescript
-bufferData_ :: forall eff. GLenum -> Float32Array -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+bufferData_ :: GLenum -> Float32Array -> GLenum -> (Effect Unit)
 ```
 
 #### `bufferSubData_`
 
-``` purescript
-bufferSubData_ :: forall eff. GLenum -> GLintptr -> Float32Array -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+bufferSubData_ :: GLenum -> GLintptr -> Float32Array -> (Effect Unit)
 ```
 
 #### `checkFramebufferStatus_`
 
-``` purescript
-checkFramebufferStatus_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLenum)
+```purescript
+checkFramebufferStatus_ :: GLenum -> (Effect GLenum)
 ```
 
 #### `clear_`
 
-``` purescript
-clear_ :: forall eff. GLbitfield -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+clear_ :: GLbitfield -> (Effect Unit)
 ```
 
 #### `clearColor_`
 
-``` purescript
-clearColor_ :: forall eff. GLclampf -> GLclampf -> GLclampf -> GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+clearColor_ :: GLclampf -> GLclampf -> GLclampf -> GLclampf -> (Effect Unit)
 ```
 
 #### `clearDepth_`
 
-``` purescript
-clearDepth_ :: forall eff. GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+clearDepth_ :: GLclampf -> (Effect Unit)
 ```
 
 #### `clearStencil_`
 
-``` purescript
-clearStencil_ :: forall eff. GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+clearStencil_ :: GLint -> (Effect Unit)
 ```
 
 #### `colorMask_`
 
-``` purescript
-colorMask_ :: forall eff. GLboolean -> GLboolean -> GLboolean -> GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+colorMask_ :: GLboolean -> GLboolean -> GLboolean -> GLboolean -> (Effect Unit)
 ```
 
 #### `compileShader_`
 
-``` purescript
-compileShader_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+compileShader_ :: WebGLShader -> (Effect Unit)
 ```
 
 #### `copyTexImage2D_`
 
-``` purescript
-copyTexImage2D_ :: forall eff. GLenum -> GLint -> GLenum -> GLint -> GLint -> GLsizei -> GLsizei -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+copyTexImage2D_ :: GLenum -> GLint -> GLenum -> GLint -> GLint -> GLsizei -> GLsizei -> GLint -> (Effect Unit)
 ```
 
 #### `copyTexSubImage2D_`
 
-``` purescript
-copyTexSubImage2D_ :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+copyTexSubImage2D_ :: GLenum -> GLint -> GLint -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> (Effect Unit)
 ```
 
 #### `createBuffer_`
 
-``` purescript
-createBuffer_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLBuffer)
+```purescript
+createBuffer_ :: (Effect WebGLBuffer)
 ```
 
 #### `createFramebuffer_`
 
-``` purescript
-createFramebuffer_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLFramebuffer)
+```purescript
+createFramebuffer_ :: (Effect WebGLFramebuffer)
 ```
 
 #### `createProgram_`
 
-``` purescript
-createProgram_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLProgram)
+```purescript
+createProgram_ :: (Effect WebGLProgram)
 ```
 
 #### `createRenderbuffer_`
 
-``` purescript
-createRenderbuffer_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLRenderbuffer)
+```purescript
+createRenderbuffer_ :: (Effect WebGLRenderbuffer)
 ```
 
 #### `createShader_`
 
-``` purescript
-createShader_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) WebGLShader)
+```purescript
+createShader_ :: GLenum -> (Effect WebGLShader)
 ```
 
 #### `createTexture_`
 
-``` purescript
-createTexture_ :: forall eff. (Eff (webgl :: WebGl | eff) WebGLTexture)
+```purescript
+createTexture_ :: (Effect WebGLTexture)
 ```
 
 #### `cullFace_`
 
-``` purescript
-cullFace_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+cullFace_ :: GLenum -> (Effect Unit)
 ```
 
 #### `deleteBuffer_`
 
-``` purescript
-deleteBuffer_ :: forall eff. WebGLBuffer -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+deleteBuffer_ :: WebGLBuffer -> (Effect Unit)
 ```
 
 #### `deleteFramebuffer_`
 
-``` purescript
-deleteFramebuffer_ :: forall eff. WebGLFramebuffer -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+deleteFramebuffer_ :: WebGLFramebuffer -> (Effect Unit)
 ```
 
 #### `deleteProgram_`
 
-``` purescript
-deleteProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+deleteProgram_ :: WebGLProgram -> (Effect Unit)
 ```
 
 #### `deleteRenderbuffer_`
 
-``` purescript
-deleteRenderbuffer_ :: forall eff. WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+deleteRenderbuffer_ :: WebGLRenderbuffer -> (Effect Unit)
 ```
 
 #### `deleteShader_`
 
-``` purescript
-deleteShader_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+deleteShader_ :: WebGLShader -> (Effect Unit)
 ```
 
 #### `deleteTexture_`
 
-``` purescript
-deleteTexture_ :: forall eff. WebGLTexture -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+deleteTexture_ :: WebGLTexture -> (Effect Unit)
 ```
 
 #### `depthFunc_`
 
-``` purescript
-depthFunc_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+depthFunc_ :: GLenum -> (Effect Unit)
 ```
 
 #### `depthMask_`
 
-``` purescript
-depthMask_ :: forall eff. GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+depthMask_ :: GLboolean -> (Effect Unit)
 ```
 
 #### `depthRange_`
 
-``` purescript
-depthRange_ :: forall eff. GLclampf -> GLclampf -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+depthRange_ :: GLclampf -> GLclampf -> (Effect Unit)
 ```
 
 #### `detachShader_`
 
-``` purescript
-detachShader_ :: forall eff. WebGLProgram -> WebGLShader -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+detachShader_ :: WebGLProgram -> WebGLShader -> (Effect Unit)
 ```
 
 #### `disable_`
 
-``` purescript
-disable_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+disable_ :: GLenum -> (Effect Unit)
 ```
 
 #### `disableVertexAttribArray_`
 
-``` purescript
-disableVertexAttribArray_ :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+disableVertexAttribArray_ :: GLuint -> (Effect Unit)
 ```
 
 #### `drawArrays_`
 
-``` purescript
-drawArrays_ :: forall eff. GLenum -> GLint -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+drawArrays_ :: GLenum -> GLint -> GLsizei -> (Effect Unit)
 ```
 
 #### `drawElements_`
 
-``` purescript
-drawElements_ :: forall eff. GLenum -> GLsizei -> GLenum -> GLintptr -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+drawElements_ :: GLenum -> GLsizei -> GLenum -> GLintptr -> (Effect Unit)
 ```
 
 #### `enable_`
 
-``` purescript
-enable_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+enable_ :: GLenum -> (Effect Unit)
 ```
 
 #### `enableVertexAttribArray_`
 
-``` purescript
-enableVertexAttribArray_ :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+enableVertexAttribArray_ :: GLuint -> (Effect Unit)
 ```
 
 #### `finish_`
 
-``` purescript
-finish_ :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+finish_ :: (Effect Unit)
 ```
 
 #### `flush_`
 
-``` purescript
-flush_ :: forall eff. (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+flush_ :: (Effect Unit)
 ```
 
 #### `framebufferRenderbuffer_`
 
-``` purescript
-framebufferRenderbuffer_ :: forall eff. GLenum -> GLenum -> GLenum -> WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+framebufferRenderbuffer_ :: GLenum -> GLenum -> GLenum -> WebGLRenderbuffer -> (Effect Unit)
 ```
 
 #### `framebufferTexture2D_`
 
-``` purescript
-framebufferTexture2D_ :: forall eff. GLenum -> GLenum -> GLenum -> WebGLTexture -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+framebufferTexture2D_ :: GLenum -> GLenum -> GLenum -> WebGLTexture -> GLint -> (Effect Unit)
 ```
 
 #### `frontFace_`
 
-``` purescript
-frontFace_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+frontFace_ :: GLenum -> (Effect Unit)
 ```
 
 #### `generateMipmap_`
 
-``` purescript
-generateMipmap_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+generateMipmap_ :: GLenum -> (Effect Unit)
 ```
 
 #### `getActiveAttrib_`
 
-``` purescript
-getActiveAttrib_ :: forall eff. WebGLProgram -> GLuint -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
+```purescript
+getActiveAttrib_ :: WebGLProgram -> GLuint -> (Effect WebGLActiveInfo)
 ```
 
 #### `getActiveUniform_`
 
-``` purescript
-getActiveUniform_ :: forall eff. WebGLProgram -> GLuint -> (Eff (webgl :: WebGl | eff) WebGLActiveInfo)
+```purescript
+getActiveUniform_ :: WebGLProgram -> GLuint -> (Effect WebGLActiveInfo)
 ```
 
 #### `getAttachedShaders_`
 
-``` purescript
-getAttachedShaders_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) WebGLShader)
+```purescript
+getAttachedShaders_ :: WebGLProgram -> (Effect WebGLShader)
 ```
 
 #### `getAttribLocation_`
 
-``` purescript
-getAttribLocation_ :: forall eff. WebGLProgram -> String -> (Eff (webgl :: WebGl | eff) GLint)
+```purescript
+getAttribLocation_ :: WebGLProgram -> String -> (Effect GLint)
 ```
 
 #### `getParameter_`
 
-``` purescript
-getParameter_ :: forall eff ret. GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getParameter_ :: forall ret. GLenum -> (Effect ret)
 ```
 
 #### `getBufferParameter_`
 
-``` purescript
-getBufferParameter_ :: forall eff ret. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getBufferParameter_ :: forall ret. GLenum -> GLenum -> (Effect ret)
 ```
 
 #### `getError_`
 
-``` purescript
-getError_ :: forall eff. (Eff (webgl :: WebGl | eff) GLenum)
+```purescript
+getError_ :: (Effect GLenum)
 ```
 
 #### `getFramebufferAttachmentParameter_`
 
-``` purescript
-getFramebufferAttachmentParameter_ :: forall eff ret. GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getFramebufferAttachmentParameter_ :: forall ret. GLenum -> GLenum -> GLenum -> (Effect ret)
 ```
 
 #### `getProgramParameter_`
 
-``` purescript
-getProgramParameter_ :: forall eff ret. WebGLProgram -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getProgramParameter_ :: forall ret. WebGLProgram -> GLenum -> (Effect ret)
 ```
 
 #### `getProgramInfoLog_`
 
-``` purescript
-getProgramInfoLog_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) String)
+```purescript
+getProgramInfoLog_ :: WebGLProgram -> (Effect String)
 ```
 
 #### `getRenderbufferParameter_`
 
-``` purescript
-getRenderbufferParameter_ :: forall eff ret. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getRenderbufferParameter_ :: forall ret. GLenum -> GLenum -> (Effect ret)
 ```
 
 #### `getShaderParameter_`
 
-``` purescript
-getShaderParameter_ :: forall eff ret. WebGLShader -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getShaderParameter_ :: forall ret. WebGLShader -> GLenum -> (Effect ret)
 ```
 
 #### `getShaderInfoLog_`
 
-``` purescript
-getShaderInfoLog_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
+```purescript
+getShaderInfoLog_ :: WebGLShader -> (Effect String)
 ```
 
 #### `getShaderSource_`
 
-``` purescript
-getShaderSource_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) String)
+```purescript
+getShaderSource_ :: WebGLShader -> (Effect String)
 ```
 
 #### `getTexParameter_`
 
-``` purescript
-getTexParameter_ :: forall eff ret. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getTexParameter_ :: forall ret. GLenum -> GLenum -> (Effect ret)
 ```
 
 #### `getUniform_`
 
-``` purescript
-getUniform_ :: forall eff ret. WebGLProgram -> WebGLUniformLocation -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getUniform_ :: forall ret. WebGLProgram -> WebGLUniformLocation -> (Effect ret)
 ```
 
 #### `getUniformLocation_`
 
-``` purescript
-getUniformLocation_ :: forall eff. WebGLProgram -> String -> (Eff (webgl :: WebGl | eff) WebGLUniformLocation)
+```purescript
+getUniformLocation_ :: WebGLProgram -> String -> (Effect WebGLUniformLocation)
 ```
 
 #### `getVertexAttrib_`
 
-``` purescript
-getVertexAttrib_ :: forall eff ret. GLuint -> GLenum -> (Eff (webgl :: WebGl | eff) ret)
+```purescript
+getVertexAttrib_ :: forall ret. GLuint -> GLenum -> (Effect ret)
 ```
 
 #### `getVertexAttribOffset_`
 
-``` purescript
-getVertexAttribOffset_ :: forall eff. GLuint -> GLenum -> (Eff (webgl :: WebGl | eff) GLsizeiptr)
+```purescript
+getVertexAttribOffset_ :: GLuint -> GLenum -> (Effect GLsizeiptr)
 ```
 
 #### `hint_`
 
-``` purescript
-hint_ :: forall eff. GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+hint_ :: GLenum -> GLenum -> (Effect Unit)
 ```
 
 #### `isBuffer_`
 
-``` purescript
-isBuffer_ :: forall eff. WebGLBuffer -> (Eff (webgl :: WebGl | eff) GLboolean)
+```purescript
+isBuffer_ :: WebGLBuffer -> (Effect GLboolean)
 ```
 
 #### `isEnabled_`
 
-``` purescript
-isEnabled_ :: forall eff. GLenum -> (Eff (webgl :: WebGl | eff) GLboolean)
+```purescript
+isEnabled_ :: GLenum -> (Effect GLboolean)
 ```
 
 #### `isFramebuffer_`
 
-``` purescript
-isFramebuffer_ :: forall eff. WebGLFramebuffer -> (Eff (webgl :: WebGl | eff) GLboolean)
+```purescript
+isFramebuffer_ :: WebGLFramebuffer -> (Effect GLboolean)
 ```
 
 #### `isProgram_`
 
-``` purescript
-isProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) GLboolean)
+```purescript
+isProgram_ :: WebGLProgram -> (Effect GLboolean)
 ```
 
 #### `isRenderbuffer_`
 
-``` purescript
-isRenderbuffer_ :: forall eff. WebGLRenderbuffer -> (Eff (webgl :: WebGl | eff) GLboolean)
+```purescript
+isRenderbuffer_ :: WebGLRenderbuffer -> (Effect GLboolean)
 ```
 
 #### `isShader_`
 
-``` purescript
-isShader_ :: forall eff. WebGLShader -> (Eff (webgl :: WebGl | eff) GLboolean)
+```purescript
+isShader_ :: WebGLShader -> (Effect GLboolean)
 ```
 
 #### `isTexture_`
 
-``` purescript
-isTexture_ :: forall eff. WebGLTexture -> (Eff (webgl :: WebGl | eff) GLboolean)
+```purescript
+isTexture_ :: WebGLTexture -> (Effect GLboolean)
 ```
 
 #### `lineWidth_`
 
-``` purescript
-lineWidth_ :: forall eff. GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+lineWidth_ :: GLfloat -> (Effect Unit)
 ```
 
 #### `linkProgram_`
 
-``` purescript
-linkProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+linkProgram_ :: WebGLProgram -> (Effect Unit)
 ```
 
 #### `pixelStorei_`
 
-``` purescript
-pixelStorei_ :: forall eff. GLenum -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+pixelStorei_ :: GLenum -> GLint -> (Effect Unit)
 ```
 
 #### `polygonOffset_`
 
-``` purescript
-polygonOffset_ :: forall eff. GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+polygonOffset_ :: GLfloat -> GLfloat -> (Effect Unit)
 ```
 
 #### `readPixels_`
 
-``` purescript
-readPixels_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+readPixels_ :: GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> (Effect Unit)
 ```
 
 #### `renderbufferStorage_`
 
-``` purescript
-renderbufferStorage_ :: forall eff. GLenum -> GLenum -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+renderbufferStorage_ :: GLenum -> GLenum -> GLsizei -> GLsizei -> (Effect Unit)
 ```
 
 #### `sampleCoverage_`
 
-``` purescript
-sampleCoverage_ :: forall eff. GLclampf -> GLboolean -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+sampleCoverage_ :: GLclampf -> GLboolean -> (Effect Unit)
 ```
 
 #### `scissor_`
 
-``` purescript
-scissor_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+scissor_ :: GLint -> GLint -> GLsizei -> GLsizei -> (Effect Unit)
 ```
 
 #### `shaderSource_`
 
-``` purescript
-shaderSource_ :: forall eff. WebGLShader -> String -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+shaderSource_ :: WebGLShader -> String -> (Effect Unit)
 ```
 
 #### `stencilFunc_`
 
-``` purescript
-stencilFunc_ :: forall eff. GLenum -> GLint -> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+stencilFunc_ :: GLenum -> GLint -> GLuint -> (Effect Unit)
 ```
 
 #### `stencilFuncSeparate_`
 
-``` purescript
-stencilFuncSeparate_ :: forall eff. GLenum -> GLenum -> GLint -> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+stencilFuncSeparate_ :: GLenum -> GLenum -> GLint -> GLuint -> (Effect Unit)
 ```
 
 #### `stencilMask_`
 
-``` purescript
-stencilMask_ :: forall eff. GLuint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+stencilMask_ :: GLuint -> (Effect Unit)
 ```
 
 #### `stencilMaskSeparate_`
 
-``` purescript
-stencilMaskSeparate_ :: forall eff. GLenum -> GLuint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+stencilMaskSeparate_ :: GLenum -> GLuint -> (Effect Unit)
 ```
 
 #### `stencilOp_`
 
-``` purescript
-stencilOp_ :: forall eff. GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+stencilOp_ :: GLenum -> GLenum -> GLenum -> (Effect Unit)
 ```
 
 #### `stencilOpSeparate_`
 
-``` purescript
-stencilOpSeparate_ :: forall eff. GLenum -> GLenum -> GLenum -> GLenum -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+stencilOpSeparate_ :: GLenum -> GLenum -> GLenum -> GLenum -> (Effect Unit)
 ```
 
 #### `texImage2D_`
 
-``` purescript
-texImage2D_ :: forall eff. GLenum -> GLint -> GLenum -> GLsizei -> GLsizei -> GLint -> GLenum -> GLenum -> ArrayBufferView -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+texImage2D_ :: GLenum -> GLint -> GLenum -> GLsizei -> GLsizei -> GLint -> GLenum -> GLenum -> ArrayBufferView -> (Effect Unit)
 ```
 
 #### `texParameterf_`
 
-``` purescript
-texParameterf_ :: forall eff. GLenum -> GLenum -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+texParameterf_ :: GLenum -> GLenum -> GLfloat -> (Effect Unit)
 ```
 
 #### `texParameteri_`
 
-``` purescript
-texParameteri_ :: forall eff. GLenum -> GLenum -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+texParameteri_ :: GLenum -> GLenum -> GLint -> (Effect Unit)
 ```
 
 #### `texSubImage2D_`
 
-``` purescript
-texSubImage2D_ :: forall eff. GLenum -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+texSubImage2D_ :: GLenum -> GLint -> GLint -> GLint -> GLsizei -> GLsizei -> GLenum -> GLenum -> ArrayBufferView -> (Effect Unit)
 ```
 
 #### `uniform1f_`
 
-``` purescript
-uniform1f_ :: forall eff. WebGLUniformLocation -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform1f_ :: WebGLUniformLocation -> GLfloat -> (Effect Unit)
 ```
 
 #### `uniform1fv_`
 
-``` purescript
-uniform1fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform1fv_ :: WebGLUniformLocation -> FloatArray -> (Effect Unit)
 ```
 
 #### `uniform1i_`
 
-``` purescript
-uniform1i_ :: forall eff. WebGLUniformLocation -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform1i_ :: WebGLUniformLocation -> GLint -> (Effect Unit)
 ```
 
 #### `uniform1iv_`
 
-``` purescript
-uniform1iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform1iv_ :: WebGLUniformLocation -> Int32Array -> (Effect Unit)
 ```
 
 #### `uniform2f_`
 
-``` purescript
-uniform2f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform2f_ :: WebGLUniformLocation -> GLfloat -> GLfloat -> (Effect Unit)
 ```
 
 #### `uniform2fv_`
 
-``` purescript
-uniform2fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform2fv_ :: WebGLUniformLocation -> FloatArray -> (Effect Unit)
 ```
 
 #### `uniform2i_`
 
-``` purescript
-uniform2i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform2i_ :: WebGLUniformLocation -> GLint -> GLint -> (Effect Unit)
 ```
 
 #### `uniform2iv_`
 
-``` purescript
-uniform2iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform2iv_ :: WebGLUniformLocation -> Int32Array -> (Effect Unit)
 ```
 
 #### `uniform3f_`
 
-``` purescript
-uniform3f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform3f_ :: WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> (Effect Unit)
 ```
 
 #### `uniform3fv_`
 
-``` purescript
-uniform3fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform3fv_ :: WebGLUniformLocation -> FloatArray -> (Effect Unit)
 ```
 
 #### `uniform3i_`
 
-``` purescript
-uniform3i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform3i_ :: WebGLUniformLocation -> GLint -> GLint -> GLint -> (Effect Unit)
 ```
 
 #### `uniform3iv_`
 
-``` purescript
-uniform3iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform3iv_ :: WebGLUniformLocation -> Int32Array -> (Effect Unit)
 ```
 
 #### `uniform4f_`
 
-``` purescript
-uniform4f_ :: forall eff. WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform4f_ :: WebGLUniformLocation -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> (Effect Unit)
 ```
 
 #### `uniform4fv_`
 
-``` purescript
-uniform4fv_ :: forall eff. WebGLUniformLocation -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform4fv_ :: WebGLUniformLocation -> FloatArray -> (Effect Unit)
 ```
 
 #### `uniform4i_`
 
-``` purescript
-uniform4i_ :: forall eff. WebGLUniformLocation -> GLint -> GLint -> GLint -> GLint -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform4i_ :: WebGLUniformLocation -> GLint -> GLint -> GLint -> GLint -> (Effect Unit)
 ```
 
 #### `uniform4iv_`
 
-``` purescript
-uniform4iv_ :: forall eff. WebGLUniformLocation -> Int32Array -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniform4iv_ :: WebGLUniformLocation -> Int32Array -> (Effect Unit)
 ```
 
 #### `uniformMatrix2fv_`
 
-``` purescript
-uniformMatrix2fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniformMatrix2fv_ :: WebGLUniformLocation -> GLboolean -> FloatArray -> (Effect Unit)
 ```
 
 #### `uniformMatrix3fv_`
 
-``` purescript
-uniformMatrix3fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniformMatrix3fv_ :: WebGLUniformLocation -> GLboolean -> FloatArray -> (Effect Unit)
 ```
 
 #### `uniformMatrix4fv_`
 
-``` purescript
-uniformMatrix4fv_ :: forall eff. WebGLUniformLocation -> GLboolean -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+uniformMatrix4fv_ :: WebGLUniformLocation -> GLboolean -> FloatArray -> (Effect Unit)
 ```
 
 #### `useProgram_`
 
-``` purescript
-useProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+useProgram_ :: WebGLProgram -> (Effect Unit)
 ```
 
 #### `validateProgram_`
 
-``` purescript
-validateProgram_ :: forall eff. WebGLProgram -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+validateProgram_ :: WebGLProgram -> (Effect Unit)
 ```
 
 #### `vertexAttrib1f_`
 
-``` purescript
-vertexAttrib1f_ :: forall eff. GLuint -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib1f_ :: GLuint -> GLfloat -> (Effect Unit)
 ```
 
 #### `vertexAttrib1fv_`
 
-``` purescript
-vertexAttrib1fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib1fv_ :: GLuint -> FloatArray -> (Effect Unit)
 ```
 
 #### `vertexAttrib2f_`
 
-``` purescript
-vertexAttrib2f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib2f_ :: GLuint -> GLfloat -> GLfloat -> (Effect Unit)
 ```
 
 #### `vertexAttrib2fv_`
 
-``` purescript
-vertexAttrib2fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib2fv_ :: GLuint -> FloatArray -> (Effect Unit)
 ```
 
 #### `vertexAttrib3f_`
 
-``` purescript
-vertexAttrib3f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib3f_ :: GLuint -> GLfloat -> GLfloat -> GLfloat -> (Effect Unit)
 ```
 
 #### `vertexAttrib3fv_`
 
-``` purescript
-vertexAttrib3fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib3fv_ :: GLuint -> FloatArray -> (Effect Unit)
 ```
 
 #### `vertexAttrib4f_`
 
-``` purescript
-vertexAttrib4f_ :: forall eff. GLuint -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib4f_ :: GLuint -> GLfloat -> GLfloat -> GLfloat -> GLfloat -> (Effect Unit)
 ```
 
 #### `vertexAttrib4fv_`
 
-``` purescript
-vertexAttrib4fv_ :: forall eff. GLuint -> FloatArray -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttrib4fv_ :: GLuint -> FloatArray -> (Effect Unit)
 ```
 
 #### `vertexAttribPointer_`
 
-``` purescript
-vertexAttribPointer_ :: forall eff. GLuint -> GLint -> GLenum -> GLboolean -> GLsizei -> GLintptr -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+vertexAttribPointer_ :: GLuint -> GLint -> GLenum -> GLboolean -> GLsizei -> GLintptr -> (Effect Unit)
 ```
 
 #### `viewport_`
 
-``` purescript
-viewport_ :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> (Eff (webgl :: WebGl | eff) Unit)
+```purescript
+viewport_ :: GLint -> GLint -> GLsizei -> GLsizei -> (Effect Unit)
 ```
-
-

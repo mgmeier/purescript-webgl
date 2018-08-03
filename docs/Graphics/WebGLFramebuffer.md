@@ -4,21 +4,21 @@ Framebuffers for the WebGL binding for purescript
 
 #### `WebGLBuf`
 
-``` purescript
+```purescript
 newtype WebGLBuf
   = WebGLBuf WebGLFramebuffer
 ```
 
 #### `WebGLRendBuf`
 
-``` purescript
+```purescript
 newtype WebGLRendBuf
   = WebGLRendBuf WebGLRenderbuffer
 ```
 
 #### `RenderbufferFormat`
 
-``` purescript
+```purescript
 data RenderbufferFormat
   = RGBA4
   | RGB565
@@ -28,7 +28,7 @@ data RenderbufferFormat
 
 #### `AttachementPoint`
 
-``` purescript
+```purescript
 data AttachementPoint
   = COLOR_ATTACHMENT0
   | DEPTH_ATTACHMENT
@@ -38,7 +38,7 @@ data AttachementPoint
 
 #### `FrameBufferCode`
 
-``` purescript
+```purescript
 data FrameBufferCode
   = FRAMEBUFFER_COMPLETE
   | FRAMEBUFFER_INCOMPLETE_ATTACHMENT
@@ -49,74 +49,72 @@ data FrameBufferCode
 
 #### `frameBufferCodeToConst`
 
-``` purescript
+```purescript
 frameBufferCodeToConst :: FrameBufferCode -> GLenum
 ```
 
 #### `checkFramebufferStatus`
 
-``` purescript
-checkFramebufferStatus :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLenum
+```purescript
+checkFramebufferStatus :: GLenum -> Effect GLenum
 ```
 
 #### `createFramebuffer`
 
-``` purescript
-createFramebuffer :: forall eff. EffWebGL eff WebGLBuf
+```purescript
+createFramebuffer :: Effect WebGLBuf
 ```
 
 #### `bindFramebuffer`
 
-``` purescript
-bindFramebuffer :: forall eff. WebGLBuf -> EffWebGL eff Unit
+```purescript
+bindFramebuffer :: WebGLBuf -> Effect Unit
 ```
 
 #### `unbindFramebuffer`
 
-``` purescript
-unbindFramebuffer :: forall eff. EffWebGL eff Unit
+```purescript
+unbindFramebuffer :: Effect Unit
 ```
 
 #### `createRenderbuffer`
 
-``` purescript
-createRenderbuffer :: forall eff. EffWebGL eff WebGLRendBuf
+```purescript
+createRenderbuffer :: Effect WebGLRendBuf
 ```
 
 #### `bindRenderbuffer`
 
-``` purescript
-bindRenderbuffer :: forall eff. WebGLRendBuf -> EffWebGL eff Unit
+```purescript
+bindRenderbuffer :: WebGLRendBuf -> Effect Unit
 ```
 
 #### `unbindRenderbuffer`
 
-``` purescript
-unbindRenderbuffer :: forall eff. EffWebGL eff Unit
+```purescript
+unbindRenderbuffer :: Effect Unit
 ```
 
 #### `renderbufferStorage`
 
-``` purescript
-renderbufferStorage :: forall eff. RenderbufferFormat -> Int -> Int -> EffWebGL eff Unit
+```purescript
+renderbufferStorage :: RenderbufferFormat -> Int -> Int -> Effect Unit
 ```
 
 #### `framebufferRenderbuffer`
 
-``` purescript
-framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf -> EffWebGL eff Unit
+```purescript
+framebufferRenderbuffer :: AttachementPoint -> WebGLRendBuf -> Effect Unit
 ```
 
 #### `framebufferTexture2D`
 
-``` purescript
-framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTex -> EffWebGL eff Unit
+```purescript
+framebufferTexture2D :: AttachementPoint -> TargetType -> WebGLTex -> Effect Unit
 ```
 
 #### `readPixels`
 
-``` purescript
-readPixels :: forall eff. GLint -> GLint -> GLsizei -> GLsizei -> Uint8Array -> Eff (webgl :: WebGl | eff) Uint8Array
+```purescript
+readPixels :: GLint -> GLint -> GLsizei -> GLsizei -> Uint8Array -> Effect Uint8Array
 ```
-
-

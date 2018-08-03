@@ -2,14 +2,14 @@
 
 Binding to WebGL for purescript.
 
-
 This modules should be imported like:
-~~~
-import Control.Monad.Eff.WebGL as GL
+
+```
+import Effect.WebGL as GL
 import Graphics.WebGL as GL
 import Graphics.WebGLTexture as GL
 import Graphics.WebGLFramebuffer as GL
-~~~
+```
 
 I started with generating the raw interface by parsing the Kronos IDL and generating
 a low level binding to Graphics.WebGLRaw. This can be found in the package
@@ -37,18 +37,18 @@ that you don't pick a value which is not allowed.
 
 Start up by calling runWebGL with the canvas name to be used, an error handler
 and a continuation which takes a context with the canvas name and runs with
-the effect EffWebGL. This will fail if the browser does not support webgl.
+the Effect. This will fail if the browser does not support webgl.
 
-~~~
+```
 runWebGL "glcanvas" (\s -> alert s)
   \ context -> do
-~~~
+```
 
 Then you need to define the fshader and vshader in the shader language as two strings.
 The Shaders constructor takes the two strings and has an additional phantom type,
 which defines the bindings between purescript and the graphic processor. E.g.:
 
-~~~
+```
 shaders :: Shaders {aVertexPosition :: Attribute Vec3, uPMatrix :: Uniform Mat4, uMVMatrix:: Uniform Mat4}
 shaders = Shaders
   """precision mediump float;
@@ -67,30 +67,32 @@ shaders = Shaders
           gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
       }
   """
-~~~
+```
 
 Although type safety is guaranteed in the purescript world, currently the correctness of your
 types is not checked against the shading language definitions. Be careful as unused variables
 in the sahder code will be optimized away and the binding will not be correct then.
 
 By calling
-~~~
+
+```
 withShaders shaders (\s -> alert s)
       \ bindings -> do
-~~~
+```
+
 compile the shaders, and the returned bindings are a record, with a type that matches the
 shaders phantom type, plus an additional field, which holds the WebGlShaderProgram, which is
 needed for some procedures. So here is the withShaders type:
 
-~~~
-withShaders :: forall bindings eff a. Shaders (Object bindings) -> (String -> EffWebGL eff a) ->
-                ({webGLProgram :: WebGLProg | bindings} -> EffWebGL eff a) -> EffWebGL eff a
-~~~
+```
+withShaders :: forall bindings a. Shaders (Object bindings) -> (String -> Effect a) ->
+                ({webGLProgram :: WebGLProg | bindings} -> Effect a) -> Effect a
+```
 
 You can then bind values to uniforms and make buffers and draw. This is just on a slightly
 higher leven then calling the original webgl procedures. Eg:
 
-~~~
+```
     let pMatrix = M.makePerspective 45 (canvasWidth / canvasHeight) 0.1 100.0
     setUniformFloats bindings.uPMatrix (M.toArray pMatrix)
 
@@ -102,12 +104,12 @@ higher leven then calling the original webgl procedures. Eg:
                        (-1.0), (-1.0),  0.0,
                         1.0, (-1.0),  0.0]
     drawArr TRIANGLES buf1 bindings.aVertexPosition
-~~~
+```
 
 Textures are supported via the module Graphics.WebGLTexture. A texture can be created by:
 
-~~~
+```
     texture2DFor "crate.gif" MIPMAP \texture -> do
-~~~
+```
 
 The interface is not stable, but the basic constructs (effect, shaders) will not be dropped.

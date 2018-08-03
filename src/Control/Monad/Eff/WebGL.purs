@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Control.Monad.Eff.WebGL
+-- Module      :  Effect.WebGL
 -- Copyright   :  Jürgen Nicklisch-Franken
 -- License     :  Apache-2.0
 --
@@ -12,12 +12,8 @@
 --
 -----------------------------------------------------------------------------
 
-module Control.Monad.Eff.WebGL where
+module Effect.WebGL where
 
-import Control.Monad.Eff (kind Effect, Eff)
+import Effect (Effect)
 
-foreign import data WebGl :: Effect
-
-type EffWebGL eff a = Eff (webgl :: WebGl | eff) a
-
-foreign import runWebGl_ :: forall a e. Eff (webgl :: WebGl | e) a -> Eff e a
+foreign import runWebGl_ :: forall a. Effect a -> Effect a

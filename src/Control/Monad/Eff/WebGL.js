@@ -1,6 +1,6 @@
 /* global exports */
 
-// module Control.Monad.Eff.WebGL
+// module Effect.WebGL
 
 
     "use strict";

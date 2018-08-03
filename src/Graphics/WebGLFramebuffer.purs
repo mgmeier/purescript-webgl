@@ -35,9 +35,8 @@ module Graphics.WebGLFramebuffer
 )where
 
 import Prelude
-import Control.Monad.Eff (Eff)
+import Effect (Effect)
 
-import Control.Monad.Eff.WebGL (WebGl, EffWebGL)
 import Graphics.WebGLRaw (GLenum, GLsizei, GLint, WebGLRenderbuffer, WebGLFramebuffer, _UNSIGNED_BYTE, _RGBA, _FRAMEBUFFER, framebufferTexture2D_, _RENDERBUFFER, framebufferRenderbuffer_, renderbufferStorage_, bindRenderbuffer_, createRenderbuffer_, bindFramebuffer_, createFramebuffer_, checkFramebufferStatus_, _DEPTH_STENCIL_ATTACHMENT, _STENCIL_ATTACHMENT, _DEPTH_ATTACHMENT, _COLOR_ATTACHMENT0, _DEPTH_COMPONENT16, _RGB5_A1, _RGB565, _RGBA4)
 import Graphics.WebGLTexture (TargetType, WebGLTex(WebGLTex), targetTypeToConst)
 import Data.ArrayBuffer.Types (ArrayView, Uint8Array)
@@ -88,63 +87,63 @@ _FRAMEBUFFER_INCOMPLETE_DIMENSIONS = 36057
 _FRAMEBUFFER_UNSUPPORTED :: Int
 _FRAMEBUFFER_UNSUPPORTED = 36061
 
-checkFramebufferStatus :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) GLenum
+checkFramebufferStatus :: GLenum -> Effect GLenum
 checkFramebufferStatus = checkFramebufferStatus_
 
-createFramebuffer :: forall eff. EffWebGL eff WebGLBuf
+createFramebuffer :: Effect WebGLBuf
 createFramebuffer = do
   b <- createFramebuffer_
   pure (WebGLBuf b)
 
-bindFramebuffer :: forall eff. WebGLBuf -> EffWebGL eff Unit
+bindFramebuffer :: WebGLBuf -> Effect Unit
 bindFramebuffer (WebGLBuf buf) = bindFramebuffer_ _FRAMEBUFFER buf
 
-unbindFramebuffer :: forall eff. EffWebGL eff Unit
+unbindFramebuffer :: Effect Unit
 unbindFramebuffer = unbindFramebuffer_ _FRAMEBUFFER
 
-createRenderbuffer :: forall eff. EffWebGL eff WebGLRendBuf
+createRenderbuffer :: Effect WebGLRendBuf
 createRenderbuffer = do
   b <- createRenderbuffer_
   pure (WebGLRendBuf b)
 
-bindRenderbuffer :: forall eff. WebGLRendBuf -> EffWebGL eff Unit
+bindRenderbuffer :: WebGLRendBuf -> Effect Unit
 bindRenderbuffer (WebGLRendBuf buf) = bindRenderbuffer_ _RENDERBUFFER buf
 
-unbindRenderbuffer :: forall eff. EffWebGL eff Unit
+unbindRenderbuffer :: Effect Unit
 unbindRenderbuffer = unbindRenderbuffer_ _RENDERBUFFER
 
-renderbufferStorage :: forall eff. RenderbufferFormat -> Int -> Int -> EffWebGL eff Unit
+renderbufferStorage :: RenderbufferFormat -> Int -> Int -> Effect Unit
 renderbufferStorage renderbufferFormat width height =
   renderbufferStorage_ _RENDERBUFFER (renderbufferFormatToConst renderbufferFormat) width height
 
-framebufferRenderbuffer :: forall eff. AttachementPoint -> WebGLRendBuf ->  EffWebGL eff Unit
+framebufferRenderbuffer :: AttachementPoint -> WebGLRendBuf ->  Effect Unit
 framebufferRenderbuffer attachementPoint (WebGLRendBuf buf) =
   framebufferRenderbuffer_ _FRAMEBUFFER (attachementPointToConst attachementPoint) _RENDERBUFFER buf
 
-framebufferTexture2D :: forall eff. AttachementPoint -> TargetType -> WebGLTex -> EffWebGL eff Unit
+framebufferTexture2D :: AttachementPoint -> TargetType -> WebGLTex -> Effect Unit
 framebufferTexture2D attachementPoint targetType (WebGLTex texture) =
   framebufferTexture2D_ _FRAMEBUFFER (attachementPointToConst attachementPoint) (targetTypeToConst targetType) texture 0
 
-readPixels :: forall eff. GLint ->
+readPixels :: GLint ->
                GLint ->
                GLsizei ->
                GLsizei ->
-               Uint8Array -> Eff (webgl :: WebGl | eff) Uint8Array
+               Uint8Array -> Effect Uint8Array
 readPixels x y width height uint8Array =
   let copiedArray = asUint8Array (asArray uint8Array)
   in do
     readPixels__ x y width height _RGBA _UNSIGNED_BYTE copiedArray
     pure copiedArray
 
-foreign import unbindRenderbuffer_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+foreign import unbindRenderbuffer_ :: GLenum -> Effect Unit
 
-foreign import unbindFramebuffer_ :: forall eff. GLenum -> Eff (webgl :: WebGl | eff) Unit
+foreign import unbindFramebuffer_ :: GLenum -> Effect Unit
 
-foreign import readPixels__ :: forall a eff. GLint
+foreign import readPixels__ :: forall a. GLint
                    -> GLint
                    -> GLsizei
                    -> GLsizei
                    -> GLenum
                    -> GLenum
                    -> ArrayView a
-                   -> Eff (webgl :: WebGl | eff) Unit
+                   -> Effect Unit
